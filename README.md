@@ -1,0 +1,3 @@
+# SimpleGPS
+
+SimpleGPS is a low cost and easy to use GPS tracker for model rocketry. It can operate of a single 3.7V lipo battery and has a built in charger to enable "plug-&-play" usability. Power on is can be done with a simple jumper, or an external switch can be used if perfered, for example via a screw switch. The GPS coordinates of the SimpleGPS are transmitted via 433MHz LoRa every second providing several km of tracking range depending on the antenna used on the SimpleGPS and the ground station. SimpleGPS can also be used as a minimal ground station, reporting the location of a paired tracker via USB serial connection to a PC or phone.
