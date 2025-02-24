@@ -1,167 +1,149 @@
 #! /bin/env python3
 
 import os, sys
+from nmea import *
 from serial import Serial
 import datetime
-#import geopands as gpd
+import time
+import serial.tools.list_ports
+from PyQt5 import QtCore, QtSerialPort
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMainWindow, QPushButton, QVBoxLayout, QGridLayout, QTextEdit
 
-#rom shapley.geometry import Point, Polygon
+verbose = True
 
 dt = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-raw1_filename = f"nmea_1_{dt}.txt"
-raw2_filename = f"nmea_2_{dt}.txt"
 log_filename = f"log_{dt}.csv"
 live_filename = "live.csv"
 
-def conv_dec(deg_min):
-    if (len(deg_min) == 0):
-        return 0
-    brk = deg_min.find('.') - 2
-    degrees = deg_min[0:brk]
-    minutes = deg_min[brk:]
-    return float(degrees) + float(minutes) / 60;
 
-def get_content(nmea_sentence):
-    delim_index = 1;
-    if (nmea_sentence[0] != '$'):
-        return ''
-    for i in range(len(nmea_sentence)):
-        if (nmea_sentence[i] == '*'):
-            delim_index = i
-    return nmea_sentence[1:delim_index]
+class ground_station:
+    def __init__(self, port_name, text_edit):
+        self.ser = QtSerialPort.QSerialPort(
+            port_name,
+            baudRate=QtSerialPort.QSerialPort.Baud9600,
+            readyRead=self.readline
+        )        
+        #self.ser = Serial(port_name, timeout = 0.5)
+        #self.ser.write(b"UID\n")
+        #time.sleep(1)
+        self.uid = "auniquestr" #f"{int(self.ser.readline().decode()):08x}"
+        print(f"Opened Ground Station {self.uid}\n")
+        self.raw_filename = f"{self.uid}_{dt}.raw"
+        self.log = open(self.raw_filename, "w")
 
-def get_time(nmea_sentence):
-    content = get_content(nmea_sentence)
-    fields = content.split(',')
-    time = datetime.time(int(fields[1][:-8]), int(fields[1][-8:-6]), int(fields[1][-6:-4]))
-    return time
- 
-def get_latitude(nmea_sentence):
-    content = get_content(nmea_sentence)
-    fields = content.split(',')
-    lat = conv_dec(fields[2])
-    if (fields[3] == 'N'):
-        return lat
-    else:
-        return -lat
+    @QtCore.pyqtSlot() 
+    def readline(self):
+        while self.ser.canReadLine:
+            line = self.ser.readline().decode()
+            self.log.write(line)
+            self.log.flush()
+            text_edit.append(line)
 
-def get_longitude(nmea_sentence):
-    content = get_content(nmea_sentence)
-    fields = content.split(',')
-    long = conv_dec(fields[4])
-    if (fields[5] == 'E'):
-        return long
-    else:
-        return -long
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-def get_altitude(nmea_sentence):
-    content = get_content(nmea_sentence)
-    fields = content.split(',')
-    return fields[9] 
+        self.setWindowTitle("SimpleTrackerGUI")
+        self.lbl_latitude = QLabel("Latitude: ")
+        self.lbl_longitude = QLabel("Longitude: ")
+        self.lbl_altitude = QLabel("Altitude: ")
+        self.btn_reset_ground = QPushButton("Reset Ground Level")
+        self.te_rx_msg = QTextEdit()
+#        self.btn = QPushButton("Press Me!")
 
-def get_checksum(nmea_sentence):
-    if (nmea_sentence[0] != '$'):
-        return ''
-    for i in range(len(nmea_sentence)):
-        if (nmea_sentence[i] == '*'):
-            delim_index = i
-    return nmea_sentence[delim_index+1:delim_index+3]
- 
-def calc_checksum(nmea_sentence):
-    cksum = 0
-    content = get_content(nmea_sentence)
-    for char in content:
-        cksum ^= ord(char)
-    return f"{cksum:02X}"
+        lo_main = QVBoxLayout()
+        lo_grid = QGridLayout()
+        lo_grid.addWidget(self.lbl_latitude, 0, 0)
+        lo_grid.addWidget(self.lbl_longitude, 1, 0)
+        lo_grid.addWidget(self.lbl_altitude, 2, 0)
+        lo_grid.addWidget(self.btn_reset_ground, 2, 2)
 
-def nmea_checksum_ok(nmea_sentence):
-    ccksum = calc_checksum(nmea_sentence)
-    rcksum = get_checksum(nmea_sentence)
-    return (ccksum == rcksum)
+        lo_main.addLayout(lo_grid)
+        lo_main.addWidget(self.te_rx_msg)
 
-port1 = True
-port2 = True
+        container = QWidget()
+        container.setLayout(lo_main)
 
-try:
-    gps1 = Serial("/dev/ttyACM0", timeout=0.5)
-    raw1 = open(raw1_filename, "w")
-    print("Ground station found on /dev/ttyACM0")
-except Exception:
-    port1 = False
+        self.setCentralWidget(container)
 
-try:
-    gps2 = Serial("/dev/ttyACM1", timeout=0.5)
-    raw2 = open(raw2_filename, "w")
-    print("Ground station found on /dev/ttyACM1")
-except Exception:
-    port2 = False
+        #self.gs_list = []
+        
+        ports = serial.tools.list_ports.comports()
+        for p in ports:
+            if p.product == "SimpleTracker":
+                #self.gs_list.append(ground_station(p.device, self.te_rx_msg))
+                self.serial = QtSerialPort.QSerialPort(
+                    p.device,
+                    baudRate=QtSerialPort.QSerialPort.Baud9600,
+                    readyRead=self.receive
+                )
+                print(f"Connected to {p.device}")
 
-log = open(log_filename, "w")
-live = open(live_filename, "w")
+        
+        self.log = open(log_filename, "w")
+        self.live = open(live_filename, "w")
+        
+        self.header = "utc_time,uid,latitude,longitude,altitude,rssi"
+        self.log.write(f"{self.header}\n")
+        self.live.write(f"{self.header}\n")
+        print(self.header)
+        self.columns = {
+            "utc_time"      :"", 
+            "uid"           :"",
+            "latitude"      :"", 
+            "longitude"     :"", 
+            "altitude"      :0.0, 
+            "rssi"          :0, 
+        }
+        self.serial.open(QtCore.QIODevice.ReadWrite) 
+        self.new_data = False
+    
+    @QtCore.pyqtSlot()
+    def receive(self):
+        while self.serial.canReadLine:
+            line = self.serial.readLine().decode().strip('\r\n')
+            print(line)
+            #self.log.write(line)
+            #self.log.flush()
+            self.te_rx_msg.append(line)
 
-header = "utc_time,latitude,longitude,altitude,port1_rssi,port2_rssi"
-log.write(header)
-live.write(header)
-print(header)
-columns = {
-    "utc_time"      :"", 
-    "latitude"      :"", 
-    "longitude"     :"", 
-    "altitude"      :0.0, 
-    "port1_rssi"    :0, 
-    "port2_rssi"    :0
-}
 
-new_data = False
+app = QApplication(sys.argv)
+window = MainWindow()
+window.show()
+app.exec()
 
 while (1):
-    try:
-        if (port1):
-            raw_str = gps1.readline().decode()
-            raw1.write(raw_str)
-            raw1.flush()
-            data = raw_str.split(" ")
-            if (data[0] == "RSSI:"):
-                columns["port1_rssi"] = int(data[1].strip())
-            elif (data[0] == "->"):
-                if (nmea_checksum_ok(data[2])):
-                    new_data = True
-                    columns["utc_time"] = get_time(data[2])
-                    columns["latitude"] = f"{get_latitude(data[2]):.6f}"
-                    columns["longitude"] = f"{get_longitude(data[2]):.6f}"
-                    columns["altitude"] = get_altitude(data[2])
-                    #print(f"p1 columns:{columns}")
-    except Exception as e:
-        #print (f"Error on line {sys.exc_info()[2].tb_lineno}: {e}")
-        pass
-    
-    try:
-        if (port2):
-            raw_str = gps2.readline().decode()
-            raw2.write(raw_str)
-            raw2.flush()
-            data = raw_str.split(" ")
-            if (data[0] == "RSSI:"):
-                columns["port2_rssi"] = int(data[1].strip())
-            elif (data[0] == "->"):
-                if (nmea_checksum_ok(data[2])):
-                    new_data = True
-                    columns["utc_time"] = get_time(data[2]).strftime("%H:%M:%S")
-                    columns["latitude"] = f"{get_latitude(data[2]):.6f}"
-                    columns["longitude"] = f"{get_longitude(data[2]):.6f}"
-                    columns["altitude"] = get_altitude(data[2])
-                    #print(f"p2 columns:{columns}")
-    except Exception as e:
-        #print (f"Error on line {sys.exc_info()[2].tb_lineno}: {e}")
-        pass
+
+    for gs in gs_list:
+        try:
+            raw = gs.readline()
+            if raw != "":
+                data = raw.split(" ")
+                if (data[0] == "RSSI:"):
+                    columns["rssi"] = int(data[1].strip())
+                elif (data[0] == "->") and \
+                    nmea_checksum_ok(data[2]) and \
+                    (get_fix(data[2]) == 1) and \
+                    (get_time(data[2]) != columns["utc_time"]):
+                        new_data = True
+                        columns["utc_time"] = get_time(data[2])                    
+                        columns["uid"] = data[1].strip()
+                        columns["latitude"] = f"{get_latitude(data[2]):.6f}"
+                        columns["longitude"] = f"{get_longitude(data[2]):.6f}"
+                        columns["altitude"] = get_altitude(data[2])
+        except Exception as e:
+            print (f"Error on line {sys.exc_info()[2].tb_lineno}: {e}")
+            print (raw)
+            pass
 
     if (new_data):
+        new_data = False
         #print(columns)
         line = ",".join([f"{columns[h]}" for h in header.split(',')])
         log.write(f"{line}\n")
         live.write(f"{line}\n")
         live.flush()
-        new_data = False
         print(line)
             
 
