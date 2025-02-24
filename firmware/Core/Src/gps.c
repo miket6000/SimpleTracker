@@ -54,7 +54,7 @@ void gps_init(UART_HandleTypeDef *huart) {
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
   Buffer *tmpBuffer;
 
-  if (rx_char == '$') {
+  if (rx_char == '$' || uartRxBuffer->index >= NMEA_SENTENCE_SIZE) {
     if (strncmp((char *)uartRxBuffer->data, "$GPGGA", 6) == 0) { 
       tmpBuffer = uartRxBuffer;
       uartRxBuffer = gpsSentence;

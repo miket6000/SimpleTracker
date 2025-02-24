@@ -29,6 +29,8 @@
 #include "led.h"
 #include "task.h"
 #include "usbd_cdc_if.h"
+#include "record.h"
+#include "filesystem.h"
 #include "command.h"
 #include "commands.h"
 #include "gps.h"
@@ -51,7 +53,10 @@ typedef struct {
 #define UPDATE_PERIOD_MS  2000
 #define UID_STR_LENGTH    9
 #define HEADER_LEN        UID_STR_LENGTH
-#define TX_MESG_LEN       (HEADER_LEN + NMEA_SENTENCE_SIZE)
+#define MESSAGE_LEN       (HEADER_LEN + NMEA_SENTENCE_SIZE)
+#define MODE_TRANSMIT     0x0001
+#define MODE_RECEIVE      0x0002
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,8 +67,6 @@ typedef struct {
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-bool rx_mode = true;
-
 extern USBD_HandleTypeDef hUsbDeviceFS;
 extern uint8_t UserRxBufferFS[APP_RX_DATA_SIZE];
 extern uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
@@ -103,8 +106,17 @@ void print(char *tx_buffer, uint16_t len) {
   }
 }
 
+void load_settings() {  //load settings
+  uint8_t i = 0;
+  Setting **settingList = get_settings();
+  while (settingList[i] != NULL) {
+    fs_read_config(settingList[i]->label, &settingList[i]->value);
+    i++;
+  }
+}
+
 void transmit(char *buffer, uint16_t len) {
-  LoRa_transmit(&hlora, (uint8_t *)buffer, len, UPDATE_PERIOD_MS / 2);
+  LoRa_transmit(&hlora, (uint8_t *)buffer, len, UPDATE_PERIOD_MS);
 }
 
 void task_led(void *param) {
@@ -124,15 +136,9 @@ void task_gps(void *param) {
       led_add_sequence(&led_blue, flash_sequence);
     }
 
-/*
-    print("<- ", 3);
-    print(uid_str, strlen(uid_str));
-    print(" ", 1);
-    print((char *)gps_buffer->data, gps_buffer->index);
-*/    
-    if (!rx_mode) {
+    if (setting('m')->value & MODE_TRANSMIT) {
       led_add_sequence(&led_green, double_flash_sequence);
-      char tmpBuffer[TX_MESG_LEN];
+      char tmpBuffer[MESSAGE_LEN];
       strncpy(tmpBuffer, uid_str, UID_STR_LENGTH);
       strncat(tmpBuffer, " ", 2); //include \0
       strncat(tmpBuffer, (char *)gps_buffer->data, gps_buffer->index);
@@ -144,10 +150,10 @@ void task_gps(void *param) {
 }
 
 void task_lora_rx(void *param) {
-  if (rx_mode) {
+  if (setting('m')->value & MODE_RECEIVE) {
     uint8_t bytes_received = 0;
     int16_t rssi = 0;
-    bytes_received = LoRa_receive(&hlora, (uint8_t *)param, TX_MESG_LEN);
+    bytes_received = LoRa_receive(&hlora, (uint8_t *)param, MESSAGE_LEN);
     if (bytes_received > 0) {
       led_add_sequence(&led_green, flash_sequence);
       print("-> ", 3);
@@ -172,7 +178,7 @@ int main(void)
 
   /* USER CODE BEGIN 1 */
   hlora = newLoRa(); 
-  uint8_t lora_rx_buffer[NMEA_SENTENCE_SIZE];
+  uint8_t lora_rx_buffer[MESSAGE_LEN];
   uint32_t uid;
 
   /* USER CODE END 1 */
@@ -203,8 +209,10 @@ int main(void)
   led_init(&led_blue, LED_BLUE_GPIO_Port, LED_BLUE_Pin);
   led_init(&led_green, LED_GREEN_GPIO_Port, LED_GREEN_Pin);
   led_add_sequence(&led_blue, off_sequence);
-//  led_add_sequence(&led_green, idle_sequence);
-  
+
+  fs_init();
+  load_settings();
+   
   uid = HAL_GetUIDw0() ^ HAL_GetUIDw1() ^ HAL_GetUIDw2();
   itoa(uid, uid_str, 16);
 
@@ -212,8 +220,10 @@ int main(void)
   cmd_add("REBOOT", reboot, NULL);
   cmd_add("I", cmd_set_interactive, NULL);
   cmd_add("i", cmd_unset_interactive, NULL);
-  cmd_add("R", read_gps, NULL);
-  cmd_add("W", write_gps, NULL);
+  cmd_add("GR", read_gps, NULL);
+  cmd_add("GW", write_gps, NULL);
+  cmd_add("SET", set_config, NULL);
+  cmd_add("GET", get_config, NULL);
   cmd_add("UID", print_uint32, &uid);
   cmd_set_print_function(print); 
   
@@ -280,43 +290,65 @@ int main(void)
   * @brief System Clock Configuration
   * @retval None
   */
+
+void RCC_Clock_Config(uint8_t divider) {
+  uint32_t tickstart;
+  
+  MODIFY_REG(RCC->CFGR, RCC_CFGR_PPRE, RCC_HCLK_DIV16);
+  MODIFY_REG(RCC->CFGR, RCC_CFGR_HPRE, divider);
+  __HAL_RCC_SYSCLK_CONFIG(RCC_SYSCLKSOURCE_HSI48);
+
+  tickstart = HAL_GetTick();
+    
+  while (__HAL_RCC_GET_SYSCLK_SOURCE() != (RCC_SYSCLKSOURCE_HSI48 << RCC_CFGR_SWS_Pos)) {
+    if((HAL_GetTick() - tickstart ) > CLOCKSWITCH_TIMEOUT_VALUE) {
+      Error_Handler();
+    }
+  }
+  
+  MODIFY_REG(RCC->CFGR, RCC_CFGR_PPRE, RCC_HCLK_DIV1);
+  SystemCoreClock = HAL_RCC_GetSysClockFreq() >> AHBPrescTable[(RCC->CFGR & RCC_CFGR_HPRE)>> RCC_CFGR_HPRE_BITNUMBER];
+
+  /* Configure the source of time base considering new system clocks settings*/
+  HAL_InitTick (TICK_INT_PRIORITY);
+}
+
+void RCC_Oscillator_Config() {
+  uint32_t tickstart;
+
+  __HAL_RCC_HSI14ADC_DISABLE();
+  __HAL_RCC_HSI14_ENABLE();
+  tickstart = HAL_GetTick();
+  /* Wait till HSI is ready */  
+  while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSI14RDY) == RESET) {
+    if((HAL_GetTick() - tickstart) > HSI14_TIMEOUT_VALUE) {
+      Error_Handler();
+    }      
+  } 
+  __HAL_RCC_HSI14_CALIBRATIONVALUE_ADJUST(16);
+
+  __HAL_RCC_HSI48_ENABLE();
+  tickstart = HAL_GetTick();
+  /* Wait till HSI48 is ready */  
+  while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSI48RDY) == RESET) {
+    if((HAL_GetTick() - tickstart) > HSI48_TIMEOUT_VALUE) {
+      Error_Handler();
+    }
+  } 
+}
+
+
+/**
+ * @brief System Clock Configuration
+ * @retval None
+ */
 void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+  RCC_Oscillator_Config();
+  RCC_Clock_Config(RCC_SYSCLK_DIV1);
 
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI48;
-  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
-  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-                              |RCC_CLOCKTYPE_PCLK1;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI48;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USB;
-  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
-
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
+  __HAL_RCC_USB_CONFIG(RCC_USBCLKSOURCE_HSI48);
+ }
 
 /* USER CODE BEGIN 4 */
 void USBD_CDC_RxHandler(uint8_t *rxBuffer, uint32_t len) {
