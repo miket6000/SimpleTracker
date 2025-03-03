@@ -6,10 +6,10 @@ class StatusBar extends StatelessWidget {
   final bool isConnected;
 
   const StatusBar({
-    Key? key, 
+    super.key, 
     required this.isGpsFix, 
     required this.isConnected
-  }) : super(key: key);
+  });
 
 
   @override

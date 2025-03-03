@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:intl/intl.dart';
 import 'datatile.dart';
 import 'status_bar.dart';
 import 'serial_parser.dart';
+import 'serial_connection_widget.dart';
 import 'dart:io';
-import 'dart:async';
 
 void main() {
   runApp(SimpleTrackerApp());
@@ -31,21 +30,13 @@ class SimpleTrackerScreen extends StatefulWidget {
   SimpleTrackerScreenState createState() => SimpleTrackerScreenState();
 }
 
-
-
 class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
-  List<String> availablePorts = SerialPort.availablePorts;
-  String? selectedPort;
-  SerialPort? port;
-  SerialPortReader? reader;
-  List<String> receivedDataList = [];
   SerialMessage message = SerialMessage();
-  RandomAccessFile? logFile;
-  RandomAccessFile? liveFile;
-  bool isConnected = false;
-  Timer? communicationTimer;
-  bool isCommunicating = false;
+  List<String> receivedDataList = [];
+  int isCommunicating = 0;
+  DateTime lastMessageTime = DateTime.now();
   double altOffset = 0.0;
+  RandomAccessFile? liveFile;
 
   toggleAbsoluteAlt() {
     if (altOffset > 0.0) {
@@ -57,76 +48,24 @@ class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
     }
   }
 
-  void connect() {
-    port = SerialPort(selectedPort!);
-
-    if (!port!.openRead()) {
-      print("Failed to open port");
-      return;
+  logMessage(String title) {
+    if (message.gpsTime != null && message.gpsTime != lastMessageTime) {
+      lastMessageTime = message.gpsTime!;
+      liveFile?.writeStringSync(message.csvString());
+      liveFile?.flushSync();
     }
-
-    String logFileName = "serial_${DateFormat('yyyyMMdd-HHmmss').format(DateTime.now())}.log";
-    logFile = File(logFileName).openSync(mode: FileMode.write);
-    liveFile = File("live.csv").openSync(mode: FileMode.write);
-
-    liveFile?.writeStringSync("gpsTime, uid, latitude, longitude, altitude, rssi\n");
-
-    reader = SerialPortReader(port!);
-    reader!.stream.listen((data) {
-      setState(() {
-        String incomingData = String.fromCharCodes(data);
-        List<String> lines = incomingData.split('\n'); 
-        for (String line in lines) {
-          if (line.trim().isNotEmpty) {
-            receivedDataList.add(line.trim());
-            message.parse(line.trim());
-            logFile?.writeStringSync('$line\n');
-            logFile?.flushSync();
-            liveFile?.writeStringSync(message.csvString());
-            liveFile?.flushSync();
-          }
-        }
-        
-        isCommunicating = true;
-        communicationTimer?.cancel();
-        communicationTimer = Timer(Duration(seconds: 6), () {
-          setState(() {
-            isCommunicating = false; // No data received for 6 seconds
-          });
-        });         
-      });
+    setState(() {
+      receivedDataList.add("[$title] ${message.rawString}");
     });
   }
 
-  void disconnect() {
-    reader?.close();
-    port?.close();
-    logFile?.closeSync();
-    reader = null;
-    port = null;
-    logFile = null;
-  }
-
-  void toggleConnection() {
-    if (selectedPort == null) return;
-
-    if (!isConnected) {
-      connect();
-    } else {
-      disconnect();
-    }
-
-    setState((){isConnected = !isConnected;});
-  }
-
   @override
-  void dispose() {
-    reader?.close();
-    port?.close();
-    logFile?.closeSync();
-    super.dispose();
+  void initState() {
+    super.initState();
+    liveFile = File("live.csv").openSync(mode: FileMode.write);
+    liveFile?.writeStringSync("gpsTime, uid, latitude, longitude, altitude, rssi\n");
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,22 +74,35 @@ class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            PortSelector(
-              selectedPort: selectedPort,
-              availablePorts: availablePorts,
-              onPortChanged: (newPort) {
+            Row( children:[
+            SerialConnectionWidget(
+              title: "Port 1",
+              sharedMessage: message,
+              onMessageReceived: () {
+                logMessage("1");
+              },
+              onConnectionChange: (connected) {
                 setState(() {
-                  selectedPort = newPort;
+                  if(connected) { isCommunicating |= 1; }
+                  else { isCommunicating &= ~1; }
                 });
               },
-              onDropdownTap: () {
-                setState(() {
-                  availablePorts = SerialPort.availablePorts;
-                });
-              },
-              toggleConnection: toggleConnection,
-              isConnected: isConnected,
             ),
+            SizedBox(width: 100),
+            SerialConnectionWidget(
+              title: "Port 2",
+              sharedMessage: message,
+              onMessageReceived: () {
+                logMessage("2");
+              },
+              onConnectionChange: (connected) {
+                setState(() {
+                  if(connected) { isCommunicating |= 2; }
+                  else { isCommunicating &= ~2; }
+                });
+              },
+            ), 
+            ]),
             SizedBox(height:20),
             SizedBox(
               height: 170,
@@ -167,7 +119,7 @@ class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
                       DataTile(title: "Time", value: message.gpsTime != null ? DateFormat("HH:mm:ss").format(message.gpsTime!) : "N/A"),
                       DataTile(title: "Latitude", value: message.latitude != null ? message.latitude!.toStringAsFixed(4) : "N/A"),
                       DataTile(title: "Longitude", value: message.longitude != null ? message.longitude!.toStringAsFixed(4) : "N/A"),
-                      DataTile(title: "RSSI", value: message.rssi != null ? message.rssi.toString() : "N/A"),
+                      DataTile(title: "RSSI", value: message.rssi != null ? message.rssi!.values.join(", ") : "N/A"),
                       DataTile(title: "Altitude", value: message.altitude != null ? "${(message.altitude! - altOffset).toStringAsFixed(1)} ft" : "N/A", onPressed: toggleAbsoluteAlt),
                       DataTile(title: "Vertical Velocity", value: message.verticalVelocity != null ? "${message.verticalVelocity!.toStringAsFixed(2)} ft/s" : "N/A"),
                     ],
@@ -179,55 +131,10 @@ class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
 
             SerialDisplay(receivedDataList: receivedDataList),
 
-            StatusBar(isGpsFix: message.isGpsFix && isCommunicating, isConnected: isCommunicating),
+            StatusBar(isGpsFix: message.isGpsFix && isCommunicating > 0, isConnected: isCommunicating > 0),
           ],
         ),
       ),
-    );
-  }
-}
-
-
-class PortSelector extends StatelessWidget {
-  final String? selectedPort;
-  final List<String> availablePorts;
-  final ValueChanged<String?> onPortChanged;
-  final VoidCallback onDropdownTap;
-  final VoidCallback toggleConnection;
-  final bool isConnected;
-
-  const PortSelector({
-    super.key,
-    required this.selectedPort,
-    required this.availablePorts,
-    required this.onPortChanged,
-    required this.onDropdownTap,
-    required this.toggleConnection,
-    required this.isConnected,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        DropdownButton<String>(
-          hint: Text("Select a Port"),
-          value: selectedPort,
-          onChanged: onPortChanged,
-          onTap: onDropdownTap,
-          items: availablePorts.map((String port) {
-            return DropdownMenuItem<String>(
-              value: port,
-              child: Text(port),
-            );
-          }).toList(),
-        ),
-        SizedBox(width: 9),
-        ElevatedButton(
-          onPressed: toggleConnection,
-          child: Text(isConnected ? "Disconnect" : "Connect"),
-        ),
-      ],
     );
   }
 }

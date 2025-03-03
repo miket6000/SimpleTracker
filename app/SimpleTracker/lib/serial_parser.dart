@@ -1,7 +1,7 @@
 //import 'package:intl/intl.dart';
 
 class SerialMessage {
-  String? rssi;
+  final Map<String, String>? rssi= {};
   String? uid;
   List<String>? nmeaFields;
   bool checksumValid = false;
@@ -13,8 +13,9 @@ class SerialMessage {
   double? verticalVelocity;
   double? lastAltitude;
   DateTime? lastGpsTime;
+  String? rawString;
   
-  SerialMessage({this.rssi, this.uid, this.nmeaFields});
+  SerialMessage();
 
   String csvString() {
     return "$gpsTime, $uid, $latitude, $longitude, $altitude, $rssi\n";
@@ -55,29 +56,31 @@ class SerialMessage {
     return (degrees + minutes / 60) * mul;
   }
 
-  void parse(String input) {
-    input = input.trim();
+  void parse(String input, String title) {
+    rawString = input.trim();
     
-    if (input.startsWith("RSSI")) {
-      var parts = input.split(" ");
+    if (rawString!.startsWith("RSSI")) {
+      var parts = rawString!.split(" ");
       if (parts.length > 1) {
-        rssi = parts[1];
+        rssi![title] = parts[1];
       }
-    } else if (input.startsWith("->")) {
-      var parts = input.split(" ");
+    } else if (rawString!.startsWith("->")) {
+      var parts = rawString!.split(" ");
       if (parts.length > 2) {
         uid = parts[1];
         nmeaFields = parts.sublist(2).join(" ").split(",");
         if(nmeaFields?.last == '*${calculateNmeaChecksum()?.toRadixString(16).toUpperCase()}') {
           checksumValid = true;
+          gpsTime = nmeaTime(nmeaFields![1]);
           isGpsFix = nmeaFields![6] == "1";
           if (isGpsFix) {
             latitude = nmeaToDec(nmeaFields![2], nmeaFields![3]);
             longitude = nmeaToDec(nmeaFields![4], nmeaFields![5]);
             altitude = double.parse(nmeaFields![9]) * 3.28084; // Convert meters to feet;
-            verticalVelocity = calculateVerticalVelocity(altitude, gpsTime);
+            if( gpsTime != lastGpsTime ) {
+              verticalVelocity = calculateVerticalVelocity(altitude, gpsTime);
+            }
           }
-          gpsTime = nmeaTime(nmeaFields![1]);
         } else {
           print('read: ${nmeaFields?.last}');
           print('calculated: *${calculateNmeaChecksum()?.toRadixString(16).toUpperCase()}');
