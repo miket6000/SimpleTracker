@@ -16,7 +16,7 @@ class SimpleTrackerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Serial Port Reader',
+      title: 'SimpleTracker',
       theme: ThemeData.dark(),
       home: SimpleTrackerScreen(),
     );
@@ -37,6 +37,7 @@ class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
   DateTime lastMessageTime = DateTime.now();
   double altOffset = 0.0;
   RandomAccessFile? liveFile;
+  RandomAccessFile? logFile;
 
   toggleAbsoluteAlt() {
     if (altOffset > 0.0) {
@@ -53,6 +54,8 @@ class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
       lastMessageTime = message.gpsTime!;
       liveFile?.writeStringSync(message.csvString());
       liveFile?.flushSync();
+      logFile?.writeStringSync(message.csvString());
+      logFile?.flushSync();
     }
     setState(() {
       receivedDataList.add("[$title] ${message.rawString}");
@@ -62,8 +65,14 @@ class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
   @override
   void initState() {
     super.initState();
+    
+    String logFileName =
+        "pretty_log_${DateFormat('yyyyMMdd-HHmmss').format(DateTime.now())}.csv";
+    
     liveFile = File("live.csv").openSync(mode: FileMode.write);
     liveFile?.writeStringSync("gpsTime, uid, latitude, longitude, altitude, rssi\n");
+    logFile = File(logFileName).openSync(mode: FileMode.write);
+    logFile?.writeStringSync("gpsTime, uid, latitude, longitude, altitude, rssi\n");
   }
   
   @override
@@ -74,35 +83,37 @@ class SimpleTrackerScreenState extends State<SimpleTrackerScreen> {
         padding: EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Row( children:[
-            SerialConnectionWidget(
-              title: "Port 1",
-              sharedMessage: message,
-              onMessageReceived: () {
-                logMessage("1");
-              },
-              onConnectionChange: (connected) {
-                setState(() {
-                  if(connected) { isCommunicating |= 1; }
-                  else { isCommunicating &= ~1; }
-                });
-              },
+            Row( 
+              children:[
+                SerialConnectionWidget(
+                  title: "Port 1",
+                  sharedMessage: message,
+                  onMessageReceived: () {
+                    logMessage("1");
+                  },
+                  onConnectionChange: (connected) {
+                    setState(() {
+                      if(connected) { isCommunicating |= 1; }
+                      else { isCommunicating &= ~1; }
+                    });
+                  },
+                ),
+                SizedBox(width: 100),
+                SerialConnectionWidget(
+                  title: "Port 2",
+                  sharedMessage: message,
+                  onMessageReceived: () {
+                    logMessage("2");
+                  },
+                  onConnectionChange: (connected) {
+                    setState(() {
+                      if(connected) { isCommunicating |= 2; }
+                      else { isCommunicating &= ~2; }
+                    });
+                  },
+                ), 
+              ],
             ),
-            SizedBox(width: 100),
-            SerialConnectionWidget(
-              title: "Port 2",
-              sharedMessage: message,
-              onMessageReceived: () {
-                logMessage("2");
-              },
-              onConnectionChange: (connected) {
-                setState(() {
-                  if(connected) { isCommunicating |= 2; }
-                  else { isCommunicating &= ~2; }
-                });
-              },
-            ), 
-            ]),
             SizedBox(height:20),
             SizedBox(
               height: 170,

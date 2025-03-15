@@ -6,11 +6,11 @@ class DataTile extends StatelessWidget {
   final VoidCallback? onPressed;
 
   const DataTile({
-    Key? key,
+    super.key,
     required this.title,
     this.value,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

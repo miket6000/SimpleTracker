@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -49,29 +48,36 @@ class SerialConnectionWidgetState extends State<SerialConnectionWidget> {
 
     reader = SerialPortReader(port!);
     reader!.stream.listen((data) {
-      setState(() {
-        String incomingData = String.fromCharCodes(data);
-        receivedDataList.add(incomingData);
-        List<String> lines = incomingData.split('\n');
-        for (String line in lines) {
-          if (line.trim().isNotEmpty) {
-            // Update the shared message rather than creating a new instance.
-            widget.sharedMessage.parse(line.trim(), widget.title);
-            widget.onMessageReceived();
+      try {
+        setState(() {
+          String incomingData = String.fromCharCodes(data);
+          receivedDataList.add(incomingData);
+          List<String> lines = incomingData.split('\n');
+          for (String line in lines) {
+            if (line.trim().isNotEmpty) {
+              // Update the shared message rather than creating a new instance.
+              widget.sharedMessage.parse(line.trim(), widget.title);
+              widget.onMessageReceived();
+            }
+            logFile?.writeStringSync("$line\n");
+            logFile?.flushSync();
           }
-          logFile?.writeStringSync(line + '\n');
-          logFile?.flushSync();
-        }
-        isCommunicating = true;
-        widget.onConnectionChange(isCommunicating);
-        communicationTimer?.cancel();
-        communicationTimer = Timer(Duration(seconds: 6), () {
-          setState(() {
-            isCommunicating = false;
-            widget.onConnectionChange(isCommunicating);
+          isCommunicating = true;
+          widget.onConnectionChange(isCommunicating);
+          communicationTimer?.cancel();
+          communicationTimer = Timer(Duration(seconds: 6), () {
+            setState(() {
+              isCommunicating = false;
+              widget.onConnectionChange(isCommunicating);
+            });
           });
         });
-      });
+      } catch (e, stackTrace) {
+        print("error processing serial data: \$e");
+        print(stackTrace);
+      }
+    }, onError: (error) {
+      print("Serial stream error: \$error");
     });
   }
 
@@ -107,41 +113,41 @@ class SerialConnectionWidgetState extends State<SerialConnectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    Column(
-      children: [
-        Text(widget.title),
-        Row(
-          children: [
-            DropdownButton<String>(
-              hint: Text("Select a Port"),
-              value: selectedPort,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedPort = newValue;
-                });
-              },
-              onTap: () {
-                setState(() {
-                  availablePorts = SerialPort.availablePorts;
-                });
-              },
-              items: availablePorts.map((String port) {
-                return DropdownMenuItem<String>(
-                  value: port,
-                  child: Text(port),
-                );
-              }).toList(),
+    return Column(children: [
+      Text(widget.title),
+      Row(
+        children: [
+          DropdownButton<String>(
+            hint: Text("Select a Port"),
+            value: selectedPort,
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedPort = newValue;
+              });
+            },
+            onTap: () {
+              setState(() {
+                availablePorts = SerialPort.availablePorts;
+              });
+            },
+            items: availablePorts.map((String port) {
+              return DropdownMenuItem<String>(
+                value: port,
+                child: Text(port),
+              );
+            }).toList(),
+          ),
+          SizedBox(width: 9),
+          ElevatedButton(
+            style: ButtonStyle(
+              fixedSize: WidgetStateProperty.all(
+                  Size.fromWidth(180)), // Width: 200, Height: 50
             ),
-            SizedBox(width: 9),
-            ElevatedButton(
-              style: ButtonStyle(
-                fixedSize: WidgetStateProperty.all(Size.fromWidth(180)), // Width: 200, Height: 50
-              ),             
-              onPressed: toggleConnection,
-              child: Text(isConnected ? "Disconnect" : "Connect"),
-            ),
-          ],
-        )]);
+            onPressed: toggleConnection,
+            child: Text(isConnected ? "Disconnect" : "Connect"),
+          ),
+        ],
+      )
+    ]);
   }
 }
