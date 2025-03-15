@@ -29,7 +29,7 @@
 #include "led.h"
 #include "task.h"
 #include "usbd_cdc_if.h"
-#include "record.h"
+#include "setting.h"
 #include "filesystem.h"
 #include "command.h"
 #include "commands.h"
@@ -106,7 +106,7 @@ void print(char *tx_buffer, uint16_t len) {
   }
 }
 
-void load_settings() {  //load settings
+void load_settings() {
   uint8_t i = 0;
   Setting **settingList = get_settings();
   while (settingList[i] != NULL) {
@@ -177,7 +177,6 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  hlora = newLoRa(); 
   uint8_t lora_rx_buffer[MESSAGE_LEN];
   uint32_t uid;
 
@@ -227,6 +226,15 @@ int main(void)
   cmd_add("UID", print_uint32, &uid);
   cmd_set_print_function(print); 
   
+  hlora = newLoRa(); 
+  hlora.frequency = setting('f')->value;
+  hlora.spreadingFactor = setting('s')->value;
+  hlora.bandwidth = setting('b')->value;
+  hlora.crcRate = setting('c')->value;
+  hlora.power = setting('d')->value;
+  hlora.overCurrentProtection = setting('o')->value;
+  hlora.preamble = setting('p')->value;
+
   hlora.CS_port = CS_LORA_GPIO_Port;
   hlora.CS_pin = CS_LORA_Pin;
   hlora.reset_port = GPIOB;

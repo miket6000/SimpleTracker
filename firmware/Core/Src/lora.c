@@ -10,22 +10,22 @@ arguments   : Nothing
 
 returns     : A LoRa object whith these default values:
 ----------------------------------------
-|   carrier frequency = 433 MHz        |
-|    spreading factor = 7				       |
-|           bandwidth = 125 KHz        |
-| 		    coding rate = 4/5            |
+|   carrier frequency = 434 MHz        |
+|    spreading factor = 9	       |
+|           bandwidth = 62.5 KHz       |
+| 		    coding rate = 4/5  |
 ----------------------------------------
 \* ----------------------------------------------------------------------------- */
 LoRa newLoRa(){
   LoRa new_LoRa;
 
-  new_LoRa.frequency              = 434       ;
-  new_LoRa.spredingFactor         = SF_9      ;
-  new_LoRa.bandWidth              = BW_62_5KHz; //BW_125KHz ;
-  new_LoRa.crcRate                = CR_4_5    ;
-  new_LoRa.power                  = POWER_20db;
-  new_LoRa.overCurrentProtection  = 150       ;
-  new_LoRa.preamble               = 8         ;
+  new_LoRa.frequency              = 434       ; // 434;
+  new_LoRa.spreadingFactor        = SF_9      ; // SF_9;
+  new_LoRa.bandwidth              = BW_62_5KHz; // BW_62_5KHz;
+  new_LoRa.crcRate                = CR_4_5    ; // CR_4_5;
+  new_LoRa.power                  = POWER_20db; // POWER_20db;
+  new_LoRa.overCurrentProtection  = 150       ; // 150;
+  new_LoRa.preamble               = 8         ; // 8;
 
   return new_LoRa;
 }
@@ -139,7 +139,7 @@ void LoRa_writeReg(LoRa* _LoRa, uint8_t* address, uint16_t r_length, uint8_t* va
 }
 
 /* ----------------------------------------------------------------------------- *\
-name        : LoRa_setLowDaraRateOptimization
+name        : LoRa_setLowDataRateOptimization
 
 description : set the LowDataRateOptimization flag. Is is mandated for when the symbol length exceeds 16ms.
 
@@ -149,7 +149,7 @@ uint8_t	value        --> 0 to disable, otherwise to enable
 
 returns     : Nothing
 \* ----------------------------------------------------------------------------- */
-void LoRa_setLowDaraRateOptimization(LoRa* _LoRa, uint8_t value){
+void LoRa_setLowDataRateOptimization(LoRa* _LoRa, uint8_t value){
   uint8_t	data;
   uint8_t	read;
 
@@ -175,9 +175,9 @@ LoRa*	LoRa         --> LoRa object handler
 returns     : Nothing
 \* ----------------------------------------------------------------------------- */
 void LoRa_setAutoLDO(LoRa* _LoRa){
-  double BW[] = {7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125.0, 250.0, 500.0};
+  uint32_t BW[] = {78, 104, 156, 208, 3125, 417, 625, 1250, 2500, 5000};
 
-  LoRa_setLowDaraRateOptimization(_LoRa, (long)((1 << _LoRa->spredingFactor) / ((double)BW[_LoRa->bandWidth])) > 16.0);
+  LoRa_setLowDataRateOptimization(_LoRa, (uint32_t)((10 << _LoRa->spreadingFactor) / BW[_LoRa->bandwidth]) > 16);
 }
 
 /* ----------------------------------------------------------------------------- *\
@@ -568,7 +568,7 @@ uint16_t LoRa_init(LoRa* _LoRa){
 
     // set spreading factor, CRC on, and Timeout Msb:
     LoRa_setTOMsb_setCRCon(_LoRa);
-    LoRa_setSpreadingFactor(_LoRa, _LoRa->spredingFactor);
+    LoRa_setSpreadingFactor(_LoRa, _LoRa->spreadingFactor);
 
     // set Timeout Lsb:
     LoRa_write(_LoRa, RegSymbTimeoutL, 0xFF);
@@ -577,7 +577,7 @@ uint16_t LoRa_init(LoRa* _LoRa){
     // 8 bit RegModemConfig --> | X | X | X | X | X | X | X | X |
     //       bits represent --> |   bandwidth   |     CR    |I/E|
     data = 0;
-    data = (_LoRa->bandWidth << 4) + (_LoRa->crcRate << 1);
+    data = (_LoRa->bandwidth << 4) + (_LoRa->crcRate << 1);
     LoRa_write(_LoRa, RegModemConfig1, data);
     LoRa_setAutoLDO(_LoRa);
 

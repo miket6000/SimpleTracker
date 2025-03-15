@@ -5,6 +5,10 @@
 // |         E-MAIL:  pilot.motlaq@gmail.com        | \\
 // |                                                | \\
 // -------------------------------------------------- */
+//  Heavily modified by Michael Turner.
+
+#ifndef LORA_H
+#define LORA_H
 
 #include "main.h"
 
@@ -98,8 +102,8 @@ typedef struct LoRa_setting{
 	// Module settings:
 	int			current_mode;
 	int 			frequency;
-	uint8_t			spredingFactor;
-	uint8_t			bandWidth;
+	uint8_t			spreadingFactor;
+	uint8_t			bandwidth;
 	uint8_t			crcRate;
 	uint16_t		preamble;
 	uint8_t			power;
@@ -132,3 +136,5 @@ void LoRa_receive_IT(LoRa* _LoRa, uint8_t* data, uint8_t length);
 int LoRa_getRSSI(LoRa* _LoRa);
 
 uint16_t LoRa_init(LoRa* _LoRa);
+
+#endif // LORA_H
