@@ -1,7 +1,7 @@
 //import 'package:intl/intl.dart';
 
 class SerialMessage {
-  final Map<String, String>? rssi= {};
+  final Map<String, String> rssi= {};
   String? uid;
   List<String>? nmeaFields;
   bool checksumValid = false;
@@ -62,7 +62,7 @@ class SerialMessage {
     if (rawString!.startsWith("RSSI")) {
       var parts = rawString!.split(" ");
       if (parts.length > 1) {
-        rssi![title] = parts[1];
+        rssi[title] = parts[1];
       }
     } else if (rawString!.startsWith("->")) {
       var parts = rawString!.split(" ");
@@ -107,7 +107,7 @@ class SerialMessage {
   String toString() {
     String retval = '';
     if (uid != null) retval += 'UID: $uid\n';
-    if (rssi != null) retval += 'RSSI: $rssi\n';
+    retval += 'RSSI: $rssi\n';
     if (nmeaFields != null) {
       retval += 'NMEA: ${nmeaFields?.join(", ")}\n';
       retval += 'Checksum: ${checksumValid ? "OK" : "Failed"}\n';

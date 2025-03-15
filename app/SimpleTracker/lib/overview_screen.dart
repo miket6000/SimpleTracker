@@ -113,7 +113,7 @@ class OverviewScreenState extends State<OverviewScreen> {
                       DataTile(title: "Time", value: message.gpsTime != null ? DateFormat("HH:mm:ss").format(message.gpsTime!) : "N/A"),
                       DataTile(title: "Latitude", value: message.latitude != null ? message.latitude!.toStringAsFixed(4) : "N/A"),
                       DataTile(title: "Longitude", value: message.longitude != null ? message.longitude!.toStringAsFixed(4) : "N/A"),
-                      DataTile(title: "RSSI", value: message.rssi != null ? message.rssi!.values.join(", ") : "N/A"),
+                      DataTile(title: "RSSI", value: message.rssi.isNotEmpty ? message.rssi.values.join(", ") : "N/A"),
                       DataTile(title: "Altitude", value: message.altitude != null ? "${(message.altitude! - altOffset).toStringAsFixed(1)} ft" : "N/A", onPressed: toggleAbsoluteAlt),
                       DataTile(title: "Vertical Velocity", value: message.verticalVelocity != null ? "${message.verticalVelocity!.toStringAsFixed(2)} ft/s" : "N/A"),
                     ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'overview_screen.dart';
 import 'settings_screen.dart';
+
 void main() {
   runApp(SimpleTrackerApp());
 }
@@ -46,7 +47,7 @@ class MyHomePageState extends State<MyHomePage> {
       body: TabBarView(
         children: [
           OverviewScreen(),
-          SettingsScreen(),
+          SettingPage(),
         ],
       ),
     );
