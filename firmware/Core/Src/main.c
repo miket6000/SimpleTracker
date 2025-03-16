@@ -84,6 +84,7 @@ const int8_t off_sequence[] = {NOTHING, -1};
 
 LedHandle led_blue, led_green;
 LoRa hlora;
+bool report = false;
 bool usb_connected = false;
 /* USER CODE END PV */
 
@@ -99,11 +100,16 @@ void USB_Disconnect(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void print(char *tx_buffer, uint16_t len) {
-  // if we are going to overflow the buffer, drop the message entirely.
+  uint16_t tx_len = 0;
+  // copy as much of the buffer as we can, truncate the rest.
   if (tx_buffer_index + len < sizeof(UserTxBufferFS)) {
-    memcpy(&UserTxBufferFS[tx_buffer_index], tx_buffer, len);
-    tx_buffer_index += len;
+    tx_len = len;
+  } else {
+    tx_len = sizeof(UserTxBufferFS) - tx_buffer_index;
   }
+  memcpy(&UserTxBufferFS[tx_buffer_index], tx_buffer, tx_len);
+  tx_buffer_index += tx_len;
+  //return tx_len;
 }
 
 void load_settings() {
@@ -156,12 +162,14 @@ void task_lora_rx(void *param) {
     bytes_received = LoRa_receive(&hlora, (uint8_t *)param, MESSAGE_LEN);
     if (bytes_received > 0) {
       led_add_sequence(&led_green, flash_sequence);
-      print("-> ", 3);
-      print((char *)param, bytes_received);
-      print("RSSI: ", 6);
-      rssi = LoRa_getRSSI(&hlora);
-      print_int16(&rssi);
-      print("\r\n", 2);
+      if (report) {
+        print("-> ", 3);
+        print((char *)param, bytes_received);
+        print("RSSI: ", 6);
+        rssi = LoRa_getRSSI(&hlora);
+        print_int16(&rssi);
+        print("\n", 1);
+      }
     }
   }
 }
@@ -173,8 +181,7 @@ void task_lora_rx(void *param) {
   * @brief  The application entry point.
   * @retval int
   */
-int main(void)
-{
+int main(void) {
 
   /* USER CODE BEGIN 1 */
   uint8_t lora_rx_buffer[MESSAGE_LEN];
@@ -221,6 +228,8 @@ int main(void)
   cmd_add("i", cmd_unset_interactive, NULL);
   cmd_add("GR", read_gps, NULL);
   cmd_add("GW", write_gps, NULL);
+  cmd_add("R", set_report, &report);
+  cmd_add("r", unset_report, &report);
   cmd_add("SET", set_config, NULL);
   cmd_add("GET", get_config, NULL);
   cmd_add("UID", print_uint32, &uid);
@@ -248,9 +257,9 @@ int main(void)
   HAL_Delay(10);
 
   if (LoRa_init(&hlora) == LORA_OK) {
-    print("LoRa Init OK\n\r", 14);
+    print("LoRa Init OK\n", 14);
   } else {
-    print("LoRa Init Failed\n\r", 18); 
+    print("LoRa Init Failed\n", 18); 
   }
   
   gps_init(&huart2);

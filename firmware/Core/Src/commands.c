@@ -48,6 +48,14 @@ void reboot(void *parameter) {
   HAL_NVIC_SystemReset();
 }
 
+void set_report(void *parameter) {
+   *(bool *)parameter = true;
+}
+
+void unset_report(void *parameter) {
+   *(bool *)parameter = false; 
+}  
+
 void write_gps(void *parameter) {
   //Buffer *buffer = (Buffer *)parameter;
   char *param = cmd_get_param();
@@ -57,7 +65,9 @@ void write_gps(void *parameter) {
 }
 
 void read_gps(void *parameter) {
-  print((char *)gps_read(), 16);
+  char *nmea = (char *)gps_read()->data;
+  uint8_t len = gps_read()->index;
+  print(nmea, len);
 }
 
 void set_config(void *parameter) {
@@ -79,6 +89,26 @@ void get_config(void *parameter) {
   fs_read_config(label[0], &value);
   char str_buf[10] = {0};
   print(itoa(value, str_buf, 10), strlen(str_buf));
+}
+
+void erase_flash(void *parameter) {
+  // delete everything
+  fs_erase();
+
+  // restore current config so it can be loaded on power up
+  uint8_t i = 0;
+  Setting **settingList = get_settings();
+  while (settingList[i] != NULL) {
+    fs_save_config(settingList[i]->label, &settingList[i]->value);
+    i++;
+  }
+  print("OK", 2);
+}
+
+void factory_reset(void *parameter) {
+  // set the default config, then call erase flash. 
+  setting_reset(); 
+  erase_flash(NULL);
 }
 
 void write_lora(void *parameter) {
