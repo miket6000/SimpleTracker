@@ -10,6 +10,8 @@ A sample python application is also provided which provides two receiver divesit
 
 The hardware is fairly minimal. It consist of a battery charger, two 3.3V linear power supplies, a LoRa radio module, GPS and a micro controller with a few LEDs to tie the parts together and provide status updates. Power is turned on by placing a header jumper between the two pins near the USB C connector. Bootmode can be enabled by shorting the 'b' and 'v' pins together on the PCB while placing the power on header. This will put the device into DFU mode so that it can be programmed using dfu-util or similar.
 
+The board can be built and mostly assembled by JLCPCB using their standard service (or economy service if you omit the USB connector and solder that yourself). The exception is the LoRa module, which is the very common RA-01 module available from a variety of online retailers, which is easily hand soldered onto the back of the board, and the SMA connector, if you want one. 
+
 ## Firmware
 
 The firmware is currently a work in progress but the current status (at least when this was written) is operational. The GPS is read every 2 seconds to get a position update. This is then sent to the LoRa module to be transmitted. LoRa is currently configured by re-programming. Default settings are to broadcast on 434MHz. With the broadcast message consisting of a UID and the NMEA GPGGA message, this results in an on-air time of ~600ms every 2 seconds and a proven range of ~6km with a simple omnidirectional 1/4wave antenna.
@@ -23,7 +25,11 @@ In receive\_mode the tracker outputs three different messages.
  2. A remote NMEA message (identified by the characters '->') followed by the 8 character UID of the remote transmitter and the raw NMEA GPGGA message.
  3. The RSSI of the last message received from the remote transmitter (identified by the characters 'RSSI:')
 
-## Application (track.py)
+## Application(s) 
+### track.py
 
 The application is very basic. It monitors up to two hard coded serial addresses and updates an internal dictionary with the latest data it has received if the NMEA CRC comes through as valid. On every change the dictionary is written out to a CSV file. The raw strings received from the serial port, as well as two copies of the CSV file are saved to disk. One CSV file is always called 'live.csv'. This makes it easy to create a qgis 'Delimited Text Layer' which automatically updates once per second to display the GPS track data on a map layer. Every time the application is run, this file is destroyed and started from scratch, which is why the second copy is saved with a filename pointing to the current date and time (e.g. log\_20250108-1058.csv).
 
+### SimpleTracker (flutter)
+
+Also fairly bare bones, this application gives a serial readout of all comms received by the bases stations and gives a readout of the current altitude, vertical velocity, latitude, longitude and RSSI of the receiver. This has been tested in Linux, but should build OK for Windows and Mac though has not been tested in these settings. I do intend to make a build for Android at some state in the near future as well.
