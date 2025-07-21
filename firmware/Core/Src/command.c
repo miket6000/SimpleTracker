@@ -20,7 +20,15 @@ static char no_match[] = "Command not recognised.";
 static char eol[] = "\n";
 bool interactive = false;
 
-void (*print_function)(char *str, uint16_t len);
+void (*print_function)(char *str);
+
+Command *cmd_get_list(void) {
+  return commands;
+}
+
+int cmd_get_num_commands(void) {
+  return num_commands;
+}
 
 void cmd_set_interactive(void *parameter) {
   interactive = true;
@@ -30,15 +38,15 @@ void cmd_unset_interactive(void *parameter) {
   interactive = false;
 }
 
-void cmd_print(char *buffer, uint16_t len) {
+void cmd_print(char *buffer) {
   if (interactive) {
-    print_function(buffer, len);
+    print_function(buffer);
   }
 }
 
-void cmd_set_print_function(void (*function)(char*,uint16_t)) {
+void cmd_set_print_function(void (*function)(char*)) {
   print_function = function;
-  cmd_print(prompt, sizeof(prompt));
+  cmd_print(prompt);
 }
 
 char *cmd_get_param() {
@@ -50,7 +58,7 @@ void cmd_clear_buffer() {
     rx_buffer[i] = '\0';
   }
   buffer_index = 0;
-  cmd_print(prompt, sizeof(prompt));
+  cmd_print(prompt);
 }
 
 void cmd_add(const char *command, void (*callback)(void *), void *parameter) {
@@ -70,7 +78,7 @@ void cmd_read_input(char *buffer, uint8_t len) {
   for (int i = 0; i < len; i++) {
     inchar = buffer[i];
     if (inchar == TERM_CHAR) {
-      cmd_print(eol, sizeof(eol));
+      cmd_print(eol);
       buffer_index = 0;
       token = strtok_r(rx_buffer, DELIM, &last);
       if (token == NULL) return;
@@ -86,11 +94,11 @@ void cmd_read_input(char *buffer, uint8_t len) {
       }
       if (matched == false) {
         //invalid command error handler
-        cmd_print(no_match, sizeof(no_match));
+        cmd_print(no_match);
         cmd_clear_buffer();
       }
     } else if (isprint(inchar)) {
-      cmd_print(&inchar,1); //echo printable characters
+      cmd_print((char []){inchar, '\0'}); //echo printable characters
       rx_buffer[buffer_index] = inchar;
       buffer_index++;
       rx_buffer[buffer_index] = '\0';
@@ -99,7 +107,7 @@ void cmd_read_input(char *buffer, uint8_t len) {
       }
     } else if (inchar == '\b') {
       if (buffer_index > 0) {
-        cmd_print("\b \b", 3);
+        cmd_print("\b \b");
         rx_buffer[buffer_index] = '\0';
         buffer_index--;
       }

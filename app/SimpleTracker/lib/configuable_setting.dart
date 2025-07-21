@@ -34,7 +34,7 @@ class _ConfigurableSettingState extends State<ConfigurableSetting> {
         Padding(
           padding: const EdgeInsets.only(left:10, right:10), 
           child: SizedBox(
-            width:200,
+            width:150,
             child: Text(widget.setting.title),
           ),
         ),

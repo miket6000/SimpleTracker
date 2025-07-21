@@ -33,5 +33,5 @@ enum {
 void gps_init(UART_HandleTypeDef *huart);
 void gps_write(uint8_t *data, uint8_t len);
 Buffer *gps_read();
-char *gps_get_field(Buffer* NEMA_sentence, uint8_t field);
+char *gps_get_field(char *nmeaSentence, uint8_t field);
 #endif //GPS_H

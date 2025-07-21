@@ -6,6 +6,8 @@ import 'serial_parser.dart';
 import 'serial_connection_widget.dart';
 import 'dart:io';
 import 'serial_display.dart';
+import 'file_manager.dart';
+
 
 class OverviewScreen extends StatefulWidget {
   const OverviewScreen({super.key});
@@ -45,7 +47,20 @@ class OverviewScreenState extends State<OverviewScreen> {
       receivedDataList.add("[$title] ${message.rawString}");
     });
   }
+  
+  Future<void> _initFile(RandomAccessFile? file, String filename) async {
+    try {
+    final path = await getSafeFilePath(filename);
+    setState(() {
+      file = File(path).openSync(mode: FileMode.write);
+    });
+    } catch (e, stackTrace) {
+      debugPrint('Error creating safe file: $e');
+      debugPrint('StackTrace: $stackTrace');
 
+    }
+  }
+  
   @override
   void initState() {
     super.initState();
@@ -53,9 +68,10 @@ class OverviewScreenState extends State<OverviewScreen> {
     String logFileName =
         "pretty_log_${DateFormat('yyyyMMdd-HHmmss').format(DateTime.now())}.csv";
     
-    liveFile = File("live.csv").openSync(mode: FileMode.write);
+    _initFile(liveFile, 'live.csv');
     liveFile?.writeStringSync("gpsTime, uid, latitude, longitude, altitude, rssi\n");
-    logFile = File(logFileName).openSync(mode: FileMode.write);
+    
+    _initFile(logFile, logFileName);
     logFile?.writeStringSync("gpsTime, uid, latitude, longitude, altitude, rssi\n");
   }
   

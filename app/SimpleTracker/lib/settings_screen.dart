@@ -41,7 +41,7 @@ class SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    const double widgetWidth = 400;
+    const double widgetWidth = 350;
     bool wideScreen = MediaQuery.sizeOf(context).width > (widgetWidth * 2);
 
     return 

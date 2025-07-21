@@ -498,17 +498,19 @@ uint8_t LoRa_receive(LoRa* _LoRa, uint8_t* data, uint8_t length){
 
 //  LoRa_gotoMode(_LoRa, STNBY_MODE);
   read = LoRa_read(_LoRa, RegIrqFlags);
-  if((read & 0x40) != 0){
+  if((read & 0x40) != 0) { // if the received packet flag is set...
     LoRa_gotoMode(_LoRa, STNBY_MODE);
     LoRa_write(_LoRa, RegIrqFlags, 0xFF);
     number_of_bytes = LoRa_read(_LoRa, RegRxNbBytes);
     read = LoRa_read(_LoRa, RegFiFoRxCurrentAddr);
     LoRa_write(_LoRa, RegFiFoAddPtr, read);
     min = length >= number_of_bytes ? number_of_bytes : length;
-    for(int i=0; i<min; i++)
+    for(int i = 0; i < min; i++)
       data[i] = LoRa_read(_LoRa, RegFiFo);
   }
+
   LoRa_gotoMode(_LoRa, RXCONTIN_MODE);
+  
   return min;
 }
 

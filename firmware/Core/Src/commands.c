@@ -1,4 +1,4 @@
-#include "main.h"
+#include "usb.h"
 #include "gps.h"
 #include "command.h"
 #include "commands.h"
@@ -8,87 +8,92 @@
 #include <stdlib.h>
 #include <string.h>
 
+void help(void *prameter) {
+  Command *cmd_list = cmd_get_list();
+  for (int i = 0; i < cmd_get_num_commands(); i++) {
+    print(cmd_list[i].command);
+    print(" - ");
+    print(cmd_list[i].description);
+    print("\n");
+  }
+}
+
 void print_uint32(void *parameter) {
   char buffer[8];
   itoa(*(uint32_t *)parameter, buffer, 10);
-  print(buffer, strlen(buffer));
+  print(buffer);
 }
 
 void print_int32(void *parameter) {
   char buffer[8];
   itoa(*(int32_t *)parameter, buffer, 10);
-  print(buffer, strlen(buffer));
+  print(buffer);
 }
 
 void print_uint16(void *parameter) {
   char buffer[8];
   itoa(*(uint16_t *)parameter, buffer, 10);
-  print(buffer, strlen(buffer));
+  print(buffer);
 }
 
 void print_int16(void *parameter) {
   char buffer[8];
   itoa(*(int16_t *)parameter, buffer, 10);
-  print(buffer, strlen(buffer));
+  print(buffer);
 }
 
 void print_uint8(void *parameter) {
   char buffer[8];
   itoa(*(uint8_t *)parameter, buffer, 10);
-  print(buffer, strlen(buffer));
+  print(buffer);
 }
 
 void print_int8(void *parameter) {
   char buffer[8];
   itoa(*(int8_t *)parameter, buffer, 10);
-  print(buffer, strlen(buffer));
+  print(buffer);
+}
+
+void print_str(void *parameter) {
+  char *buffer = parameter;
+  print(buffer);
+}
+
+void print_str_ptr(void *parameter) {
+  char **buffer_ptr_ptr = parameter;
+  print(*buffer_ptr_ptr);
 }
 
 void reboot(void *parameter) {
   HAL_NVIC_SystemReset();
 }
 
-void set_report(void *parameter) {
-   *(bool *)parameter = true;
-}
-
-void unset_report(void *parameter) {
-   *(bool *)parameter = false; 
-}  
-
-void write_gps(void *parameter) {
-  //Buffer *buffer = (Buffer *)parameter;
-  char *param = cmd_get_param();
-  if (param != NULL) {
-//    gps_write((uint8_t *)param, strlen(param));
-  } 
-}
-
-void read_gps(void *parameter) {
-  char *nmea = (char *)gps_read()->data;
-  uint8_t len = gps_read()->index;
-  print(nmea, len);
-}
-
 void set_config(void *parameter) {
   char *label = cmd_get_param();
   uint32_t value = atoi(cmd_get_param());
-  fs_save_config(label[0], &value);
   Setting *s = setting(label[0]);
   if (s != NULL) {
     s->value = value;
-    print("OK", 2);
+    if (fs_save_config(label[0], &value) == FS_OK) {
+      print("OK");
+    } else { // flash is full, so erase and try again...
+      erase_flash(NULL); // this prints "OK", so we don't need to
+      fs_save_config(label[0], &value);
+    }
   } else {
-    print("ERR", 3);
+    print("ERR"); // invalid label
   }
 }
 
 void get_config(void *parameter) {
   char *label = cmd_get_param();
-  uint32_t value = 0xFFFFFFFF;
-  fs_read_config(label[0], &value);
-  char str_buf[10] = {0};
-  print(itoa(value, str_buf, 10), strlen(str_buf));
+  Setting *s = setting(label[0]);
+  if (s != NULL) {
+    char str_buf[10] = {0};
+    print(itoa(s->value, str_buf, 10));
+  } else {
+    print("ERR");
+  }
 }
 
 void erase_flash(void *parameter) {
@@ -102,24 +107,12 @@ void erase_flash(void *parameter) {
     fs_save_config(settingList[i]->label, &settingList[i]->value);
     i++;
   }
-  print("OK", 2);
+  print("OK");
 }
 
 void factory_reset(void *parameter) {
   // set the default config, then call erase flash. 
   setting_reset(); 
   erase_flash(NULL);
-}
-
-void write_lora(void *parameter) {
-}
-
-void read_lora(void *parameter) {
-}
-
-void get_uid(void *parameter) {
-  uint32_t uid = *((uint32_t *)parameter);
-  char str_buf[10] = {0};
-  print(itoa(uid, str_buf, 16), strlen(str_buf));
 }
 

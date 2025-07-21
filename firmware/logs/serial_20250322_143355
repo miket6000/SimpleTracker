@@ -1,0 +1,14 @@
+
+> L
+$GPGGA,000034.262,,,,,0,0,,,M,,M,,*49
+> R
+
+> UID
+1417706f
+> get     GET m
+2
+> GET p
+-1
+> ERASE
+OK
+> REBOOT

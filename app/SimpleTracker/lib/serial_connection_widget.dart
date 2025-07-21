@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_libserialport/flutter_libserialport.dart';
 import 'package:intl/intl.dart';
 import 'serial_parser.dart';
+import 'serial_wrapper.dart';
 
 class SerialConnectionWidget extends StatefulWidget {
   final String title;
@@ -26,67 +27,67 @@ class SerialConnectionWidget extends StatefulWidget {
 class SerialConnectionWidgetState extends State<SerialConnectionWidget> {
   List<String> availablePorts = SerialPort.availablePorts;
   String? selectedPort;
-  SerialPort? port;
-  SerialPortReader? reader;
+  String uid = "";
+  SerialPortWrapper? serial;
   List<String> receivedDataList = [];
   RandomAccessFile? logFile;
   bool isConnected = false;
   Timer? communicationTimer;
   bool isCommunicating = false;
+  Timer? pollingTimer;
 
-  void connect() {
+  void startPolling(SerialPortWrapper serial) {
+    pollingTimer = Timer.periodic(Duration(seconds: 1), (timer) async {
+      try {
+        String response = await serial.sendCommand("RGPS\n");
+        widget.sharedMessage.parse(response, widget.title);
+        setState((){
+          receivedDataList.add(response);
+          widget.onMessageReceived();
+          isCommunicating = true;
+          widget.onConnectionChange(isCommunicating);
+        });
+
+        logFile?.writeStringSync("$response\n");
+        logFile?.flushSync();
+        
+        communicationTimer?.cancel();
+        communicationTimer = Timer(Duration(seconds: 6), () {
+          setState(() {
+            isCommunicating = false;
+            widget.onConnectionChange(isCommunicating);
+          });
+        });
+      } catch (e) {
+        print("Error: $e");
+        //stopPolling(); // Stop polling if there's an issue
+      }
+    });
+  }
+
+  void stopPolling() {
+    pollingTimer?.cancel();
+  }
+
+  void connect() async {
     if (selectedPort == null) return;
-    port = SerialPort(selectedPort!);
-    if (!port!.openRead()) {
-      print("Failed to open port");
-      return;
-    }
+    
+    serial = SerialPortWrapper(selectedPort!);
 
     String logFileName =
         "${widget.title}_serial_${DateFormat('yyyyMMdd-HHmmss').format(DateTime.now())}.log";
     logFile = File(logFileName).openSync(mode: FileMode.write);
-
-    reader = SerialPortReader(port!);
-    reader!.stream.listen((data) {
-      try {
-        setState(() {
-          String incomingData = String.fromCharCodes(data);
-          receivedDataList.add(incomingData);
-          List<String> lines = incomingData.split('\n');
-          for (String line in lines) {
-            if (line.trim().isNotEmpty) {
-              // Update the shared message rather than creating a new instance.
-              widget.sharedMessage.parse(line.trim(), widget.title);
-              widget.onMessageReceived();
-            }
-            logFile?.writeStringSync("$line\n");
-            logFile?.flushSync();
-          }
-          isCommunicating = true;
-          widget.onConnectionChange(isCommunicating);
-          communicationTimer?.cancel();
-          communicationTimer = Timer(Duration(seconds: 6), () {
-            setState(() {
-              isCommunicating = false;
-              widget.onConnectionChange(isCommunicating);
-            });
-          });
-        });
-      } catch (e, stackTrace) {
-        print("error processing serial data: \$e");
-        print(stackTrace);
-      }
-    }, onError: (error) {
-      print("Serial stream error: \$error");
-    });
+  
+    if (serial != null && serial!.open()){
+      uid = await serial!.sendCommand("UID\n");
+      startPolling(serial!);
+    }
   }
 
   void disconnect() {
-    reader?.close();
-    port?.close();
+    stopPolling();
+    serial?.close();
     logFile?.closeSync();
-    reader = null;
-    port = null;
     logFile = null;
   }
 

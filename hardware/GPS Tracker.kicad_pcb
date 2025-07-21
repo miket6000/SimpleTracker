@@ -9836,7 +9836,7 @@
 		(descr "JST PH series connector, B2B-PH-SM4-TB (http://www.jst-mfg.com/product/pdf/eng/ePH.pdf), generated with kicad-footprint-generator")
 		(tags "connector JST PH vertical")
 		(property "Reference" "J7"
-			(at 0 5.45 360)
+			(at 0 5.45 0)
 			(layer "B.SilkS")
 			(uuid "0963e4a3-188c-4f7f-9f50-6864a019aa47")
 			(effects
@@ -9848,7 +9848,7 @@
 			)
 		)
 		(property "Value" "Conn_01x02_Socket"
-			(at 0 -4.45 360)
+			(at 0 -4.45 0)
 			(layer "B.Fab")
 			(uuid "e154264c-5be1-45d0-9c22-4f55fae80f0a")
 			(effects
@@ -10167,7 +10167,7 @@
 			(uuid "35347e01-b0c2-4d26-80cf-338e4a728f5b")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 1 360)
+			(at 0 1 0)
 			(layer "B.Fab")
 			(uuid "22413b5f-2408-4af9-9836-8b86191ee1ab")
 			(effects

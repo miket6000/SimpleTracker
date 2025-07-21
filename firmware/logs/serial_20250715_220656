@@ -1,0 +1,6 @@
+
+> GET m
+2
+> SET m 1
+OK
+> reboot      RR EBOOT

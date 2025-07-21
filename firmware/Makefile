@@ -23,7 +23,8 @@ TARGET = firmware
 DEBUG = 1 
 # optimization
 OPT = -Og
-
+# serial connection port
+PORT ?= /dev/ttyACM0
 
 #######################################
 # paths
@@ -72,11 +73,17 @@ Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
+Core/Src/clock.c \
 Core/Src/led.c \
+Core/Src/led_sequences.c \
 Core/Src/power.c \
 Core/Src/command.c \
 Core/Src/commands.c \
 Core/Src/task.c \
+$(wildcard Core/Src/task_*.c) \
+Core/Src/event.c \
+$(wildcard Core/Src/event_*.c) \
+Core/Src/usb.c \
 Core/Src/gps.c \
 Core/Src/lora.c \
 Core/Src/flash.c \
@@ -235,13 +242,13 @@ debug_fancy:
 	gdb-multiarch build/firmware.elf -ex 'target extended-remote :3333'
 
 debug:
-	openocd -f interface/stlink.cfg -f target/stm32f0x.cfg & 
+	openocd -f interface/stlink.cfg -f target/stm32f0x.cfg & echo $$! > openocd.pid
 	gdb-multiarch build/firmware.elf -ex 'target extended-remote :3333'
+	kill `cat openocd.pid` && rm openocd.pid
 
-
-serial_log:
+serial:
 	mkdir -p logs
-	python3 -m serial /dev/ttyACM0 --raw |tee logs/serial_$$(date "+%Y%m%d_%H%M%S")
+	python3 -m serial $(PORT) --raw |tee logs/serial_$$(date "+%Y%m%d_%H%M%S")
 
 setup:
 	sudo apt install dfu-util \

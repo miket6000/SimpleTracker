@@ -53,7 +53,6 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-void print(char *tx_buffer, uint16_t len);
 
 /* USER CODE END EFP */
 
@@ -64,9 +63,9 @@ void print(char *tx_buffer, uint16_t len);
 #define LORA_INT_GPIO_Port GPIOA
 #define CS_LORA_Pin GPIO_PIN_4
 #define CS_LORA_GPIO_Port GPIOA
-#define LED_BLUE_Pin GPIO_PIN_6
+#define LED_BLUE_Pin GPIO_PIN_5
 #define LED_BLUE_GPIO_Port GPIOB
-#define LED_GREEN_Pin GPIO_PIN_7
+#define LED_GREEN_Pin GPIO_PIN_6
 #define LED_GREEN_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */

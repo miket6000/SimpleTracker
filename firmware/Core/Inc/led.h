@@ -2,6 +2,7 @@
 #define LED_H
 
 #include "stdint.h"
+#include "gpio.h"
 
 #define SEQUENCE_LEN 12
 
