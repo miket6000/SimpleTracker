@@ -2,6 +2,7 @@
 #include "gps.h"
 #include "command.h"
 #include "commands.h"
+#include "app_context.h"
 #include "setting.h"
 #include "filesystem.h"
 #include <stdbool.h>
@@ -62,6 +63,13 @@ void print_str(void *parameter) {
 void print_str_ptr(void *parameter) {
   char **buffer_ptr_ptr = parameter;
   print(*buffer_ptr_ptr);
+}
+
+void print_remote(void *parameter) {
+  AppContext_t *context = parameter;
+  print(context->lastLoraMessage);
+  print(" ");
+  print_int16(&context->rssi);
 }
 
 void reboot(void *parameter) {

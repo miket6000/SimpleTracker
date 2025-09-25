@@ -110,10 +110,6 @@ void lora_init(LoRa *hlora) {
   hlora->DIO0_pin = 4;
   hlora->hSPIx = &hspi1;
 
-  // According to the datasheet we need to wait 10ms after power on before any SPI 
-  // communications with the SX127x. Experience has shown this to be critical.
-  HAL_Delay(10);
-
   if (LoRa_init(hlora) == LORA_OK) {
     print("LoRa Init OK\n");
   } else {
@@ -177,13 +173,12 @@ int main(void) {
   cmd_add("REBOOT", reboot, NULL);
   cmd_add("I", cmd_set_interactive, NULL);
   cmd_add("i", cmd_unset_interactive, NULL);
-  cmd_add("R", print_str_ptr, &appContext.lastLoraMessage);
+  cmd_add("R", print_remote, &appContext);
   cmd_add("L", print_str_ptr, &appContext.lastGpsSentence);
   cmd_add("SET", set_config, NULL);
   cmd_add("GET", get_config, NULL);
   cmd_add("UID", print_str, &appContext.uidStr);
   cmd_add("ERASE", erase_flash, NULL); 
-  cmd_add("?", help, NULL);
   cmd_set_print_function(print); 
 
   /* Architecture description.
@@ -200,7 +195,6 @@ int main(void) {
    *
    *
    */
-
 
   /* init lora & gps modules */
   lora_init(&hlora);

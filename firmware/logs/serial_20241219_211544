@@ -1,713 +1,0 @@
-$GPGGA,235951.262,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,235952.262,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,235953.262,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,235954.262,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,235955.262,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,235956.262,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,235957.262,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,235958.262,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,235959.262,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,000000.262,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,000001.262,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,000002.262,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,000003.262,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,000004.262,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,000005.262,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,000006.262,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,000007.262,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,000008.262,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,000009.262,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,000010.262,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,000011.262,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,000011.905,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,000012.905,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081609.103,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081610.103,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081611.103,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081612.103,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081613.103,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081614.103,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081615.103,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081616.103,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081617.103,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081618.103,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081619.103,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081620.103,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081621.103,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081622.103,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081623.103,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081624.103,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081625.103,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081626.103,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081627.103,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081628.103,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081629.103,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081630.103,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081631.103,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081632.103,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081633.103,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081634.103,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081635.103,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081636.103,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081637.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081638.092,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081639.092,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081640.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081641.092,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081642.092,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,081643.092,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,081644.092,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081645.092,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081646.092,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081647.092,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081648.092,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081649.092,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081650.092,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081651.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081652.092,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,081653.092,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,081654.092,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081655.092,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081656.092,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081657.092,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081658.092,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081659.092,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081700.092,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081701.092,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081702.092,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081703.092,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081704.092,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081705.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081706.092,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,081707.092,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,081708.092,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081709.092,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081710.092,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081711.092,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081712.092,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081713.092,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081714.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081715.092,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081716.092,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,081717.092,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,081718.092,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081719.092,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081720.092,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081721.092,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081722.092,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081723.092,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081724.092,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,081725.092,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,081726.092,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081727.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081728.092,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081729.092,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081730.092,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081731.092,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081732.092,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081733.092,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081734.092,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,081735.092,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,081736.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081737.092,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081738.092,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081739.092,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081740.092,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081741.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081742.092,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,081743.092,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,081744.092,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081745.092,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081746.092,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081747.092,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081748.092,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081749.092,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081750.092,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081751.092,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081752.092,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,081753.092,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,081754.092,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081755.092,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081756.092,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081757.092,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081758.092,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081759.092,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081800.092,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081801.086,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081802.086,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081803.086,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081804.086,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081805.086,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081806.086,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081807.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081808.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081809.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081810.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081811.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081812.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081813.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081814.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081815.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081816.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081817.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081818.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081819.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081820.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081821.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081822.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081823.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081824.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081825.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081826.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081827.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081828.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081829.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081830.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081831.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081832.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081833.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081834.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081835.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081836.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081836.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081837.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081838.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081839.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081840.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081841.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081842.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081843.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081844.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081845.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081846.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081847.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081848.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081849.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081850.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081851.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081852.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081853.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081854.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081855.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081856.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081857.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081858.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081859.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081900.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081901.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081902.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081903.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081904.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081905.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081906.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081907.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081908.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081909.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081910.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081911.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081912.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081913.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081914.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081915.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081916.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081917.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081918.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,081919.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,081920.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081921.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081922.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081923.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081924.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081925.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081926.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081927.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081928.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081929.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081930.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081931.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081932.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081933.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081934.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081935.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081936.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081937.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081938.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,081939.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,081940.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081941.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081942.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081943.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081944.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081945.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081946.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081947.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081948.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,081949.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081950.085,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,081951.085,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,081952.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,081953.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,081954.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,081955.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,081956.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,081957.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,081958.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,081959.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082000.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,082001.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,082002.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082003.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082004.085,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082005.085,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082006.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082007.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082008.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,082009.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,082010.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,082011.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,082012.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082013.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082014.085,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082015.085,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082016.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082017.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082018.085,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,082019.085,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,082020.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082021.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082022.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,082023.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,082024.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082025.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082026.085,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082027.085,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082028.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,082029.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,082030.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082031.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082032.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,082033.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,082034.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082035.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082036.085,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082037.085,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082038.085,,,,,0,0,,,M,,M,,*44
-Transmit OK
-$GPGGA,082039.085,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,082040.085,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082041.085,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082042.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082043.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082044.085,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,082045.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,082046.085,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082047.085,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082048.085,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,082049.085,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,082050.085,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082051.085,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082052.085,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082053.085,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082054.085,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,082054.288,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,082055.288,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,082056.288,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,082057.288,,,,,0,0,,,M,,M,,*42
-Transmit OK
-$GPGGA,082058.288,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082059.288,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082100.088,,,,,0,0,,,M,,M,,*43
-Transmit OK
-$GPGGA,082100.309,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082101.309,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082102.309,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082103.309,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082104.309,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082105.309,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082106.088,,,,,0,0,,,M,,M,,*45
-Transmit OK
-$GPGGA,082106.309,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,082107.309,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,082108.309,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,082109.309,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,082110.309,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082111.309,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082112.088,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,082112.309,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082113.309,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082114.309,,,,,0,0,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082115.309,,,,,0,0,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082116.309,,,,,0,0,,,M,,M,,*4E
-Transmit OK
-$GPGGA,082117.309,,,,,0,0,,,M,,M,,*4F
-Transmit OK
-$GPGGA,082118.088,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082118.309,,,,,0,0,,,M,,M,,*40
-Transmit OK
-$GPGGA,082119.309,,,,,0,0,,,M,,M,,*41
-Transmit OK
-$GPGGA,082120.309,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082121.309,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082122.309,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082123.309,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082124.096,,,,,0,0,,,M,,M,,*4A
-Transmit OK
-$GPGGA,082125.096,,,,,0,0,,,M,,M,,*4B
-Transmit OK
-$GPGGA,082126.096,,,,,0,0,,,M,,M,,*48
-Transmit OK
-$GPGGA,082127.096,,,,,0,0,,,M,,M,,*49
-Transmit OK
-$GPGGA,082128.096,,,,,0,0,,,M,,M,,*46
-Transmit OK
-$GPGGA,082129.096,,,,,0,0,,,M,,M,,*47
-Transmit OK
-$GPGGA,082130.096,,,,,0,3,,,M,,M,,*4C
-Transmit OK
-$GPGGA,082131.096,,,,,0,3,,,M,,M,,*4D
-Transmit OK
-$GPGGA,082133.000,,,,,0,3,,,M,,M,,*40
-Transmit OK
-$GPGGA,082134.000,4546.2063,S,17035.0275,E,1,3,5.84,148.4,M,1.5,T   $GPGLL,4546.20
-Transmit Err
-$GPGGA,082135.000,4546.2061,S,17035.0287,E,1,3,5.84,148.4,M,1.5,T   $GPGGA,082135.00Transmit OK
-$GPGGA,082136.000,4546.2060,S,17035.0282,E,1,3,5.84,148.4,M,1.5,T   $GPGSA,A,2,04,03Transmit OK
-$GPGGA,082136.204,4546.2055,S,17035.0258,E,1,3,5.83,148.5,M,1.5,T   $GPGGA,082136.20Transmit OK
-$GPGGA,082138.000,4546.2058,S,17035.0253,E,1,3,5.83,148.5,M,1.5,T   $GPGSA,A,2,04,03Transmit OK
-

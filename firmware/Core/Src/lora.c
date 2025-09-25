@@ -187,29 +187,51 @@ description : set carrier frequency e.g 433 MHz
 
 arguments   :
 LoRa* LoRa        --> LoRa object handler
-int   freq        --> desired frequency in MHz unit, e.g 434
+int   freq        --> desired frequency in Hz unit, e.g 434,000,000
 
 returns     : Nothing
 \* ----------------------------------------------------------------------------- */
 void LoRa_setFrequency(LoRa* _LoRa, int freq){
   uint8_t  data;
   uint32_t F;
-  F = (freq * 524288)>>5;
+
+  //434 = 7110565
+//  F = (freq * 524288)>>5;
+//  (434000 * 8388) >> 9 = 7110140
+  
+  F = (freq * 8388) >> 9; // divided by 1000 (16.3828 instead of 16.384)
+                          //
+                          //
+                          //
+  uint32_t step_int;
+  uint32_t step_frac;
+
+  step_int = freq / 15625;
+  step_frac = freq - (step_int * 15625); 
+
+  F = (step_int << 14) + (((step_frac << 14) + (15625 >> 1)) / 15625);
 
   // write Msb:
-  data = F >> 16;
-  LoRa_write(_LoRa, RegFrMsb, data);
+  //data = F >> 16;
+  data = (F >> 24) & 0xFF;
+  LoRa_write(_LoRa, 0x06, data);
   HAL_Delay(5);
 
   // write Mid:
-  data = F >> 8;
-  LoRa_write(_LoRa, RegFrMid, data);
+  data = (F >> 16) & 0xFF;
+  LoRa_write(_LoRa, 0x07, data);
   HAL_Delay(5);
 
   // write Lsb:
-  data = F >> 0;
-  LoRa_write(_LoRa, RegFrLsb, data);
+  data = (F >> 8) & 0xFF;
+  LoRa_write(_LoRa, 0x08, data);
   HAL_Delay(5);
+
+  // write Lsb:
+  data = F & 0xFF;
+  LoRa_write(_LoRa, 0x09, data);
+  HAL_Delay(5);
+
 }
 
 /* ----------------------------------------------------------------------------- *\
@@ -545,6 +567,10 @@ uint16_t LoRa_init(LoRa* _LoRa){
   uint8_t    read;
 
   if(LoRa_isvalid(_LoRa)){
+    // According to the datasheet we need to wait 10ms after power on before any SPI 
+    // communications with the SX127x. Experience has shown this to be critical.
+    HAL_Delay(10);
+
     // goto sleep mode:
     LoRa_gotoMode(_LoRa, SLEEP_MODE);
     HAL_Delay(10);
