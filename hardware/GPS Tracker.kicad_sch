@@ -5,9 +5,9 @@
 	(uuid "1342bbf7-72bc-4277-a73a-932aa6a5d42a")
 	(paper "A3")
 	(title_block
-		(title "SimpleTracker Rev")
-		(date "2025-09-24")
-		(rev "0.3")
+		(title "SimpleTracker")
+		(date "2025-09-28")
+		(rev "0.4")
 		(company "Blueskin Design Ltd")
 		(comment 1 "CERN-OHL-W-2.0 license")
 	)
@@ -2356,20 +2356,22 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "U"
-				(at -2.54 0 0)
+			(property "Reference" "U6"
+				(at -5.6581 -25.4 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify right)
 				)
 			)
 			(property "Value" "nRF52820-QDxx"
-				(at -2.54 -2.54 0)
+				(at -5.6581 -27.94 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify right)
 				)
 			)
 			(property "Footprint" "Package_DFN_QFN:QFN-40-1EP_5x5mm_P0.4mm_EP3.6x3.6mm"
@@ -2391,6 +2393,15 @@
 				)
 			)
 			(property "Description" "Multiprotocol BLE/ANT/2.4 GHz/802.15.4 Cortex-M4 SoC, QFN-40"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "JLCPCB" ""
 				(at 0 0 0)
 				(effects
 					(font
@@ -2921,7 +2932,7 @@
 				(pin bidirectional line
 					(at 27.94 12.7 180)
 					(length 2.54)
-					(name "AIN1/P0.03"
+					(name "AIN1/*P0.03"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3011,7 +3022,7 @@
 				(pin bidirectional line
 					(at 27.94 0 180)
 					(length 2.54)
-					(name "P0.08"
+					(name "*P0.08"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3065,7 +3076,7 @@
 				(pin bidirectional line
 					(at 27.94 -7.62 180)
 					(length 2.54)
-					(name "P0.16"
+					(name "*P0.16"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3083,7 +3094,7 @@
 				(pin bidirectional line
 					(at 27.94 -10.16 180)
 					(length 2.54)
-					(name "P0.17"
+					(name "*P0.17"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3119,7 +3130,7 @@
 				(pin bidirectional line
 					(at 27.94 -15.24 180)
 					(length 2.54)
-					(name "P0.28"
+					(name "*P0.28"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3137,7 +3148,7 @@
 				(pin bidirectional line
 					(at 27.94 -17.78 180)
 					(length 2.54)
-					(name "P0.29"
+					(name "*P0.29"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -3155,7 +3166,7 @@
 				(pin bidirectional line
 					(at 27.94 -20.32 180)
 					(length 2.54)
-					(name "P0.30"
+					(name "*P0.30"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -5153,10 +5164,6 @@
 		(uuid "2d44cce8-5f57-45c9-bdaa-429449996c86")
 	)
 	(no_connect
-		(at 261.62 170.18)
-		(uuid "32c0da8c-ac16-43cb-b273-bed649d7b2b7")
-	)
-	(no_connect
 		(at 289.56 142.24)
 		(uuid "43996f62-b05f-46fe-8e7d-c99f31a796cb")
 	)
@@ -5173,12 +5180,8 @@
 		(uuid "81c6f15d-c186-4ee1-ad9e-498aff4146b3")
 	)
 	(no_connect
-		(at 261.62 180.34)
+		(at 261.62 182.88)
 		(uuid "9c4d8bdc-9536-48dd-b3ac-db39eb0ada0d")
-	)
-	(no_connect
-		(at 261.62 172.72)
-		(uuid "9e6a3c2b-12bb-48d6-a9a4-e1b4ffe1ea8c")
 	)
 	(no_connect
 		(at 151.13 179.07)
@@ -7113,7 +7116,7 @@
 		(uuid "03951f84-89b1-4ae6-9c70-5162493dcda4")
 	)
 	(label "GNSS_PPS"
-		(at 261.62 157.48 0)
+		(at 261.62 180.34 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7123,7 +7126,7 @@
 		(uuid "17ad5b86-c409-48a5-bfed-515d1835ec84")
 	)
 	(label "LORA_RST"
-		(at 261.62 152.4 0)
+		(at 261.62 154.94 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7133,7 +7136,7 @@
 		(uuid "1b2f44d2-d842-4145-84fa-21145e7c3634")
 	)
 	(label "LORA_RX_EN"
-		(at 261.62 147.32 0)
+		(at 261.62 165.1 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7153,7 +7156,7 @@
 		(uuid "4e9c1aa9-0b99-4bc3-8b94-6d3d4c735998")
 	)
 	(label "SPI_MOSI"
-		(at 261.62 187.96 0)
+		(at 261.62 157.48 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7183,7 +7186,7 @@
 		(uuid "5a0e0a0e-8b99-4802-a3a4-ee62b921611c")
 	)
 	(label "BATT_SENSE"
-		(at 261.62 160.02 0)
+		(at 261.62 152.4 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7263,7 +7266,7 @@
 		(uuid "70f5f01f-dde4-4f72-96f7-024634c71e5a")
 	)
 	(label "SPI_MISO"
-		(at 261.62 182.88 0)
+		(at 261.62 160.02 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7273,7 +7276,7 @@
 		(uuid "7d4da761-83fb-4886-8460-d488d2190411")
 	)
 	(label "~{CS_LORA}"
-		(at 261.62 185.42 0)
+		(at 261.62 149.86 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7283,7 +7286,7 @@
 		(uuid "96946fd7-b099-4607-98db-ca3d90222b70")
 	)
 	(label "GNSS_RX"
-		(at 261.62 162.56 0)
+		(at 261.62 172.72 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7303,7 +7306,7 @@
 		(uuid "a897a23e-ca7a-4ec2-b16e-1e03dabb054f")
 	)
 	(label "LED"
-		(at 261.62 149.86 0)
+		(at 261.62 167.64 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7353,7 +7356,7 @@
 		(uuid "da7c1670-2611-4443-a4ea-c7e00643fb80")
 	)
 	(label "SPI_SCK"
-		(at 261.62 167.64 0)
+		(at 261.62 147.32 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7373,7 +7376,7 @@
 		(uuid "e62cd890-8875-44f4-8fa2-49a63dd00838")
 	)
 	(label "LORA_BUSY"
-		(at 261.62 154.94 0)
+		(at 261.62 162.56 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7383,7 +7386,7 @@
 		(uuid "ed8ef9b4-c018-48cd-b6e1-e72546ca4369")
 	)
 	(label "GNSS_TX"
-		(at 261.62 165.1 0)
+		(at 261.62 170.18 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7850,7 +7853,7 @@
 				(justify right)
 			)
 		)
-		(property "Value" "BLUE_LED"
+		(property "Value" "RED_LED"
 			(at 367.03 70.1674 90)
 			(effects
 				(font
@@ -7859,7 +7862,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "LED_THT:LED_D3.0mm"
+		(property "Footprint" "LED_SMD:LED_1206_3216Metric_ReverseMount_Hole1.8x2.4mm"
 			(at 363.22 67.31 0)
 			(effects
 				(font
@@ -14316,7 +14319,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Crystal:Crystal_SMD_2520-4Pin_2.5x2.0mm"
+		(property "Footprint" "Crystal:Crystal_SMD_2016-4Pin_2.0x1.6mm"
 			(at 245.11 215.9 0)
 			(effects
 				(font
