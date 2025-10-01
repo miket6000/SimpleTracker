@@ -4177,6 +4177,304 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Transistor_FET:AO3400A"
+			(pin_names
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 5.08 1.905 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "AO3400A"
+				(at 5.08 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+				(at 5.08 -1.905 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+						(italic yes)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf"
+				(at 5.08 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+					(hide yes)
+				)
+			)
+			(property "Description" "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_keywords" "N-Channel MOSFET"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "ki_fp_filters" "SOT?23*"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "AO3400A_0_1"
+				(polyline
+					(pts
+						(xy 0.254 1.905) (xy 0.254 -1.905)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.254 0) (xy -2.54 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 2.286) (xy 0.762 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 0.508) (xy 0.762 -0.508)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.27) (xy 0.762 -2.286)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0.762 -1.778) (xy 3.302 -1.778) (xy 3.302 1.778) (xy 0.762 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.016 0) (xy 2.032 0.381) (xy 2.032 -0.381) (xy 1.016 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 1.651 0)
+					(radius 2.794)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 2.54) (xy 2.54 1.778)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.54 1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(circle
+					(center 2.54 -1.778)
+					(radius 0.254)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type outline)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 -2.54) (xy 2.54 0) (xy 0.762 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.794 0.508) (xy 2.921 0.381) (xy 3.683 0.381) (xy 3.81 0.254)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 3.302 0.381) (xy 2.921 -0.254) (xy 3.683 -0.254) (xy 3.302 0.381)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "AO3400A_1_1"
+				(pin input line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "G"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 5.08 270)
+					(length 2.54)
+					(name "D"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -5.08 90)
+					(length 2.54)
+					(name "S"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Transistor_FET:AO3401A"
 			(pin_names
 				(hide yes)
@@ -4954,6 +5252,12 @@
 		(uuid "116f999f-f298-4d5c-bf76-0da5bcc40121")
 	)
 	(junction
+		(at 104.14 166.37)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "12530097-bc90-43eb-aff3-6cc5e70a4ff0")
+	)
+	(junction
 		(at 353.06 152.4)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4976,6 +5280,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "2b690b5b-a8d9-4073-b522-c6176e2e6d51")
+	)
+	(junction
+		(at 88.9 151.13)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "2d4b3c09-e0eb-4efa-8891-0e739e075cf8")
 	)
 	(junction
 		(at 252.73 54.61)
@@ -5156,10 +5466,6 @@
 		(uuid "1db5f06b-eeac-4bc8-ac48-e9a4b69e19e2")
 	)
 	(no_connect
-		(at 151.13 176.53)
-		(uuid "2d248ac2-6aab-48ab-9971-a9a27b14cf0e")
-	)
-	(no_connect
 		(at 330.2 182.88)
 		(uuid "2d44cce8-5f57-45c9-bdaa-429449996c86")
 	)
@@ -5172,20 +5478,12 @@
 		(uuid "4441c3b3-af7b-4992-9075-1f159573f411")
 	)
 	(no_connect
-		(at 125.73 163.83)
-		(uuid "6f5fc1a3-5006-4459-ab5c-749e5709cdfe")
-	)
-	(no_connect
 		(at 318.77 68.58)
 		(uuid "81c6f15d-c186-4ee1-ad9e-498aff4146b3")
 	)
 	(no_connect
 		(at 261.62 182.88)
 		(uuid "9c4d8bdc-9536-48dd-b3ac-db39eb0ada0d")
-	)
-	(no_connect
-		(at 151.13 179.07)
-		(uuid "b4b6ee7e-a64e-4e5d-8fd3-03d77c39bdf3")
 	)
 	(no_connect
 		(at 261.62 175.26)
@@ -5264,6 +5562,16 @@
 			(type default)
 		)
 		(uuid "026345f9-2796-42d2-9156-26d9eb3901f8")
+	)
+	(wire
+		(pts
+			(xy 104.14 152.4) (xy 104.14 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "028d68d1-4d92-48f4-a97c-074f3e79d87d")
 	)
 	(wire
 		(pts
@@ -5364,6 +5672,16 @@
 			(type default)
 		)
 		(uuid "0fadd2d6-5708-4704-90be-72f2cbe4254e")
+	)
+	(wire
+		(pts
+			(xy 151.13 179.07) (xy 166.37 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "123f0786-b45f-4a87-b501-f261879e2ff8")
 	)
 	(wire
 		(pts
@@ -5627,6 +5945,16 @@
 	)
 	(wire
 		(pts
+			(xy 104.14 176.53) (xy 104.14 179.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "331bf9a1-1066-434a-9e8c-89b945954c7a")
+	)
+	(wire
+		(pts
 			(xy 110.49 168.91) (xy 125.73 168.91)
 		)
 		(stroke
@@ -5644,6 +5972,16 @@
 			(type default)
 		)
 		(uuid "368dc623-b669-45b5-8894-528d2786006b")
+	)
+	(wire
+		(pts
+			(xy 104.14 166.37) (xy 125.73 166.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "3929a680-f1ba-4e11-a2e9-9591895818a7")
 	)
 	(wire
 		(pts
@@ -5694,6 +6032,26 @@
 			(type default)
 		)
 		(uuid "42bd0bab-437f-4aa9-8a49-2be7ba415f6f")
+	)
+	(wire
+		(pts
+			(xy 95.25 186.69) (xy 95.25 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "44ec8d66-7dac-48a3-823c-1ba430003dcc")
+	)
+	(wire
+		(pts
+			(xy 88.9 151.13) (xy 88.9 152.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "464904cd-bb00-486d-b6f4-0f782d323426")
 	)
 	(wire
 		(pts
@@ -5857,7 +6215,7 @@
 	)
 	(wire
 		(pts
-			(xy 88.9 149.86) (xy 88.9 152.4)
+			(xy 88.9 149.86) (xy 88.9 151.13)
 		)
 		(stroke
 			(width 0)
@@ -6197,6 +6555,16 @@
 	)
 	(wire
 		(pts
+			(xy 72.39 186.69) (xy 95.25 186.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "87153f5b-1f54-4893-842e-e79cff80fef9")
+	)
+	(wire
+		(pts
 			(xy 297.18 142.24) (xy 297.18 135.89)
 		)
 		(stroke
@@ -6254,6 +6622,16 @@
 			(type default)
 		)
 		(uuid "8d035f79-f92a-414e-8a9a-2839e80bdc93")
+	)
+	(wire
+		(pts
+			(xy 104.14 160.02) (xy 104.14 166.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8d607756-3e29-40fd-b663-0676e6107cb2")
 	)
 	(wire
 		(pts
@@ -6424,6 +6802,16 @@
 			(type default)
 		)
 		(uuid "9f04421e-8240-4abd-9096-c10a8d245e7e")
+	)
+	(wire
+		(pts
+			(xy 110.49 163.83) (xy 125.73 163.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9f2bffef-a56d-4490-9b5f-415ae1b2fb20")
 	)
 	(wire
 		(pts
@@ -6717,16 +7105,6 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 166.37) (xy 125.73 166.37)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "cf67af36-b871-4954-a00a-69e01253086a")
-	)
-	(wire
-		(pts
 			(xy 161.29 76.2) (xy 153.67 76.2)
 		)
 		(stroke
@@ -6877,6 +7255,16 @@
 	)
 	(wire
 		(pts
+			(xy 151.13 176.53) (xy 166.37 176.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e0ae847b-6c98-44bf-8c8a-b8531e5de350")
+	)
+	(wire
+		(pts
 			(xy 261.62 60.96) (xy 261.62 62.23)
 		)
 		(stroke
@@ -6924,6 +7312,16 @@
 			(type default)
 		)
 		(uuid "e8bf05fe-5ab1-44b8-8362-265d5cb1e4dd")
+	)
+	(wire
+		(pts
+			(xy 95.25 171.45) (xy 96.52 171.45)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e9ad6565-3578-4b7a-9694-7b7dd6073d36")
 	)
 	(wire
 		(pts
@@ -7037,6 +7435,16 @@
 	)
 	(wire
 		(pts
+			(xy 104.14 151.13) (xy 88.9 151.13)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f6f602fc-8b9b-45ac-a666-7977d59ce876")
+	)
+	(wire
+		(pts
 			(xy 278.13 78.74) (xy 278.13 83.82)
 		)
 		(stroke
@@ -7115,6 +7523,16 @@
 		)
 		(uuid "03951f84-89b1-4ae6-9c70-5162493dcda4")
 	)
+	(label "LORA_TX_EN"
+		(at 110.49 163.83 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0a2a05de-bb68-44f8-967d-8cb07096ec94")
+	)
 	(label "GNSS_PPS"
 		(at 261.62 180.34 0)
 		(effects
@@ -7126,7 +7544,7 @@
 		(uuid "17ad5b86-c409-48a5-bfed-515d1835ec84")
 	)
 	(label "LORA_RST"
-		(at 261.62 154.94 0)
+		(at 261.62 187.96 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -7135,15 +7553,15 @@
 		)
 		(uuid "1b2f44d2-d842-4145-84fa-21145e7c3634")
 	)
-	(label "LORA_RX_EN"
-		(at 261.62 165.1 0)
+	(label "LORA_TX_EN"
+		(at 166.37 179.07 180)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify right bottom)
 		)
-		(uuid "22bc19a9-536f-424a-9974-19c7a8de4a38")
+		(uuid "2ad7fac8-0d62-411e-a2b3-b9cf520666fe")
 	)
 	(label "LORA_RST"
 		(at 110.49 161.29 0)
@@ -7205,16 +7623,6 @@
 		)
 		(uuid "6b5b3897-5ff2-4129-a523-494fec59f082")
 	)
-	(label "LORA_RX_EN"
-		(at 110.49 166.37 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "6c0d5679-d8de-4556-b40a-b2ea3b788bd7")
-	)
 	(label "XTAL_P"
 		(at 337.82 160.02 180)
 		(effects
@@ -7275,6 +7683,16 @@
 		)
 		(uuid "7d4da761-83fb-4886-8460-d488d2190411")
 	)
+	(label "LORA_TX_EN"
+		(at 72.39 186.69 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "86bcb9d0-8189-43ad-8fa7-6441ca0e4f45")
+	)
 	(label "~{CS_LORA}"
 		(at 261.62 149.86 0)
 		(effects
@@ -7324,6 +7742,26 @@
 			(justify left bottom)
 		)
 		(uuid "c1c95ad6-cd3b-456d-aa14-a83feb3b4f53")
+	)
+	(label "DIO1"
+		(at 166.37 176.53 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "c442fc76-591e-4641-835c-fb9fc7e9d640")
+	)
+	(label "DIO1"
+		(at 261.62 165.1 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d107d9f1-8c57-4e72-b376-b32d25b358e0")
 	)
 	(label "LED"
 		(at 339.09 48.26 0)
@@ -7747,6 +8185,86 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 104.14 156.21 0)
+		(mirror y)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "13d1fdd0-2cce-4593-a5a8-682fdc84a640")
+		(property "Reference" "R4"
+			(at 106.68 154.9399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "10k"
+			(at 106.68 157.4799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 105.918 156.21 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 104.14 156.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Resistor"
+			(at 104.14 156.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C25741"
+			(at 104.14 156.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "132b1203-d64d-46a3-a8cb-3302d0d758c0")
+		)
+		(pin "2"
+			(uuid "d9a361c5-0cdf-4089-a4d7-e19c2ff401e2")
+		)
+		(instances
+			(project "GPS Tracker"
+				(path "/1342bbf7-72bc-4277-a73a-932aa6a5d42a"
+					(reference "R4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "My Components:Chip_Antenna_3pin")
 		(at 369.57 152.4 0)
 		(unit 1)
@@ -7798,16 +8316,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" "C581402"
-			(at 369.57 152.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C581402"
 			(at 369.57 152.4 0)
 			(effects
 				(font
@@ -7889,7 +8398,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C125107"
 			(at 363.22 67.31 90)
 			(effects
 				(font
@@ -8096,16 +8605,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 334.01 124.46 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C52923"
 			(at 334.01 124.46 90)
 			(effects
 				(font
@@ -8183,16 +8683,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 300.99 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1525"
 			(at 300.99 119.38 0)
 			(effects
 				(font
@@ -8402,15 +8893,6 @@
 				)
 			)
 		)
-		(property "JLCPCB" ""
-			(at 361.95 228.6 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "1"
 			(uuid "69b36eee-6fbd-496a-826e-fcc18a0cf1ac")
 		)
@@ -8486,16 +8968,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" "C1855072"
-			(at 341.63 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1550"
 			(at 341.63 157.48 0)
 			(effects
 				(font
@@ -8772,7 +9245,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C52923"
 			(at 182.88 77.47 0)
 			(effects
 				(font
@@ -8841,15 +9314,6 @@
 			)
 		)
 		(property "Description" ""
-			(at 138.43 168.91 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
 			(at 138.43 168.91 0)
 			(effects
 				(font
@@ -8946,7 +9410,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "510R"
+		(property "Value" "470R"
 			(at 365.76 59.6899 0)
 			(effects
 				(font
@@ -8982,7 +9446,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C25117 "
 			(at 363.22 58.42 0)
 			(effects
 				(font
@@ -9192,7 +9656,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C52923"
 			(at 218.44 77.47 0)
 			(effects
 				(font
@@ -9272,16 +9736,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
-			(at 97.79 73.66 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLC Part Number" "C315248"
+		(property "JLCPCB Part #" " C15525"
 			(at 97.79 73.66 0)
 			(effects
 				(font
@@ -9358,16 +9813,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 334.01 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1525"
 			(at 334.01 137.16 90)
 			(effects
 				(font
@@ -9643,16 +10089,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 66.04 203.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C23733"
 			(at 66.04 203.2 0)
 			(effects
 				(font
@@ -9993,16 +10430,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" "C1332560"
-			(at 347.98 152.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C162543"
 			(at 347.98 152.4 90)
 			(effects
 				(font
@@ -10082,7 +10510,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1525"
 			(at 121.92 77.47 0)
 			(effects
 				(font
@@ -10228,7 +10656,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C3015612"
 			(at 302.26 167.64 0)
 			(effects
 				(font
@@ -10424,7 +10852,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1562"
 			(at 261.62 58.42 0)
 			(effects
 				(font
@@ -10560,15 +10988,6 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
-			(at 224.79 254 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
 			(at 224.79 254 0)
 			(effects
 				(font
@@ -10903,16 +11322,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 271.78 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C23733"
 			(at 271.78 119.38 0)
 			(effects
 				(font
@@ -10992,7 +11402,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C25741"
 			(at 88.9 156.21 0)
 			(effects
 				(font
@@ -11011,6 +11421,91 @@
 			(project "GPS Tracker"
 				(path "/1342bbf7-72bc-4277-a73a-932aa6a5d42a"
 					(reference "R1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Transistor_FET:AO3400A")
+		(at 101.6 171.45 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "76108f7c-c114-4c63-9643-0f175913bb86")
+		(property "Reference" "Q2"
+			(at 107.95 170.1799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "AO3400A"
+			(at 107.95 172.7199 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23"
+			(at 106.68 173.355 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+					(italic yes)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://www.aosmd.com/pdfs/datasheet/AO3400A.pdf"
+			(at 106.68 175.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "30V Vds, 5.7A Id, N-Channel MOSFET, SOT-23"
+			(at 101.6 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "JLCPCB Part #" "C20917"
+			(at 101.6 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "3"
+			(uuid "78567dd9-bc8c-491f-9f85-f8163aaf209e")
+		)
+		(pin "1"
+			(uuid "79e4e55a-34fa-408b-9b46-1f5d48573b2b")
+		)
+		(pin "2"
+			(uuid "fad0d231-d86d-4ec5-8f33-5ea9f80c6266")
+		)
+		(instances
+			(project ""
+				(path "/1342bbf7-72bc-4277-a73a-932aa6a5d42a"
+					(reference "Q2")
 					(unit 1)
 				)
 			)
@@ -11136,16 +11631,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 74.93 203.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1525"
 			(at 74.93 203.2 0)
 			(effects
 				(font
@@ -11224,7 +11710,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C52923"
 			(at 191.77 80.01 0)
 			(effects
 				(font
@@ -11369,7 +11855,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C25741"
 			(at 111.76 77.47 0)
 			(effects
 				(font
@@ -11446,16 +11932,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 334.01 130.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1546"
 			(at 334.01 130.81 90)
 			(effects
 				(font
@@ -11598,7 +12075,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C80670"
 			(at 168.91 76.2 0)
 			(effects
 				(font
@@ -11751,16 +12228,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 280.67 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C52923"
 			(at 280.67 119.38 0)
 			(effects
 				(font
@@ -11905,7 +12373,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1525"
 			(at 252.73 58.42 0)
 			(effects
 				(font
@@ -12182,7 +12650,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C25741"
 			(at 111.76 64.77 0)
 			(effects
 				(font
@@ -12260,16 +12728,6 @@
 				(hide yes)
 			)
 		)
-		(property "MF" "Quectel"
-			(at 298.45 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify bottom)
-				(hide yes)
-			)
-		)
 		(property "MAXIMUM_PACKAGE_HEIGHT" "7.25 mm"
 			(at 298.45 68.58 0)
 			(effects
@@ -12280,67 +12738,7 @@
 				(hide yes)
 			)
 		)
-		(property "Package" "Package"
-			(at 298.45 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify bottom)
-				(hide yes)
-			)
-		)
-		(property "Price" "None"
-			(at 298.45 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify bottom)
-				(hide yes)
-			)
-		)
 		(property "Check_prices" "https://www.snapeda.com/parts/LC86G/Quectel/view-part/?ref=eda"
-			(at 298.45 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify bottom)
-				(hide yes)
-			)
-		)
-		(property "STANDARD" "Manufacturer Recommendations"
-			(at 298.45 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify bottom)
-				(hide yes)
-			)
-		)
-		(property "PARTREV" "1.2"
-			(at 298.45 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify bottom)
-				(hide yes)
-			)
-		)
-		(property "SnapEDA_Link" "https://www.snapeda.com/parts/LC86G/Quectel/view-part/?ref=snap"
-			(at 298.45 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify bottom)
-				(hide yes)
-			)
-		)
-		(property "MP" "LC86G"
 			(at 298.45 68.58 0)
 			(effects
 				(font
@@ -12377,15 +12775,6 @@
 					(size 1.27 1.27)
 				)
 				(justify bottom)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
-			(at 298.45 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
 				(hide yes)
 			)
 		)
@@ -12640,6 +13029,71 @@
 		)
 	)
 	(symbol
+		(lib_id "power:GND")
+		(at 104.14 179.07 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a8fc4cb7-2cee-4543-a401-28b534ba8d73")
+		(property "Reference" "#PWR017"
+			(at 104.14 185.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 104.14 183.2031 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 104.14 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 104.14 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 104.14 179.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "ac3a3868-0863-46ed-865a-a91bdc7621fa")
+		)
+		(instances
+			(project "GPS Tracker"
+				(path "/1342bbf7-72bc-4277-a73a-932aa6a5d42a"
+					(reference "#PWR017")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C_Small")
 		(at 237.49 222.25 0)
 		(unit 1)
@@ -12693,16 +13147,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 237.49 222.25 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1547"
 			(at 237.49 222.25 0)
 			(effects
 				(font
@@ -12974,7 +13419,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C80670"
 			(at 205.74 76.2 0)
 			(effects
 				(font
@@ -13054,15 +13499,6 @@
 			)
 		)
 		(property "Description" "Mounting Hole without connection"
-			(at 224.79 259.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
 			(at 224.79 259.08 0)
 			(effects
 				(font
@@ -13265,16 +13701,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 290.83 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1525"
 			(at 290.83 119.38 0)
 			(effects
 				(font
@@ -13353,7 +13780,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C52923"
 			(at 153.67 80.01 0)
 			(effects
 				(font
@@ -13563,16 +13990,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 88.9 165.1 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1525"
 			(at 88.9 165.1 0)
 			(effects
 				(font
@@ -13650,16 +14068,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" ""
-			(at 252.73 222.25 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1547"
 			(at 252.73 222.25 0)
 			(effects
 				(font
@@ -13935,16 +14344,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" "C86061"
-			(at 358.14 152.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C162540"
 			(at 358.14 152.4 90)
 			(effects
 				(font
@@ -14090,15 +14490,6 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
-			(at 165.1 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "2"
 			(uuid "d74c5dd6-e2c8-4876-8b7e-c44152f9eb03")
 		)
@@ -14168,16 +14559,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" "C1855072"
-			(at 353.06 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C1551"
 			(at 353.06 157.48 0)
 			(effects
 				(font
@@ -14257,16 +14639,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLC Part Number" "C15127"
-			(at 76.2 71.12 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C15127"
 			(at 76.2 71.12 90)
 			(effects
 				(font
@@ -14345,16 +14718,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" "C37635354"
-			(at 245.11 215.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C2682773"
 			(at 245.11 215.9 0)
 			(effects
 				(font
@@ -14438,15 +14802,6 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
-			(at 55.88 74.93 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
 		(pin "1"
 			(uuid "0e3cf9ce-a6f7-467b-abca-74091e0aaff7")
 		)
@@ -14517,16 +14872,7 @@
 				(hide yes)
 			)
 		)
-		(property "JLCPCB" ""
-			(at 243.84 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLC Part Number" "C315248"
+		(property "JLCPCB Part #" " C15525"
 			(at 243.84 58.42 0)
 			(effects
 				(font
@@ -14604,16 +14950,7 @@
 				)
 			)
 		)
-		(property "JLC Part Number" "C408626"
-			(at 165.1 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "JLCPCB" ""
+		(property "JLCPCB Part #" "C89954"
 			(at 165.1 157.48 0)
 			(effects
 				(font
