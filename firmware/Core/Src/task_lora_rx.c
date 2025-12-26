@@ -11,7 +11,7 @@ char *lastLoraMessage = bufferA;
 char *workingBuffer = bufferB;
 
 void task_lora_rx(AppContext_t *context, void *param) {
-  if (context->mode & MODE_RECEIVE) {
+  if (context->mode & MODE_GROUND_STATION) {
     uint8_t message_len = 0;
     
     message_len = LoRa_receive(context->lora, (uint8_t *)workingBuffer, LORA_MAX_MSG_LEN);

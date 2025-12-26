@@ -153,9 +153,6 @@ int main(void) {
   MX_USB_DEVICE_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-  /* set up LED sequencer for each of the two LEDs */
-  led_init(&status_led, LED_GPIO_Port, LED_Pin);
-  led_add_sequence(&status_led, off_sequence);
 
   /* Initialize flash filesystem and load settings */
   fs_init();
@@ -165,6 +162,14 @@ int main(void) {
   appContext.mode = setting('m')->value;
   appContext.uid = HAL_GetUIDw0() ^ HAL_GetUIDw1() ^ HAL_GetUIDw2();
   itoa(appContext.uid, appContext.uidStr, 16);
+  
+  /* set up LED sequencer for the LEDs */
+  led_init(&status_led, LED_GPIO_Port, LED_Pin);
+  if (appContext.mode == MODE_TRACKER) {
+    led_add_sequence(&status_led, gps_search_sequence);
+  } else {
+    led_add_sequence(&status_led, gs_waiting_sequence);
+  }
 
   /* init command line interpreter */
   cmd_add("REBOOT", reboot, NULL);

@@ -5,7 +5,7 @@
 
 void processGPSData(AppContext_t *context, char *gpsSentence) {
   static uint8_t counter = 0;
-  uint8_t *sequence;
+  uint8_t hadFix = context->gpsFix;
   counter++;
   
   context->lastGpsSentence = gpsSentence;
@@ -16,14 +16,18 @@ void processGPSData(AppContext_t *context, char *gpsSentence) {
 
   if (context->mode & MODE_TRACKER) {
     if (context->gpsFix) {
-      sequence = &gps_lock_sequence;
+      if (!hadFix) {
+        led_add_sequence(context->led, gps_lock_sequence);
+      }
       
       Event_t newEvent;
       newEvent.type = EVENT_LORA_TX;
       newEvent.data = gpsSentence;
       eventQueue_push(newEvent);
     } else {
-      sequence = &gps_search_sequence;
+      if (hadFix) {
+        led_add_sequence(context->led, gps_search_sequence);
+      }
     }
   }
 }
