@@ -1,6 +1,6 @@
 # SimpleTracker
 
-![Photo comparing SimpleTracker to an Elvin Beacon for size](docs/SimpleTracker_V5_and_Elvin_Beacon.jpg)
+![Photo comparing SimpleTracker to an Elvin Beacon for size](docs/SimpleTracker_V5_and_Elvin_Beacon.jpg "Comparison of SimpleTracker \(on the left\) and Elvin Beacon")
 
 SimpleTracker is a low cost and easy to use GPS tracker for model rocketry. It can operate of a single 3.7V lipo battery and has a built in charger to enable "plug-&-play" usability. The GPS coordinates of the SimpleTracker are transmitted via 433MHz LoRa every second providing several km of tracking range depending on the antenna used on the SimpleTracker and the ground station. SimpleTracker can also be used as a minimal ground station, reporting the location of a paired tracker via USB serial connection to a PC or phone.
 
