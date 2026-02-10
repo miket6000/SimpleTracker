@@ -15,7 +15,7 @@ typedef struct {
   char uidStr[UID_STR_LENGTH];
   bool gpsFix;
   LedHandle *led;
-  LoRa *lora;
+  LoRa_t *lora;
   char *lastGpsSentence;
   char *lastLoraMessage;
   int16_t rssi;

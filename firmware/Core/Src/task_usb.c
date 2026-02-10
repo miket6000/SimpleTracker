@@ -8,12 +8,7 @@ void task_usb(void *param) {
       cmd_read_input((char *)usb->rx_buffer, usb->rx_buffer_index);
       usb->rx_buffer_index = 0;
     }
-    
-    if (usb->tx_buffer_index > 0) {
-      if (CDC_Transmit_FS(UserTxBufferFS, usb->tx_buffer_index) == USBD_OK) {
-        usb->tx_buffer_index = 0;
-      }
-    }  
+    flush();
   }  
 }
 

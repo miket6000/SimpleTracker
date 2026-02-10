@@ -6,11 +6,11 @@
   If a setting is not found, the default value is returned instead.
 */
 
-//                                     LBL, DEFAULT_VALUE,    FACTORY_VALUE
+//                                     LBL, VALUE,            FACTORY_VALUE
 static Setting freq_setting         = {'f', DEFAULT_FREQ,     DEFAULT_FREQ};
 static Setting sf_setting           = {'s', DEFAULT_SF,       DEFAULT_SF};
 static Setting bandwidth_setting    = {'b', DEFAULT_BW,       DEFAULT_BW};
-static Setting crc_setting          = {'c', DEFAULT_CRC,      DEFAULT_CRC};
+static Setting crc_setting          = {'c', DEFAULT_CR,       DEFAULT_CR};
 static Setting power_setting        = {'d', DEFAULT_POWER,    DEFAULT_POWER};
 static Setting overcurrent_setting  = {'o', DEFAULT_OC,       DEFAULT_OC};
 static Setting preamble_setting     = {'p', DEFAULT_PREAMBLE, DEFAULT_PREAMBLE};

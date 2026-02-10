@@ -16,6 +16,11 @@ typedef struct {
 } usb_state_t;
 
 void print(char *tx_buffer);
+void print_byte(uint8_t byte);
+void print_bytes(uint8_t *bytes, uint8_t len);
+
+
+void flush();
 void USBD_CDC_RxHandler(uint8_t *rxBuffer, uint32_t len);
 void USB_Connect(void);
 void USB_Disconnect(void);

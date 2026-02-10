@@ -1,140 +1,118 @@
-/* -------------------------------------------------- \\
-// |                                                | \\
-// |            WRITTEN BY: Sslman Motlaq           | \\
-// |               Telegram: @S_Motlaq              | \\
-// |         E-MAIL:  pilot.motlaq@gmail.com        | \\
-// |                                                | \\
-// -------------------------------------------------- */
-//  Heavily modified by Michael Turner.
+#pragma once
 
-#ifndef LORA_H
-#define LORA_H
+#include "stm32f0xx_hal.h"
+#include <stdint.h>
 
-#include "main.h"
+/* ================= LoRa Enums ================= */
 
-#define TRANSMIT_TIMEOUT		2000
-#define RECEIVE_TIMEOUT			2000
+#define LORA_TX_POWER_20_DBM 2
 
-//--------- MODES ---------//
-#define SLEEP_MODE			0
-#define	STNBY_MODE			1
-#define TRANSMIT_MODE			3
-#define RXCONTIN_MODE			5
-#define RXSINGLE_MODE			6
+#define IRQ_TX_DONE        (1 << 0)
+#define IRQ_RX_DONE        (1 << 1)
+#define IRQ_TIMEOUT        (1 << 9)
+#define IRQ_CRC_ERROR      (1 << 6)
 
-//------- BANDWIDTH -------//
-#define BW_7_8KHz			0
-#define BW_10_4KHz			1
-#define BW_15_6KHz			2
-#define BW_20_8KHz			3
-#define BW_31_25KHz			4
-#define BW_41_7KHz			5
-#define BW_62_5KHz			6
-#define BW_125KHz			7
-#define BW_250KHz			8
-#define BW_500KHz			9
+#define LORA_RX_TIMEOUT_MS  5000
 
-//------ CODING RATE ------//
-#define CR_4_5				1
-#define CR_4_6				2
-#define CR_4_7				3
-#define CR_4_8				4
+typedef struct {
+    uint8_t length;
+    int8_t  rssi;
+    int8_t  snr;
+} LoRaRxInfo_t;
 
-//--- SPREADING FACTORS ---//
-#define SF_7				7
-#define SF_8				8
-#define SF_9				9
-#define SF_10				10
-#define SF_11  				11
-#define SF_12				12
+typedef enum {
+    LORA_EVENT_NONE       = 0,
+    LORA_EVENT_TX_DONE    = 1 << 0,
+    LORA_EVENT_RX_DONE    = 1 << 1,
+    LORA_EVENT_TIMEOUT    = 1 << 2,
+    LORA_EVENT_CRC_ERROR  = 1 << 3
+} LoRaEvent_t;
 
-//------ POWER GAIN ------//
-#define POWER_11db			0xF6
-#define POWER_14db			0xF9
-#define POWER_17db			0xFC
-#define POWER_20db			0xFF
+typedef enum {
+    LORA_MODE_SLEEP,
+    LORA_MODE_STDBY,
+    LORA_MODE_TX,
+    LORA_MODE_RX
+} LoRaMode_t;
 
-//------- REGISTERS -------//
-#define RegFiFo				0x00
-#define RegOpMode			0x01
-#define RegFrMsb			0x06
-#define RegFrMid			0x07
-#define RegFrLsb			0x08
-#define RegPaConfig			0x09
-#define RegOcp				0x0B
-#define RegLna				0x0C
-#define RegFiFoAddPtr			0x0D
-#define RegFiFoTxBaseAddr		0x0E
-#define RegFiFoRxBaseAddr		0x0F
-#define RegFiFoRxCurrentAddr	0x10
-#define RegIrqFlags				0x12
-#define RegRxNbBytes			0x13
-#define RegPktRssiValue			0x1A
-#define	RegModemConfig1			0x1D
-#define RegModemConfig2			0x1E
-#define RegSymbTimeoutL			0x1F
-#define RegPreambleMsb			0x20
-#define RegPreambleLsb			0x21
-#define RegPayloadLength		0x22
-#define RegModemConfig3			0x26
-#define RegSyncWord				0x39
-#define RegDioMapping1			0x40
-#define RegDioMapping2			0x41
-#define RegVersion			0x42
+typedef enum {
+    LORA_SF5 = 5,
+    LORA_SF6,
+    LORA_SF7,
+    LORA_SF8,
+    LORA_SF9,
+    LORA_SF10,
+    LORA_SF11,
+    LORA_SF12
+} LoRaSpreadingFactor_t;
 
-//------ LORA STATUS ------//
-#define LORA_OK				200
-#define LORA_NOT_FOUND			404
-#define LORA_LARGE_PAYLOAD		413
-#define LORA_UNAVAILABLE		503
+typedef enum {
+    LORA_BW_62_5 = 0x03,  
+    LORA_BW_125 = 0x04,
+    LORA_BW_250 = 0x05,
+    LORA_BW_500 = 0x06
+} LoRaBandwidth_t;
 
-typedef struct LoRa_setting{
-	
-	// Hardware setings:
-	GPIO_TypeDef*		CS_port;
-	uint16_t		CS_pin;
-	GPIO_TypeDef*		reset_port;
-	uint16_t		reset_pin;
-	GPIO_TypeDef*		DIO0_port;
-	uint16_t		DIO0_pin;
-	SPI_HandleTypeDef*	hSPIx;
-	
-	// Module settings:
-	int			current_mode;
-	int 			frequency;
-	uint8_t			spreadingFactor;
-	uint8_t			bandwidth;
-	uint8_t			crcRate;
-	uint16_t		preamble;
-	uint8_t			power;
-	uint8_t			overCurrentProtection;
-	
-} LoRa;
+typedef enum {
+    LORA_CR_4_5 = 0x01,
+    LORA_CR_4_6,
+    LORA_CR_4_7,
+    LORA_CR_4_8
+} LoRaCodingRate_t;
 
-LoRa newLoRa(void);
-void LoRa_reset(LoRa* _LoRa);
-void LoRa_readReg(LoRa* _LoRa, uint8_t* address, uint16_t r_length, uint8_t* output, uint16_t w_length);
-void LoRa_writeReg(LoRa* _LoRa, uint8_t* address, uint16_t r_length, uint8_t* values, uint16_t w_length);
-void LoRa_gotoMode(LoRa* _LoRa, int mode);
-uint8_t LoRa_read(LoRa* _LoRa, uint8_t address);
-void LoRa_write(LoRa* _LoRa, uint8_t address, uint8_t value);
-void LoRa_BurstWrite(LoRa* _LoRa, uint8_t address, uint8_t *value, uint8_t length);
-uint8_t LoRa_isvalid(LoRa* _LoRa);
+typedef enum {
+    LORA_TX_PWR_LOW,
+    LORA_TX_PWR_MED,
+    LORA_TX_PWR_HIGH
+} LoRaTxPower_t;
 
-void LoRa_setLowDaraRateOptimization(LoRa* _LoRa, uint8_t value);
-void LoRa_setAutoLDO(LoRa* _LoRa);
-void LoRa_setFrequency(LoRa* _LoRa, int freq);
-void LoRa_setSpreadingFactor(LoRa* _LoRa, int SP);
-void LoRa_setPower(LoRa* _LoRa, uint8_t power);
-void LoRa_setOCP(LoRa* _LoRa, uint8_t current);
-void LoRa_setTOMsb_setCRCon(LoRa* _LoRa);
-void LoRa_setSyncWord(LoRa* _LoRa, uint8_t syncword);
-uint8_t LoRa_transmit(LoRa* _LoRa, uint8_t* data, uint8_t length, uint16_t timeout);
-void LoRa_startReceiving(LoRa* _LoRa);
-uint8_t LoRa_receive(LoRa* _LoRa, uint8_t* data, uint8_t length);
-void LoRa_receive_IT(LoRa* _LoRa, uint8_t* data, uint8_t length);
-int LoRa_getRSSI(LoRa* _LoRa);
+/* ================= User Struct ================= */
 
-uint16_t LoRa_init(LoRa* _LoRa);
+typedef struct
+{
+    SPI_HandleTypeDef *hspi;
 
-#endif // LORA_H
+    GPIO_TypeDef *nss_port;
+    uint16_t      nss_pin;
+
+    GPIO_TypeDef *busy_port;
+    uint16_t      busy_pin;
+
+    GPIO_TypeDef *reset_port;
+    uint16_t      reset_pin;
+
+    GPIO_TypeDef *dio1_port;
+    uint16_t      dio1_pin;
+
+    uint32_t frequency;
+
+    LoRaSpreadingFactor_t spreadingFactor;
+    LoRaBandwidth_t       bandwidth;
+    LoRaCodingRate_t      codingRate;
+
+    uint16_t preambleLength;
+    uint8_t  payloadLength;
+    uint8_t  crcEnabled;
+
+    LoRaTxPower_t txPower;
+
+    LoRaMode_t currentMode;
+    LoRaEvent_t events;
+    volatile uint8_t irqPending;
+
+} LoRa_t;
+
+/* ================= API ================= */
+
+void LoRa_Init(LoRa_t *lora);
+void LoRa_Reset(LoRa_t *lora);
+
+void LoRa_SetFrequency(LoRa_t *lora, uint32_t freq_hz);
+void LoRa_Configure(LoRa_t *lora);
+
+void LoRa_Transmit(LoRa_t *lora, uint8_t *data, uint8_t length);
+void LoRa_Receive(LoRa_t *lora, uint32_t timeout_ms);
+uint8_t LoRa_ReadPacket(LoRa_t *l, uint8_t *buffer, uint8_t maxLen, LoRaRxInfo_t *info);
+
+void LoRa_IrqHandler(LoRa_t *lora);
+

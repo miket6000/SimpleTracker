@@ -64,7 +64,7 @@
 
 /* USER CODE BEGIN PV */
 LedHandle status_led;
-LoRa hlora;
+LoRa_t hlora;
 
 AppContext_t appContext = {
   .gpsFix = false, 
@@ -91,32 +91,44 @@ void load_settings() {
   }
 }
 
-void lora_init(LoRa *hlora) {
-  *hlora = newLoRa(); 
-  hlora->frequency = setting('f')->value;
-  hlora->spreadingFactor = setting('s')->value;
-  hlora->bandwidth = setting('b')->value;
-  hlora->crcRate = setting('c')->value;
-  hlora->power = setting('d')->value;
-  hlora->overCurrentProtection = setting('o')->value;
-  hlora->preamble = setting('p')->value;
+void lora_init(LoRa_t *hlora) {
+  HAL_Delay(3000);
+  //*hlora = LoRa_initStruct(); 
+  //hlora->frequency = setting('f')->value;
+  //hlora->spreadingFactor = setting('s')->value;
+  //hlora->bandwidth = setting('b')->value;
+  //hlora->codingRate = setting('c')->value;
+  //hlora->txPower = setting('d')->value;
+  //hlora->overCurrentProtection = setting('o')->value;
+  //hlora->preambleLength = setting('p')->value;
+  hlora->frequency = DEFAULT_FREQ; 
+  hlora->spreadingFactor = DEFAULT_SF;
+  hlora->bandwidth = DEFAULT_BW;
+  hlora->codingRate = DEFAULT_CR;
+  hlora->txPower = DEFAULT_POWER;
+  hlora->preambleLength = DEFAULT_PREAMBLE; 
+  hlora->crcEnabled = 1;
 
-  hlora->CS_port = LORA_CS_GPIO_Port;
-  hlora->CS_pin = LORA_CS_Pin;
+  hlora->nss_port = LORA_CS_GPIO_Port;
+  hlora->nss_pin = LORA_CS_Pin;
+  hlora->busy_port = LORA_BUSY_GPIO_Port;
+  hlora->busy_pin = LORA_BUSY_Pin;
   hlora->reset_port = LORA_RST_GPIO_Port;
   hlora->reset_pin = LORA_RST_Pin;
-  hlora->DIO0_port = LORA_DIO1_GPIO_Port;
-  hlora->DIO0_pin = LORA_DIO1_Pin;
-  hlora->hSPIx = &hspi1;
+  hlora->dio1_port = LORA_DIO1_GPIO_Port;
+  hlora->dio1_pin = LORA_DIO1_Pin;
+  hlora->hspi = &hspi1;
 
-  if (LoRa_init(hlora) == LORA_OK) {
-    print("LoRa Init OK\n");
-  } else {
-    print("LoRa Init Failed\n"); 
-  }
-
+  LoRa_Init(hlora);
 }
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+{
+    if (GPIO_Pin == LORA_DIO1_Pin)
+    {
+        LoRa_IrqHandler(appContext.lora);
+    }
+}
 
 /* USER CODE END 0 */
 
@@ -159,7 +171,9 @@ int main(void) {
   load_settings();
 
   /* populate appContext with values that are now available */
-  appContext.mode = setting('m')->value;
+  //appContext.mode = setting('m')->value;
+  appContext.mode = MODE_TRACKER;
+  //appContext.mode = MODE_GROUND_STATION;
   appContext.uid = HAL_GetUIDw0() ^ HAL_GetUIDw1() ^ HAL_GetUIDw2();
   itoa(appContext.uid, appContext.uidStr, 16);
   
