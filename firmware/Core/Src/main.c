@@ -92,22 +92,24 @@ void load_settings() {
 }
 
 void lora_init(LoRa_t *hlora) {
-  HAL_Delay(3000);
-  //*hlora = LoRa_initStruct(); 
-  //hlora->frequency = setting('f')->value;
-  //hlora->spreadingFactor = setting('s')->value;
-  //hlora->bandwidth = setting('b')->value;
-  //hlora->codingRate = setting('c')->value;
-  //hlora->txPower = setting('d')->value;
-  //hlora->overCurrentProtection = setting('o')->value;
-  //hlora->preambleLength = setting('p')->value;
-  hlora->frequency = DEFAULT_FREQ; 
-  hlora->spreadingFactor = DEFAULT_SF;
-  hlora->bandwidth = DEFAULT_BW;
-  hlora->codingRate = DEFAULT_CR;
-  hlora->txPower = DEFAULT_POWER;
-  hlora->preambleLength = DEFAULT_PREAMBLE; 
-  hlora->crcEnabled = 1;
+  
+  if (1) {
+    hlora->frequency = setting('f')->value;
+    hlora->spreadingFactor = setting('s')->value;
+    hlora->bandwidth = setting('b')->value;
+    hlora->codingRate = setting('c')->value;
+    hlora->txPower = setting('d')->value;
+    hlora->preambleLength = setting('p')->value;
+    hlora->crcEnabled = 0;
+  } else {
+    hlora->frequency = DEFAULT_FREQ;
+    hlora->spreadingFactor = DEFAULT_SF;
+    hlora->bandwidth = DEFAULT_BW;
+    hlora->codingRate = DEFAULT_CR;
+    hlora->txPower = DEFAULT_POWER;
+    hlora->preambleLength = DEFAULT_PREAMBLE;
+    hlora->crcEnabled = 0;
+  }
 
   hlora->nss_port = LORA_CS_GPIO_Port;
   hlora->nss_pin = LORA_CS_Pin;
@@ -166,13 +168,14 @@ int main(void) {
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
 
+  //led(&status_led, LED_ON);
   /* Initialize flash filesystem and load settings */
   fs_init();
   load_settings();
 
   /* populate appContext with values that are now available */
-  //appContext.mode = setting('m')->value;
-  appContext.mode = MODE_TRACKER;
+  appContext.mode = setting('m')->value;
+  //appContext.mode = MODE_TRACKER;
   //appContext.mode = MODE_GROUND_STATION;
   appContext.uid = HAL_GetUIDw0() ^ HAL_GetUIDw1() ^ HAL_GetUIDw2();
   itoa(appContext.uid, appContext.uidStr, 16);
@@ -195,6 +198,7 @@ int main(void) {
   cmd_add("GET", get_config, NULL);
   cmd_add("UID", print_str, &appContext.uidStr);
   cmd_add("ERASE", erase_flash, NULL); 
+  cmd_add("FACTORY", factory_reset, NULL);
   cmd_set_print_function(print); 
 
   /* Architecture description.
@@ -203,23 +207,31 @@ int main(void) {
    * the LoRa module, flashing LEDs and managing the USB Tx and Rx buffers. These task 
    * must happen in a timely manner for the operation of the tracker.
    *
-   * Some task are interrupt driven, most notably the GPS receiver / parser.
+   * Some task are interrupt driven, most notably the GPS receiver / parser and LoRa 
+   * event completion.
    *
    * Higher level logic is taken care of using an event driven framework. For example,
    * the GPS rx interrupt will generate an event if it detects a valid GNGGA packet,
    * which then potentially creates a lora_tx event. 
    *
-   *
    */
 
   /* init lora & gps modules */
+  //HAL_Delay(3000); // short delay to allow user to view init over serial.
   lora_init(&hlora);
   gps_init(&huart2);
 
   /* create task, arguments are init_delay, period, callback, parameter */
-  task_build(0, 15, task_led, &appContext);
+  task_build(0, 25, task_led, &appContext);
   task_build(0, 100, task_lora_rx, &appContext);
   task_build(0, 0, task_usb, USB_getStatePointer());
+
+  
+  // Rx need to be started once, will restart itself
+  if (appContext.mode & MODE_GROUND_STATION) {
+    LoRa_Receive(&hlora, LORA_RX_TIMEOUT_MS);
+  }
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -251,6 +263,7 @@ void Error_Handler(void)
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
+  
   while (1)
   {
   }

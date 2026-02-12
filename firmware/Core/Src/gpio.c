@@ -61,11 +61,14 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, 
       LORA_RST_Pin, 
       GPIO_PIN_SET);
-
-  /*Configure GPIOA pin initial Output Level (low) */
   HAL_GPIO_WritePin(GPIOA, 
       LED_Pin, 
-      GPIO_PIN_RESET);
+      GPIO_PIN_SET);
+
+  /*Configure GPIOA pin initial Output Level (low) */
+  //HAL_GPIO_WritePin(GPIOA, 
+  //    LED_Pin, 
+  //    GPIO_PIN_RESET);
 
 
   /*Configure GPIO pins : PB1, PB4, PB6, PB7 (analogue inputs or unused) */

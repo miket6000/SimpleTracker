@@ -22,7 +22,7 @@ void processGPSData(AppContext_t *context, char *gpsSentence) {
      gps_get_field(gpsSentence, FIX)[0] != '0') ? 1 : 0; // 0 or null = no fix
 
   if (context->mode & MODE_TRACKER) {
-    // push an event for every second message to avoid swamping the lora modules (tx timeout is 1500ms)
+    // push an event for every second message to avoid swamping the lora modules
     if (counter & 0x01) {
         Event_t newEvent;
         newEvent.type = EVENT_LORA_TX;
@@ -33,13 +33,7 @@ void processGPSData(AppContext_t *context, char *gpsSentence) {
       if (!hadFix) {
         led_add_sequence(context->led, gps_lock_sequence);
       }
-/*      
-      Event_t newEvent;
-      newEvent.type = EVENT_LORA_TX;
-      newEvent.data = gpsSentence;
-      eventQueue_push(newEvent);
-*/
-      } else {
+    } else {
       if (hadFix) {
         led_add_sequence(context->led, gps_search_sequence);
       }

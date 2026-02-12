@@ -1,27 +1,40 @@
 #include "lora.h"
 #include "usb.h"
+
+
+//#define DEBUG
+//#define DEBUG_LORA
+
+#define dbg_print(x) \
+          do { if (DEBUG) print(x); } while (0)
+
+
+
 /* ================= SX126x Commands ================= */
 
-#define CMD_SET_SLEEP              0x84
-#define CMD_SET_STANDBY            0x80
-#define CMD_SET_FS                 0xC1
-#define CMD_SET_TX                 0x83
-#define CMD_SET_RX                 0x82
-#define CMD_WRITE_BUFFER           0x0E
-#define CMD_READ_BUFFER            0x1E
-#define CMD_SET_RF_FREQUENCY       0x86
-#define CMD_SET_PACKET_PARAMS      0x8C
-#define CMD_SET_MODULATION_PARAMS  0x8B
-#define CMD_SET_DIO_IRQ_PARAMS     0x08
-#define CMD_CLEAR_IRQ_STATUS       0x02
+#define CMD_SET_SLEEP               0x84
+#define CMD_SET_STANDBY             0x80
+#define CMD_SET_FS                  0xC1
+#define CMD_SET_TX                  0x83
+#define CMD_SET_RX                  0x82
+#define CMD_WRITE_BUFFER            0x0E
+#define CMD_READ_BUFFER             0x1E
+#define CMD_SET_RF_FREQUENCY        0x86
+#define CMD_SET_PACKET_PARAMS       0x8C
+#define CMD_SET_MODULATION_PARAMS   0x8B
+#define CMD_SET_DIO_IRQ_PARAMS      0x08
+#define CMD_CLEAR_IRQ_STATUS        0x02
+#define CMD_SET_PACKET_TYPE         0x8A
+#define CMD_SET_BUFFER_BASE_ADDRESS 0x8F
 
-#define CMD_SET_DIO_IRQ_PARAMS     0x08
-#define CMD_GET_IRQ_STATUS         0x12
-#define CMD_CLEAR_IRQ_STATUS       0x02
+#define CMD_SET_DIO_IRQ_PARAMS      0x08
+#define CMD_GET_IRQ_STATUS          0x12
+#define CMD_CLEAR_IRQ_STATUS        0x02
 
-#define CMD_GET_RX_BUFFER_STATUS   0x13
-#define CMD_READ_BUFFER            0x1E
-#define CMD_GET_PACKET_STATUS      0x14
+#define CMD_GET_RX_BUFFER_STATUS    0x13
+#define CMD_READ_BUFFER             0x1E
+#define CMD_GET_PACKET_STATUS       0x14
+
 
 /* ================= Helpers ================= */
 
@@ -44,7 +57,7 @@ static void SpiCmd(LoRa_t *l, uint8_t *tx, uint8_t *rx, uint16_t len) {
     NSS_High(l);
     WaitBusy(l);
     
-#ifdef DEBUG_SPI
+#ifdef DEBUG_LORA
     print("CMDW\t");
     print_bytes(tx, len);
     print("\nRX\t");
@@ -84,7 +97,18 @@ static void LoRa_SetIrqConfig(LoRa_t *l)
     SpiCmd(l, cmd, rx, sizeof(cmd));
 }
 
+static void LoRa_SetBufferOffsets(LoRa_t *l, uint8_t tx_offset, uint8_t rx_offset) {
+  uint8_t cmd[] = {
+    CMD_SET_BUFFER_BASE_ADDRESS,
+    tx_offset,
+    rx_offset,
+  };
 
+  uint8_t rx[sizeof(cmd)];
+
+  SpiCmd(l, cmd, rx, sizeof(cmd));
+
+}
 /* ================= Core ================= */
 
 void LoRa_Reset(LoRa_t *l)
@@ -125,7 +149,15 @@ void LoRa_SetFrequency(LoRa_t *l, uint32_t freq_hz)
 }
 
 void LoRa_Configure(LoRa_t *l)
-{
+{   
+    uint8_t type[2] = {
+      CMD_SET_PACKET_TYPE,
+      1
+    };
+    
+    uint8_t rx0[2];
+    SpiCmd(l, type, rx0, sizeof(type));
+    
     uint8_t mod[5] = {
         CMD_SET_MODULATION_PARAMS,
         l->spreadingFactor,
@@ -133,6 +165,7 @@ void LoRa_Configure(LoRa_t *l)
         l->codingRate,
         0x00
     };
+     
     uint8_t rx1[5];
     SpiCmd(l, mod, rx1, sizeof(mod));
 
@@ -145,16 +178,34 @@ void LoRa_Configure(LoRa_t *l)
         l->crcEnabled ? 0x01 : 0x00,
         0x00
     };
+
     uint8_t rx2[7];
     SpiCmd(l, pkt, rx2, sizeof(pkt));
+
+    LoRa_SetBufferOffsets(l, 0x00, 0x00);
+    
 }
 
 void LoRa_Transmit(LoRa_t *l, uint8_t *data, uint8_t len)
 {
+    uint8_t pkt[7] = {
+        CMD_SET_PACKET_PARAMS,
+        (l->preambleLength >> 8) & 0xFF,
+        l->preambleLength & 0xFF,
+        0x00,          // explicit header
+        len,           // <-- actual TX length
+        l->crcEnabled ? 0x01 : 0x00,
+        0x00
+    };
+    
+    uint8_t rx_pkt[7];
+    SpiCmd(l, pkt, rx_pkt, sizeof(pkt));
+    
     uint8_t buf[1 + 1 + 255];
     buf[0] = CMD_WRITE_BUFFER;
     buf[1] = 0x00;
     memcpy(&buf[2], data, len);
+
 
     uint8_t rx[sizeof(buf)];
     SpiCmd(l, buf, rx, len + 2);
@@ -172,12 +223,17 @@ void LoRa_Transmit(LoRa_t *l, uint8_t *data, uint8_t len)
 
 void LoRa_Receive(LoRa_t *l, uint32_t timeout_ms)
 {
+    uint32_t timeout = timeout_ms * 64;
+    if (timeout > 0x00FFFFFF)
+        timeout = 0x00FFFFFF;
+
     uint8_t rx_cmd[] = {
         CMD_SET_RX,
-        (timeout_ms >> 16) & 0xFF,
-        (timeout_ms >> 8) & 0xFF,
-        timeout_ms & 0xFF
+        (timeout >> 16) & 0xFF,
+        (timeout >> 8)  & 0xFF,
+        timeout & 0xFF
     };
+
     uint8_t rx[4];
     
     LoRa_ClearIrq(l, 0xFFFF);
@@ -207,21 +263,30 @@ uint8_t LoRa_ReadPacket(LoRa_t *l, uint8_t *buffer, uint8_t maxLen, LoRaRxInfo_t
         payloadLen = maxLen;
 
     /* --- Read RX buffer --- */
-    uint8_t readCmd[2] = {
+    uint8_t readCmd[3] = {
         CMD_READ_BUFFER,
-        startPtr
+        startPtr,
+        0
     };
 
     WaitBusy(l);
     NSS_Low(l);
-    HAL_SPI_Transmit(l->hspi, readCmd, 2, HAL_MAX_DELAY);
+    HAL_SPI_Transmit(l->hspi, readCmd, sizeof(readCmd), HAL_MAX_DELAY);
     HAL_SPI_Receive(l->hspi, buffer, payloadLen, HAL_MAX_DELAY);
     NSS_High(l);
     WaitBusy(l);
 
+#ifdef DEBUG_LORA
+    print("CMDR\t");
+    print_bytes(readCmd, sizeof(readCmd));
+    print("\nRX\t");
+    print_bytes(buffer, payloadLen);
+    print("\n");
+#endif
+
     /* --- Optional: get RSSI / SNR --- */
     if (info) {
-        uint8_t psCmd[4] = { CMD_GET_PACKET_STATUS, 0x00, 0x00, 0x00 };
+      uint8_t psCmd[4] = { CMD_GET_PACKET_STATUS, 0x00, 0x00, 0x00 };
         uint8_t psRx[4];
 
         SpiCmd(l, psCmd, psRx, sizeof(psCmd));
@@ -229,6 +294,15 @@ uint8_t LoRa_ReadPacket(LoRa_t *l, uint8_t *buffer, uint8_t maxLen, LoRaRxInfo_t
         info->rssi = -(int8_t)(psRx[2] >> 1);
         info->snr  =  (int8_t)(psRx[3] >> 2);
         info->length = payloadLen;
+#ifdef DEBUG_LORA      
+        print("RSSI\t");
+        print_byte(info->rssi);
+        print("\nSNR\t");
+        print_byte(info->snr);
+        print("\nLEN\t");
+        print_byte(info->length);
+        print("\n");
+#endif
     }
 
     return payloadLen;
@@ -240,6 +314,7 @@ void LoRa_IrqHandler(LoRa_t *l)
     uint8_t cmd[4] = { CMD_GET_IRQ_STATUS, 0x00, 0x00, 0x00 };
     uint8_t rx[4];
 
+    char* buf;
     SpiCmd(l, cmd, rx, sizeof(cmd));
 
     uint16_t irq = (rx[2] << 8) | rx[3];
@@ -248,19 +323,32 @@ void LoRa_IrqHandler(LoRa_t *l)
     {
         l->currentMode = LORA_MODE_STDBY;
         l->events |= LORA_EVENT_TX_DONE;
+        buf = "TX";
     }
 
     if (irq & IRQ_RX_DONE)
     {
-        l->currentMode = LORA_MODE_RX;
+        l->currentMode = LORA_MODE_STDBY;
         l->events |= LORA_EVENT_RX_DONE;
+        buf = "RX";
+    }
+    
+    if (irq & IRQ_CRC_ERROR) {
+      buf = "CRC";
     }
 
     if (irq & IRQ_TIMEOUT)
     {
         l->currentMode = LORA_MODE_STDBY;
         l->events |= LORA_EVENT_TIMEOUT;
+        buf = "TO";
     }
+
+#ifdef DEBUG_LORA
+    print("IRQ(");
+    print(buf);
+    print(")\n");
+#endif
 
     LoRa_ClearIrq(l, irq);
     l->irqPending = 1;

@@ -68,8 +68,8 @@ void print_str_ptr(void *parameter) {
 void print_remote(void *parameter) {
   AppContext_t *context = parameter;
   print(context->lastLoraMessage);
-  print(" ");
-  print_int16(&context->rssi);
+//  print("\n");
+//  print_int16(&context->rssi);
 }
 
 void reboot(void *parameter) {

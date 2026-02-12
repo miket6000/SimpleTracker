@@ -36,7 +36,6 @@ void task_lora_rx(AppContext_t *context, void *param) {
       }
 
       context->lora->events &= ~LORA_EVENT_RX_DONE;
-
       LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
     }
 
@@ -44,11 +43,6 @@ void task_lora_rx(AppContext_t *context, void *param) {
     else if (context->lora->events & LORA_EVENT_TIMEOUT) {
       context->lora->events &= ~LORA_EVENT_TIMEOUT;
       LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
-    }
-    
-    // Not in Rx mode, start Receiving
-    else if (context->lora->currentMode != LORA_MODE_RX) {
-      LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS); 
     }
   }
 }
