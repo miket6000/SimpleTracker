@@ -26,7 +26,6 @@ void task_lora_rx(AppContext_t *context, void *param) {
         workingBuffer = tmpBuffer;
 
         context->rssi = info.rssi;
-        context->lastLoraMessage = lastLoraMessage;
 
         // Push new event for higher level code
         Event_t newEvent;
@@ -42,6 +41,11 @@ void task_lora_rx(AppContext_t *context, void *param) {
     // LoRa Rx Timeout, start again
     else if (context->lora->events & LORA_EVENT_TIMEOUT) {
       context->lora->events &= ~LORA_EVENT_TIMEOUT;
+      LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
+    }
+
+    else if (context->lora->events & LORA_EVENT_TX_DONE) {
+      context->lora->events &= ~ LORA_EVENT_TX_DONE;
       LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
     }
   }

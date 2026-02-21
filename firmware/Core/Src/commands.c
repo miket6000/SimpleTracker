@@ -68,19 +68,25 @@ void print_str_ptr(void *parameter) {
 void print_remote(void *parameter) {
   AppContext_t *context = parameter;
   print(context->lastLoraMessage);
-//  print("\n");
-//  print_int16(&context->rssi);
+  print(" ");
+  print_int16(&context->rssi);
 }
 
 void reboot(void *parameter) {
   HAL_NVIC_SystemReset();
 }
 
+void transmit(void *parameter) {
+  AppContext_t  *context = parameter;
+  char *cmd = cmd_get_param();
+  LoRa_Transmit(context->lora, (uint8_t *)cmd, strlen(cmd)); 
+}
+
 void set_config(void *parameter) {
   char *label = cmd_get_param();
-  uint32_t value = atoi(cmd_get_param());
   Setting *s = setting(label[0]);
   if (s != NULL) {
+    uint32_t value = atoi(cmd_get_param());
     s->value = value;
     if (fs_save_config(label[0], &value) == FS_OK) {
       print("OK");
@@ -119,8 +125,9 @@ void erase_flash(void *parameter) {
 }
 
 void factory_reset(void *parameter) {
-  // set the default config, then call erase flash. 
+  // set the default config, then call erase flash and reboot so settings take effect. 
   setting_reset(); 
   erase_flash(NULL);
+  reboot(NULL);
 }
 

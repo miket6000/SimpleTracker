@@ -22,7 +22,7 @@ TARGET = firmware
 # debug build?
 DEBUG = 1 
 # optimization
-OPT = -Og
+OPT = -Os
 # serial connection port
 PORT ?= /dev/ttyACM0
 
@@ -46,6 +46,8 @@ USB_DEVICE/App/usb_device.c \
 USB_DEVICE/App/usbd_desc.c \
 USB_DEVICE/Target/usbd_conf.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_usb.c \
+Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_adc.c \
+Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_adc_ex.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pcd.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_pcd_ex.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_rcc.c \
@@ -92,7 +94,8 @@ Core/Src/filesystem.c \
 USB_DEVICE/App/usbd_cdc_if.c \
 Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
 Core/Src/usart.c \
-Core/Src/tim.c
+Core/Src/tim.c \
+Core/Src/adc.c
 
 # ASM sources
 ASM_SOURCES =  \

@@ -5,8 +5,6 @@
 
 /* ================= LoRa Enums ================= */
 
-#define LORA_TX_POWER_20_DBM 2
-
 #define IRQ_TX_DONE        (1 << 0)
 #define IRQ_RX_DONE        (1 << 1)
 #define IRQ_TIMEOUT        (1 << 9)
@@ -47,10 +45,16 @@ typedef enum {
 } LoRaSpreadingFactor_t;
 
 typedef enum {
-    LORA_BW_62_5 = 0x03,  
-    LORA_BW_125 = 0x04,
-    LORA_BW_250 = 0x05,
-    LORA_BW_500 = 0x06
+    LORA_BW_7_8  = 0x00,
+    LORA_BW_10_4 = 0x01,
+    LORA_BW_15_6 = 0x02,
+    LORA_BW_20_8 = 0x03,
+    LORA_BW_31_2 = 0x04,
+    LORA_BW_41_6 = 0x05,
+    LORA_BW_62_5 = 0x06,  
+    LORA_BW_125  = 0x07,
+    LORA_BW_250  = 0x08,
+    LORA_BW_500  = 0x09
 } LoRaBandwidth_t;
 
 typedef enum {
@@ -61,9 +65,38 @@ typedef enum {
 } LoRaCodingRate_t;
 
 typedef enum {
-    LORA_TX_PWR_LOW,
-    LORA_TX_PWR_MED,
-    LORA_TX_PWR_HIGH
+    LORA_TX_POWER_M9_DBM = -0x09,
+    LORA_TX_POWER_M8_DBM = -0x08,
+    LORA_TX_POWER_M7_DBM = -0x07,
+    LORA_TX_POWER_M6_DBM = -0x06,
+    LORA_TX_POWER_M5_DBM = -0x05,
+    LORA_TX_POWER_M4_DBM = -0x04,
+    LORA_TX_POWER_M3_DBM = -0x03,
+    LORA_TX_POWER_M2_DBM = -0x02,
+    LORA_TX_POWER_M1_DBM = -0x01,
+    LORA_TX_POWER_0_DBM = 0x00,
+    LORA_TX_POWER_1_DBM,
+    LORA_TX_POWER_2_DBM,
+    LORA_TX_POWER_3_DBM,
+    LORA_TX_POWER_4_DBM,
+    LORA_TX_POWER_5_DBM,
+    LORA_TX_POWER_6_DBM,
+    LORA_TX_POWER_7_DBM,
+    LORA_TX_POWER_8_DBM,
+    LORA_TX_POWER_9_DBM,
+    LORA_TX_POWER_10_DBM,
+    LORA_TX_POWER_11_DBM,
+    LORA_TX_POWER_12_DBM,
+    LORA_TX_POWER_13_DBM,
+    LORA_TX_POWER_14_DBM,
+    LORA_TX_POWER_15_DBM,
+    LORA_TX_POWER_16_DBM,
+    LORA_TX_POWER_17_DBM,
+    LORA_TX_POWER_18_DBM,
+    LORA_TX_POWER_19_DBM,
+    LORA_TX_POWER_20_DBM,
+    LORA_TX_POWER_21_DBM,
+    LORA_TX_POWER_22_DBM,
 } LoRaTxPower_t;
 
 /* ================= User Struct ================= */

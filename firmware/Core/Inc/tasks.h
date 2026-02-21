@@ -5,6 +5,6 @@ void task_led(void *param);
 //void task_gps(void *param);
 void task_usb(void *param);
 void task_lora_rx(void *param);
-
+void task_measure_voltage(void *param);
 #endif // TASKS_H
        

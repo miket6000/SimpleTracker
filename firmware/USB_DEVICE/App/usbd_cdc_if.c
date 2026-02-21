@@ -128,6 +128,18 @@ static int8_t CDC_Receive_FS(uint8_t* pbuf, uint32_t *Len);
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
 extern void USBD_CDC_RxHandler(uint8_t *rxBuffer, uint32_t len);
+/* USER CODE BEGIN 5 */
+USBD_CDC_LineCodingTypeDef LineCoding =
+{ 
+  115200, /* baud rate     */
+  0x00,   /* stop bits-1   */
+  0x00,   /* parity - none */
+  0x08    /* nb. of bits 8 */
+};
+
+volatile uint8_t dtr_state = 0; // Global variable to store DTR state
+volatile uint8_t rts_state = 0; // Global variable to store RTS state
+  
 
 /* USER CODE END PRIVATE_FUNCTIONS_DECLARATION */
 
@@ -178,7 +190,6 @@ static int8_t CDC_DeInit_FS(void)
   */
 static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 {
-  /* USER CODE BEGIN 5 */
   switch(cmd)
   {
     case CDC_SEND_ENCAPSULATED_COMMAND:
@@ -219,15 +230,25 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
   /* 6      | bDataBits  |   1   | Number Data bits (5, 6, 7, 8 or 16).          */
   /*******************************************************************************/
     case CDC_SET_LINE_CODING:
-
+    	LineCoding.bitrate    = (uint32_t)(pbuf[0] | (pbuf[1] << 8) | (pbuf[2] << 16) | (pbuf[3] << 24));
+    	LineCoding.format     = pbuf[4];
+    	LineCoding.paritytype = pbuf[5];
+    	LineCoding.datatype   = pbuf[6];
     break;
 
     case CDC_GET_LINE_CODING:
-
+    	pbuf[0] = (uint8_t)(LineCoding.bitrate);
+    	pbuf[1] = (uint8_t)(LineCoding.bitrate >> 8);
+    	pbuf[2] = (uint8_t)(LineCoding.bitrate >> 16);
+    	pbuf[3] = (uint8_t)(LineCoding.bitrate >> 24);
+    	pbuf[4] = LineCoding.format;
+    	pbuf[5] = LineCoding.paritytype;
+    	pbuf[6] = LineCoding.datatype;
     break;
 
     case CDC_SET_CONTROL_LINE_STATE:
-
+    	dtr_state = pbuf[0] & 0x01;         // Bit 0 = DTR
+    	rts_state = (pbuf[0] & 0x02) >> 1;  // Bit 1 = RTS
     break;
 
     case CDC_SEND_BREAK:
@@ -294,7 +315,13 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 }
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
+uint8_t CDC_Get_DTR_State(void) {
+	return dtr_state;
+}
 
+uint8_t CDC_Get_RTS_State(void) {
+	return rts_state;
+}
 /* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */
 
 /**

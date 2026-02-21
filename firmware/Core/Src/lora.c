@@ -17,11 +17,14 @@
 #define CMD_SET_FS                  0xC1
 #define CMD_SET_TX                  0x83
 #define CMD_SET_RX                  0x82
+#define CMD_WRITE_REGISTER          0x0D
+#define CMD_READ_REGISTER           0x1D
 #define CMD_WRITE_BUFFER            0x0E
 #define CMD_READ_BUFFER             0x1E
 #define CMD_SET_RF_FREQUENCY        0x86
 #define CMD_SET_PACKET_PARAMS       0x8C
 #define CMD_SET_MODULATION_PARAMS   0x8B
+#define CMD_SET_TX_PARAMS           0x8E
 #define CMD_SET_DIO_IRQ_PARAMS      0x08
 #define CMD_CLEAR_IRQ_STATUS        0x02
 #define CMD_SET_PACKET_TYPE         0x8A
@@ -32,9 +35,7 @@
 #define CMD_CLEAR_IRQ_STATUS        0x02
 
 #define CMD_GET_RX_BUFFER_STATUS    0x13
-#define CMD_READ_BUFFER             0x1E
 #define CMD_GET_PACKET_STATUS       0x14
-
 
 /* ================= Helpers ================= */
 
@@ -68,12 +69,12 @@ static void SpiCmd(LoRa_t *l, uint8_t *tx, uint8_t *rx, uint16_t len) {
 
 static void LoRa_ClearIrq(LoRa_t *l, uint16_t mask)
 {
-    uint8_t cmd[3] = {
+    uint8_t cmd[] = {
         CMD_CLEAR_IRQ_STATUS,
         (mask >> 8) & 0xFF,
         mask & 0xFF
     };
-    uint8_t rx[3];
+    uint8_t rx[sizeof(cmd)];
     SpiCmd(l, cmd, rx, sizeof(cmd));
 }
 
@@ -81,7 +82,7 @@ static void LoRa_SetIrqConfig(LoRa_t *l)
 {
     uint16_t irqMask = IRQ_TX_DONE | IRQ_RX_DONE | IRQ_TIMEOUT;
 
-    uint8_t cmd[9] = {
+    uint8_t cmd[] = {
         CMD_SET_DIO_IRQ_PARAMS,
         (irqMask >> 8) & 0xFF,    // IRQ mask MSB
         irqMask & 0xFF,           // IRQ mask LSB
@@ -93,7 +94,7 @@ static void LoRa_SetIrqConfig(LoRa_t *l)
         0x00, 0x00                // DIO3 mask
     };
 
-    uint8_t rx[9];
+    uint8_t rx[sizeof(cmd)];
     SpiCmd(l, cmd, rx, sizeof(cmd));
 }
 
@@ -109,6 +110,35 @@ static void LoRa_SetBufferOffsets(LoRa_t *l, uint8_t tx_offset, uint8_t rx_offse
   SpiCmd(l, cmd, rx, sizeof(cmd));
 
 }
+
+static uint8_t LoRa_ReadRegister(LoRa_t *l, uint16_t address) {
+  uint8_t cmd[] = {
+    CMD_READ_REGISTER,
+    (address >> 8) & 0xFF,
+    address & 0xFF,
+    0x00, 0x00
+  };
+
+  uint8_t rx[sizeof(cmd)];
+
+  SpiCmd(l, cmd, rx, sizeof(cmd));
+
+  return rx[sizeof(cmd)];
+}
+
+static void LoRa_WriteRegister(LoRa_t *l, uint16_t address, uint8_t data) {
+  uint8_t cmd[] = {
+    CMD_WRITE_REGISTER,
+    (address >> 8) & 0xFF,
+    address & 0xFF,
+    data
+  };
+
+  uint8_t rx[sizeof(cmd)];
+
+  SpiCmd(l, cmd, rx, sizeof(cmd));
+}
+
 /* ================= Core ================= */
 
 void LoRa_Reset(LoRa_t *l)

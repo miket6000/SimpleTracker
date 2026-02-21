@@ -51,7 +51,8 @@
 #define APP_RX_DATA_SIZE  128
 #define APP_TX_DATA_SIZE  128
 /* USER CODE BEGIN EXPORTED_DEFINES */
-
+uint8_t CDC_Get_DTR_State(void);
+uint8_t CDC_Get_RTS_State(void);
 /* USER CODE END EXPORTED_DEFINES */
 
 /**

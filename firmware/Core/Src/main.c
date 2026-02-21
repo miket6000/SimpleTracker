@@ -22,6 +22,7 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "adc.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -70,7 +71,7 @@ AppContext_t appContext = {
   .gpsFix = false, 
   .led = &status_led, 
   .lora = &hlora,
-  .mode = 0,
+  .mode = MODE_GROUND_STATION,
 };
 
 /* USER CODE END PV */
@@ -93,23 +94,13 @@ void load_settings() {
 
 void lora_init(LoRa_t *hlora) {
   
-  if (1) {
-    hlora->frequency = setting('f')->value;
-    hlora->spreadingFactor = setting('s')->value;
-    hlora->bandwidth = setting('b')->value;
-    hlora->codingRate = setting('c')->value;
-    hlora->txPower = setting('d')->value;
-    hlora->preambleLength = setting('p')->value;
-    hlora->crcEnabled = 0;
-  } else {
-    hlora->frequency = DEFAULT_FREQ;
-    hlora->spreadingFactor = DEFAULT_SF;
-    hlora->bandwidth = DEFAULT_BW;
-    hlora->codingRate = DEFAULT_CR;
-    hlora->txPower = DEFAULT_POWER;
-    hlora->preambleLength = DEFAULT_PREAMBLE;
-    hlora->crcEnabled = 0;
-  }
+  hlora->frequency = setting('f')->value;
+  hlora->spreadingFactor = setting('s')->value;
+  hlora->bandwidth = setting('b')->value;
+  hlora->codingRate = setting('c')->value;
+  hlora->txPower = setting('d')->value;
+  hlora->preambleLength = setting('p')->value;
+  hlora->crcEnabled = 0;
 
   hlora->nss_port = LORA_CS_GPIO_Port;
   hlora->nss_pin = LORA_CS_Pin;
@@ -130,6 +121,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     {
         LoRa_IrqHandler(appContext.lora);
     }
+}
+
+void task_update_mode(void *param) {
+  AppContext_t *context = (AppContext_t *)param;
+  // Todo...
 }
 
 /* USER CODE END 0 */
@@ -166,22 +162,25 @@ int main(void) {
   MX_USART2_UART_Init();
   MX_USB_DEVICE_Init();
   MX_TIM16_Init();
+  MX_ADC_Init();
   /* USER CODE BEGIN 2 */
 
   //led(&status_led, LED_ON);
   /* Initialize flash filesystem and load settings */
   fs_init();
   load_settings();
+  led_init(&status_led, LED_GPIO_Port, LED_Pin);
 
   /* populate appContext with values that are now available */
-  appContext.mode = setting('m')->value;
+  //appContext.mode = setting('m')->value;
+
   //appContext.mode = MODE_TRACKER;
-  //appContext.mode = MODE_GROUND_STATION;
+  appContext.mode = MODE_GROUND_STATION;
   appContext.uid = HAL_GetUIDw0() ^ HAL_GetUIDw1() ^ HAL_GetUIDw2();
   itoa(appContext.uid, appContext.uidStr, 16);
   
-  /* set up LED sequencer for the LEDs */
-  led_init(&status_led, LED_GPIO_Port, LED_Pin);
+  appContext.usb = USB_getStatePointer();
+
   if (appContext.mode == MODE_TRACKER) {
     led_add_sequence(&status_led, gps_search_sequence);
   } else {
@@ -194,6 +193,7 @@ int main(void) {
   cmd_add("i", cmd_unset_interactive, NULL);
   cmd_add("R", print_remote, &appContext);
   cmd_add("L", print_str_ptr, &appContext.lastGpsSentence);
+  cmd_add("T", transmit, &appContext);
   cmd_add("SET", set_config, NULL);
   cmd_add("GET", get_config, NULL);
   cmd_add("UID", print_str, &appContext.uidStr);
@@ -224,8 +224,9 @@ int main(void) {
   /* create task, arguments are init_delay, period, callback, parameter */
   task_build(0, 25, task_led, &appContext);
   task_build(0, 100, task_lora_rx, &appContext);
-  task_build(0, 0, task_usb, USB_getStatePointer());
-
+  task_build(0, 0, task_usb, &appContext);
+  task_build(0, 2500, task_measure_voltage, &appContext);
+  task_build(0, 1000, task_update_mode, &appContext);
   
   // Rx need to be started once, will restart itself
   if (appContext.mode & MODE_GROUND_STATION) {
