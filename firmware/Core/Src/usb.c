@@ -1,66 +1,72 @@
 #include "usb.h"
+#include "tusb.h"
 
-usb_state_t usb = {.rx_buffer_index = 0, .tx_buffer_index = 0, .connected = false};
+PCD_HandleTypeDef hpcd_USB_FS;
 
-static int min(int a, int b) {
-  return a < b ? a : b;
+usb_state_t usb = {
+    .rx_buffer_index = 0,
+    .tx_buffer_index = 0,
+    .connected = false
+};
+
+void print(char *str)
+{
+    if (!tud_cdc_connected()) return;
+
+    uint32_t len = strlen(str);
+
+    tud_cdc_write(str, len);
+    tud_cdc_write_flush();
 }
 
-void flush() {
-  if (usb.connected) {
-    if (usb.tx_buffer_index > 0) {
-      if (CDC_Transmit_FS(UserTxBufferFS, usb.tx_buffer_index) == USBD_OK) {
-        usb.tx_buffer_index = 0;
-      }
-    }  
-  }    
-}
-
-void print(char *tx_buffer) {
-  uint16_t tx_len = 0;
-  // copy as much of the buffer as we can, truncate the rest.
-  if (usb.connected) {
-    tx_len = min(strlen(tx_buffer), sizeof(UserTxBufferFS) - usb.tx_buffer_index);
-
-    memcpy(&UserTxBufferFS[usb.tx_buffer_index], tx_buffer, tx_len);
-    usb.tx_buffer_index += tx_len;
-    flush();
-  }
-}
-
-void print_byte(uint8_t byte) {
+void print_byte(uint8_t byte)
+{
     char buf[3];
-    if (byte < 16) {
-      buf[0] = '0';
-      itoa(byte, buf+1, 16);
-    } else {
-      itoa(byte, buf, 16);
-    }
+    snprintf(buf, sizeof(buf), "%02X", byte);
     print(buf);
 }
 
-void print_bytes(uint8_t *bytes, uint8_t len) {
-  for(int i = 0; i < len; i++) {
-    print_byte(bytes[i]);
-    print(" ");
+void print_bytes(uint8_t *bytes, uint8_t len)
+{
+    for (int i = 0; i < len; i++)
+    {
+        print_byte(bytes[i]);
+        print(" ");
+    }
+}
+
+void USB_Connect(void)
+{
+    usb.connected = true;
+}
+
+void USB_Disconnect(void)
+{
+    usb.connected = false;
+}
+
+void MX_USB_PCD_Init(void)
+{
+  __HAL_RCC_USB_CLK_ENABLE();      // Enable USB peripheral clock
+
+  hpcd_USB_FS.Instance = USB;
+
+  hpcd_USB_FS.Init.dev_endpoints = 8;
+  hpcd_USB_FS.Init.speed = PCD_SPEED_FULL;
+  hpcd_USB_FS.Init.ep0_mps = PCD_EP0MPS_64;
+  hpcd_USB_FS.Init.phy_itface = PCD_PHY_EMBEDDED;
+  hpcd_USB_FS.Init.Sof_enable = DISABLE;
+  hpcd_USB_FS.Init.low_power_enable = DISABLE;
+  hpcd_USB_FS.Init.lpm_enable = DISABLE;
+  hpcd_USB_FS.Init.battery_charging_enable = DISABLE;
+//  hpcd_USB_FS.Init.vbus_sensing_enable = DISABLE;   // IMPORTANT
+
+  if (HAL_PCD_Init(&hpcd_USB_FS) != HAL_OK)
+  {
+    Error_Handler();
   }
-}
 
-usb_state_t *USB_getStatePointer(void) {
-  return &usb;
+  // Enable USB interrupt
+  HAL_NVIC_SetPriority(USB_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USB_IRQn);
 }
-
-void USBD_CDC_RxHandler(uint8_t *rxBuffer, uint32_t len) {
-  //DANGER - does not check for rx_buffer over run.
-  memcpy(&usb.rx_buffer[usb.rx_buffer_index], rxBuffer, len);
-  usb.rx_buffer_index += len;
-}
-
-void USB_Connect(void) {
-  usb.connected = true;
-}
-
-void USB_Disconnect(void) {
-  usb.connected = false;
-}
-

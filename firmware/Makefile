@@ -42,9 +42,6 @@ Core/Src/gpio.c \
 Core/Src/spi.c \
 Core/Src/stm32f0xx_it.c \
 Core/Src/stm32f0xx_hal_msp.c \
-USB_DEVICE/App/usb_device.c \
-USB_DEVICE/App/usbd_desc.c \
-USB_DEVICE/Target/usbd_conf.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_ll_usb.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_adc.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_adc_ex.c \
@@ -70,9 +67,6 @@ Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_flash_ex.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_uart.c \
 Drivers/STM32F0xx_HAL_Driver/Src/stm32f0xx_hal_uart_ex.c \
 Core/Src/system_stm32f0xx.c \
-Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
-Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
-Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
 Core/Src/clock.c \
@@ -91,11 +85,18 @@ Core/Src/lora.c \
 Core/Src/flash.c \
 Core/Src/setting.c \
 Core/Src/filesystem.c \
-USB_DEVICE/App/usbd_cdc_if.c \
-Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
 Core/Src/usart.c \
 Core/Src/tim.c \
-Core/Src/adc.c
+Core/Src/adc.c \
+Core/Src/uid.c \
+Core/Src/usb_descriptors.c \
+tinyusb/src/tusb.c \
+tinyusb/src/common/tusb_fifo.c \
+tinyusb/src/class/cdc/cdc_device.c \
+tinyusb/src/device/usbd.c \
+tinyusb/src/device/usbd_control.c \
+tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c \
+tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -163,7 +164,8 @@ C_INCLUDES =  \
 -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F0xx/Include \
 -IDrivers/CMSIS/Include \
--IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc
+-IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
+-Itinyusb/src
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections

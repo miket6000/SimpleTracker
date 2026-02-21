@@ -29,6 +29,8 @@
 #include "clock.h"
 #include "board.h"
 #include "usb.h"
+#include "usbd_conf.h"
+#include "usbd_core.h"
 #include "led.h"
 #include "led_sequences.h"
 #include "app_context.h"
@@ -44,6 +46,9 @@
 #include "config.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include "tusb.h"
+#include "uid.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -159,8 +164,8 @@ int main(void) {
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
+  MX_USB_PCD_Init();
   MX_USART2_UART_Init();
-  MX_USB_DEVICE_Init();
   MX_TIM16_Init();
   MX_ADC_Init();
   /* USER CODE BEGIN 2 */
@@ -170,16 +175,17 @@ int main(void) {
   fs_init();
   load_settings();
   led_init(&status_led, LED_GPIO_Port, LED_Pin);
+  tusb_init();
 
   /* populate appContext with values that are now available */
   //appContext.mode = setting('m')->value;
 
   //appContext.mode = MODE_TRACKER;
   appContext.mode = MODE_GROUND_STATION;
-  appContext.uid = HAL_GetUIDw0() ^ HAL_GetUIDw1() ^ HAL_GetUIDw2();
+  appContext.uid = UID_Get();
   itoa(appContext.uid, appContext.uidStr, 16);
   
-  appContext.usb = USB_getStatePointer();
+//  appContext.usb = USB_getStatePointer();
 
   if (appContext.mode == MODE_TRACKER) {
     led_add_sequence(&status_led, gps_search_sequence);
@@ -246,6 +252,7 @@ int main(void) {
     // Time dependant task
     task_run();
     eventDispatcher(&appContext);
+    tud_task();
     //power_management();
   }
 

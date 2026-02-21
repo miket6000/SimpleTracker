@@ -14,7 +14,7 @@ void task_lora_rx(AppContext_t *context, void *param) {
   LoRaRxInfo_t info;
 
   if (context->mode & MODE_GROUND_STATION) {
-    // LoRa Rx Complete, collect packet
+    // LoRa Rx Complete, collect packet, swap buffers, publish event
     if (context->lora->events & LORA_EVENT_RX_DONE) {
 
       uint8_t len = LoRa_ReadPacket(context->lora, (uint8_t *)workingBuffer, LORA_MAX_MSG_LEN, &info);
@@ -44,6 +44,7 @@ void task_lora_rx(AppContext_t *context, void *param) {
       LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
     }
 
+    // LoRa transmission complete, switch back to Receiving Mode
     else if (context->lora->events & LORA_EVENT_TX_DONE) {
       context->lora->events &= ~ LORA_EVENT_TX_DONE;
       LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);

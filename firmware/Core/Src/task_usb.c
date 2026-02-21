@@ -1,17 +1,21 @@
 #include "usb.h"
+#include "tusb.h"
 #include "app_context.h"
 
 #include "command.h"
 
-void task_usb(AppContext_t *context) {
-  usb_state_t *usb = context->usb;
-  if (usb->connected) {
-    if (usb->rx_buffer_index > 0) {
-      cmd_read_input((char *)usb->rx_buffer, usb->rx_buffer_index);
-      usb->rx_buffer_index = 0;
+void task_usb(AppContext_t *context)
+{
+    tud_task();  // MUST call often
+
+    if (tud_cdc_connected())
+    {
+        while (tud_cdc_available())
+        {
+            uint8_t buf[64];
+            uint32_t count = tud_cdc_read(buf, sizeof(buf));
+
+            cmd_read_input((char *)buf, count);
+        }
     }
-    flush();
-  }  
 }
-
-
