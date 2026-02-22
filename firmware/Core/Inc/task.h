@@ -2,7 +2,7 @@
 #define TASK_H
 #include <stdint.h>
 
-#define MAX_NUM_TASK  5
+#define MAX_NUM_TASK  6
 
 typedef struct {
   void (*callback)(void *);

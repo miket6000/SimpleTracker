@@ -1,5 +1,6 @@
 #include "event_processors.h"
 #include "led_sequences.h"
+#include <string.h>
 #include "lora.h"
 
 void processLoRaRx(AppContext_t *context, char *loraMessage) {
@@ -14,6 +15,11 @@ void processLoRaRx(AppContext_t *context, char *loraMessage) {
         case 'T':
           LoRa_Transmit(context->lora, (uint8_t *)"ACK", 4);
           context->mode = MODE_TRACKER;
+          if (context->gpsFix) {
+            led_add_sequence(context->led, gps_lock_sequence);
+          } else {
+            led_add_sequence(context->led, gps_search_sequence); 
+          }
           break;
         case 'V':
           char buf[5];
@@ -26,6 +32,10 @@ void processLoRaRx(AppContext_t *context, char *loraMessage) {
       }
     }
   } else {
+    char rssi[5] = {0};
+    itoa(context->rssi, rssi, 10);
+    strncat(loraMessage, " ", 2);
+    strncat(loraMessage, rssi, 5);
     context->lastLoraMessage = loraMessage;
   }
 

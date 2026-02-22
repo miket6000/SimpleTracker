@@ -184,15 +184,7 @@ int main(void) {
   appContext.mode = MODE_GROUND_STATION;
   appContext.uid = UID_Get();
   itoa(appContext.uid, appContext.uidStr, 16);
-  
-//  appContext.usb = USB_getStatePointer();
-
-  if (appContext.mode == MODE_TRACKER) {
-    led_add_sequence(&status_led, gps_search_sequence);
-  } else {
-    led_add_sequence(&status_led, gs_waiting_sequence);
-  }
-
+   
   /* init command line interpreter */
   cmd_add("REBOOT", reboot, NULL);
   cmd_add("I", cmd_set_interactive, NULL);
@@ -233,11 +225,10 @@ int main(void) {
   task_build(0, 0, task_usb, &appContext);
   task_build(0, 2500, task_measure_voltage, &appContext);
   task_build(0, 1000, task_update_mode, &appContext);
+  task_build(0, 10, task_gps, &appContext);
   
-  // Rx need to be started once, will restart itself
-  if (appContext.mode & MODE_GROUND_STATION) {
-    LoRa_Receive(&hlora, LORA_RX_TIMEOUT_MS);
-  }
+  // Rx needs to be started once, will restart itself
+  LoRa_Receive(&hlora, LORA_RX_TIMEOUT_MS);
 
   /* USER CODE END 2 */
 
@@ -252,7 +243,6 @@ int main(void) {
     // Time dependant task
     task_run();
     eventDispatcher(&appContext);
-    tud_task();
     //power_management();
   }
 

@@ -6,13 +6,15 @@
 #include "lora.h"
 #include "usb.h"
 
-#define UID_STR_LENGTH          9
-#define MODE_TRACKER            1
-#define MODE_GROUND_STATION     2
+#define UID_STR_LENGTH        9
+#define MODE_TRACKER          1
+#define MODE_GROUND_STATION   2
 
 typedef struct {
   uint32_t uid;
   char uidStr[UID_STR_LENGTH];
+  uint32_t remoteUid;
+  char remoteUidStr[UID_STR_LENGTH];
   bool gpsFix;
   LedHandle *led;
   LoRa_t *lora;

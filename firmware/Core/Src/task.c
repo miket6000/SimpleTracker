@@ -16,12 +16,16 @@ Task *task_add(Task task) {
 
 Task *task_build(uint32_t delay, uint32_t period, void (*callback)(void *), void *param) {
   uint32_t time = HAL_GetTick();
-  taskList[numTask].delay = delay;
-  taskList[numTask].period = period;
-  taskList[numTask].callback = callback;
-  taskList[numTask].param = param;
-  taskList[numTask].lastRunTime = time - period + delay;  
-  return &taskList[numTask++];
+  if (numTask < MAX_NUM_TASK) {
+    taskList[numTask].delay = delay;
+    taskList[numTask].period = period;
+    taskList[numTask].callback = callback;
+    taskList[numTask].param = param;
+    taskList[numTask].lastRunTime = time - period + delay;  
+    return &taskList[numTask++];
+  }
+  while(1);
+  return NULL;
 }
 
 void task_run() {

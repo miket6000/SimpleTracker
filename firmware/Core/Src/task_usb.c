@@ -6,7 +6,7 @@
 
 void task_usb(AppContext_t *context)
 {
-    tud_task();  // MUST call often
+    tud_task();
 
     if (tud_cdc_connected())
     {

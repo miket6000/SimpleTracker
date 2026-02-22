@@ -22,7 +22,14 @@ void print(char *str)
 void print_byte(uint8_t byte)
 {
     char buf[3];
-    snprintf(buf, sizeof(buf), "%02X", byte);
+    //snprintf(buf, sizeof(buf), "%02X", byte);
+    if (byte < 0x10) {
+      buf[0] = '0';
+      itoa(byte, buf+1, 2);
+    } else {
+      itoa(byte, buf, 3);
+    }
+    
     print(buf);
 }
 
@@ -59,7 +66,6 @@ void MX_USB_PCD_Init(void)
   hpcd_USB_FS.Init.low_power_enable = DISABLE;
   hpcd_USB_FS.Init.lpm_enable = DISABLE;
   hpcd_USB_FS.Init.battery_charging_enable = DISABLE;
-//  hpcd_USB_FS.Init.vbus_sensing_enable = DISABLE;   // IMPORTANT
 
   if (HAL_PCD_Init(&hpcd_USB_FS) != HAL_OK)
   {

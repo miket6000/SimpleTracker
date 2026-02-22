@@ -6,6 +6,8 @@
 #define NMEA_SENTENCE_SIZE  83
 #define NMEA_DELIM_CHAR     ','
 
+extern uint8_t sentenceReady;
+
 typedef struct {
   uint8_t data[NMEA_SENTENCE_SIZE];
   uint16_t index;

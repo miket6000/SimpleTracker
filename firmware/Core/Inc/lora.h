@@ -45,16 +45,16 @@ typedef enum {
 } LoRaSpreadingFactor_t;
 
 typedef enum {
-    LORA_BW_7_8  = 0x00,
-    LORA_BW_10_4 = 0x01,
-    LORA_BW_15_6 = 0x02,
-    LORA_BW_20_8 = 0x03,
-    LORA_BW_31_2 = 0x04,
-    LORA_BW_41_6 = 0x05,
-    LORA_BW_62_5 = 0x06,  
-    LORA_BW_125  = 0x07,
-    LORA_BW_250  = 0x08,
-    LORA_BW_500  = 0x09
+    LORA_BW_7    = 0x00,
+    LORA_BW_10   = 0x08,
+    LORA_BW_15   = 0x01,
+    LORA_BW_20   = 0x08,
+    LORA_BW_31   = 0x02,
+    LORA_BW_41   = 0x0A,
+    LORA_BW_62   = 0x03,  
+    LORA_BW_125  = 0x04,
+    LORA_BW_250  = 0x05,
+    LORA_BW_500  = 0x06
 } LoRaBandwidth_t;
 
 typedef enum {

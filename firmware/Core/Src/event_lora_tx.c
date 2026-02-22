@@ -11,7 +11,6 @@ void processLoRaTx(AppContext_t *context, char *loraTxPayload) {
   strncpy(loraTxBuffer, context->uidStr, UID_STR_LENGTH);
   strncat(loraTxBuffer, " ", 2); //include \0
   strncat(loraTxBuffer, (char *)loraTxPayload, strlen(loraTxPayload));
-
   //if (LoRa_checkTransmit(context->lora) != LORA_STATUS_BUSY) {
     LoRa_Transmit(context->lora, (uint8_t *)loraTxBuffer, strlen(loraTxBuffer));
   //}

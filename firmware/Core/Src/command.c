@@ -77,7 +77,7 @@ void cmd_read_input(char *buffer, uint8_t len) {
   bool matched = false;
   for (int i = 0; i < len; i++) {
     inchar = buffer[i];
-    if (inchar == TERM_CHAR) {
+    if (inchar == TERM_CHAR || buffer_index >= RX_BUFFER_LEN - 1) {
       cmd_print(eol);
       buffer_index = 0;
       token = strtok_r(rx_buffer, DELIM, &last);
@@ -100,11 +100,9 @@ void cmd_read_input(char *buffer, uint8_t len) {
     } else if (isprint(inchar)) {
       cmd_print((char []){inchar, '\0'}); //echo printable characters
       rx_buffer[buffer_index] = inchar;
-      buffer_index++;
+      buffer_index++;  
       rx_buffer[buffer_index] = '\0';
-      if (buffer_index >= RX_BUFFER_LEN) {
-        buffer_index = 0;
-      }
+
     } else if (inchar == '\b') {
       if (buffer_index > 0) {
         cmd_print("\b \b");
