@@ -128,11 +128,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }
 }
 
-void task_update_mode(void *param) {
-  AppContext_t *context = (AppContext_t *)param;
-  // Todo...
-}
-
 /* USER CODE END 0 */
 
 /**
@@ -224,7 +219,6 @@ int main(void) {
   task_build(0, 100, task_lora_rx, &appContext);
   task_build(0, 0, task_usb, &appContext);
   task_build(0, 2500, task_measure_voltage, &appContext);
-  task_build(0, 1000, task_update_mode, &appContext);
   task_build(0, 10, task_gps, &appContext);
   
   // Rx needs to be started once, will restart itself

@@ -38,7 +38,7 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)
       if (!(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])))
         return NULL;
 
-        str = string_desc_arr[index];
+      str = string_desc_arr[index];
     }
     chr_count = strlen(str);
     if (chr_count > 31) chr_count = 31;

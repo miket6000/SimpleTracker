@@ -12,7 +12,7 @@ void processLoRaTx(AppContext_t *context, char *loraTxPayload) {
   strncat(loraTxBuffer, " ", 2); //include \0
   strncat(loraTxBuffer, (char *)loraTxPayload, strlen(loraTxPayload));
   //if (LoRa_checkTransmit(context->lora) != LORA_STATUS_BUSY) {
-    LoRa_Transmit(context->lora, (uint8_t *)loraTxBuffer, strlen(loraTxBuffer));
+  LoRa_Transmit(context->lora, (uint8_t *)loraTxBuffer, strlen(loraTxBuffer));
   //}
 }
 

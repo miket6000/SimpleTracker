@@ -68,6 +68,7 @@ void print_str_ptr(void *parameter) {
 void print_remote(void *parameter) {
   AppContext_t *context = parameter;
   print(context->lastLoraMessage);
+  //context->lastLoraMessage = NULL;
 }
 
 void reboot(void *parameter) {
@@ -77,7 +78,12 @@ void reboot(void *parameter) {
 void transmit(void *parameter) {
   AppContext_t  *context = parameter;
   char *cmd = cmd_get_param();
-  LoRa_Transmit(context->lora, (uint8_t *)cmd, strlen(cmd)); 
+  if (strlen(cmd) == 10) {
+    LoRa_Transmit(context->lora, (uint8_t *)cmd, strlen(cmd)); 
+    print("OK");
+  } else {
+    print("ERR");
+  }
 }
 
 void set_config(void *parameter) {

@@ -23,4 +23,5 @@ void print_bytes(uint8_t *bytes, uint8_t len);
 void USB_Connect(void);
 void USB_Disconnect(void);
 usb_state_t *USB_getStatePointer(void);
+void MX_USB_PCD_Init(void);
 #endif // USB_H

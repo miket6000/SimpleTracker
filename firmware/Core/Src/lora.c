@@ -227,7 +227,7 @@ void LoRa_Transmit(LoRa_t *l, uint8_t *data, uint8_t len)
         l->crcEnabled ? 0x01 : 0x00,
         0x00
     };
-    
+
     uint8_t rx_pkt[7];
     SpiCmd(l, pkt, rx_pkt, sizeof(pkt));
     

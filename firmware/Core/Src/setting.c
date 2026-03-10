@@ -15,7 +15,6 @@ static Setting power_setting        = {'d', DEFAULT_POWER,    DEFAULT_POWER};
 static Setting overcurrent_setting  = {'o', DEFAULT_OC,       DEFAULT_OC};
 static Setting preamble_setting     = {'p', DEFAULT_PREAMBLE, DEFAULT_PREAMBLE};
 static Setting mode_setting         = {'m', DEFAULT_MODE,     DEFAULT_MODE};
-static Setting paired_setting       = {'x', NULL,             NULL};
 
 Setting *settingList[] = {
   &freq_setting,
