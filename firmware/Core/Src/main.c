@@ -42,6 +42,8 @@
 #include "commands.h"
 #include "gps.h"
 #include "lora.h"
+#include "lora_arbitration.h"
+#include "lora_discovery.h"
 #include "event.h"
 #include "config.h"
 #include <stdbool.h>
@@ -179,7 +181,10 @@ int main(void) {
   appContext.mode = MODE_GROUND_STATION;
   appContext.uid = UID_Get();
   itoa(appContext.uid, appContext.uidStr, 16);
-   
+  
+  /* Seed the PRNG for LoRa collision avoidance with device UID */
+  lora_seed_prng(appContext.uid);
+  
   /* init command line interpreter */
   cmd_add("REBOOT", reboot, NULL);
   cmd_add("I", cmd_set_interactive, NULL);
@@ -190,6 +195,7 @@ int main(void) {
   cmd_add("SET", set_config, NULL);
   cmd_add("GET", get_config, NULL);
   cmd_add("UID", print_str, &appContext.uidStr);
+  cmd_add("D", discovery_read, &appContext);
   cmd_add("ERASE", erase_flash, NULL); 
   cmd_add("FACTORY", factory_reset, NULL);
   cmd_set_print_function(print); 
@@ -237,6 +243,7 @@ int main(void) {
     // Time dependant task
     task_run();
     eventDispatcher(&appContext);
+    lora_process_delayed_response(&appContext);
     //power_management();
   }
 

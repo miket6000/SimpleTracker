@@ -4,18 +4,27 @@
 static Task taskList[MAX_NUM_TASK];
 static uint8_t numTask = 0;
 
-Task *task_add(Task task) {
-  uint32_t time = HAL_GetTick();
-  if (numTask > (MAX_NUM_TASK - 1)) {
-    return NULL;
-  }
-  task.lastRunTime = time - task.period + task.delay;
-  taskList[numTask] = task;
-  return &taskList[numTask++];
-}
-
 Task *task_build(uint32_t delay, uint32_t period, void (*callback)(void *), void *param) {
   uint32_t time = HAL_GetTick();
+  
+  // Try to find a completed one-shot task that can be reused
+  // This allows scheduling multiple delayed tasks without task list overflow
+  if (period == 0) {  // One-shot task
+    for (uint8_t i = 0; i < numTask; i++) {
+      // Task is reusable if it was one-shot and enough time has passed since completion
+      if (taskList[i].period == 0 && (time - taskList[i].lastRunTime) >= 500) {
+        // Reuse this slot
+        taskList[i].delay = delay;
+        taskList[i].period = period;
+        taskList[i].callback = callback;
+        taskList[i].param = param;
+        taskList[i].lastRunTime = time - period + delay;
+        return &taskList[i];
+      }
+    }
+  }
+  
+  // If no reusable slot or periodic task, add new task if space available
   if (numTask < MAX_NUM_TASK) {
     taskList[numTask].delay = delay;
     taskList[numTask].period = period;
@@ -24,6 +33,8 @@ Task *task_build(uint32_t delay, uint32_t period, void (*callback)(void *), void
     taskList[numTask].lastRunTime = time - period + delay;  
     return &taskList[numTask++];
   }
+  
+  // No space and no reusable tasks
   while(1);
   return NULL;
 }

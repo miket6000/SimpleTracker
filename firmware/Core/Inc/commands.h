@@ -19,5 +19,6 @@ void set_mode(void *parameter);
 void erase_flash(void *parameter);
 void factory_reset(void *parameter);
 void reboot(void *parameter);
+void discovery_read(void *parameter);
 
 #endif // COMMANDS_H

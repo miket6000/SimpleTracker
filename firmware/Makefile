@@ -82,6 +82,8 @@ $(wildcard Core/Src/event_*.c) \
 Core/Src/usb.c \
 Core/Src/gps.c \
 Core/Src/lora.c \
+Core/Src/lora_arbitration.c \
+Core/Src/lora_discovery.c \
 Core/Src/flash.c \
 Core/Src/setting.c \
 Core/Src/filesystem.c \

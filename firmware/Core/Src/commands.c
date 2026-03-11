@@ -5,6 +5,8 @@
 #include "app_context.h"
 #include "setting.h"
 #include "filesystem.h"
+#include "event.h"
+#include "lora_discovery.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -78,12 +80,28 @@ void reboot(void *parameter) {
 void transmit(void *parameter) {
   AppContext_t  *context = parameter;
   char *cmd = cmd_get_param();
-  if (strlen(cmd) == 10) {
-    LoRa_Transmit(context->lora, (uint8_t *)cmd, strlen(cmd)); 
-    print("OK");
-  } else {
+  if (cmd == NULL || strlen(cmd) < 10) {
     print("ERR");
+    return;
   }
+
+  // If this is a broadcast UID request, start a discovery window
+  // Command format: "&ffffffffU"
+  if (strncmp(cmd, "&ffffffffU", 10) == 0) {
+    discovery_start();
+  }
+
+  // Route through EVENT_LORA_TX so processLoRaTx() prefixes our UID
+  static char txPayload[32];
+  strncpy(txPayload, cmd, sizeof(txPayload) - 1);
+  txPayload[sizeof(txPayload) - 1] = '\0';
+
+  Event_t txEvent;
+  txEvent.type = EVENT_LORA_TX;
+  txEvent.data = txPayload;
+  eventQueue_push(txEvent);
+
+  print("OK");
 }
 
 void set_config(void *parameter) {
@@ -133,5 +151,21 @@ void factory_reset(void *parameter) {
   setting_reset(); 
   erase_flash(NULL);
   reboot(NULL);
+}
+
+void discovery_read(void *parameter) {
+  if (!discovery_is_active() && discovery_get_count() == 0) {
+    print("NONE");
+  } else if (discovery_is_complete()) {
+    char buf[128];
+    discovery_get_results(buf, sizeof(buf));
+    print(buf);
+  } else {
+    // Still in progress — report partial count
+    char tmp[8];
+    itoa(discovery_get_count(), tmp, 10);
+    print("WAIT ");
+    print(tmp);
+  }
 }
 

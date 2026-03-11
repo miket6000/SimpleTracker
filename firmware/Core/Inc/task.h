@@ -12,7 +12,6 @@ typedef struct {
   uint32_t lastRunTime;
 } Task;
 
-Task *task_add(Task task);
 Task *task_build(uint32_t delay, uint32_t period, void (*callback)(void *), void *param);
 void task_run();
 
