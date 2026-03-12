@@ -10,6 +10,7 @@ typedef enum {
     EVENT_GPS_UPDATE,
     EVENT_LORA_TX,
     EVENT_LORA_RX,
+    EVENT_LORA_TX_DONE,
     EVENT_USB_COMMAND
 } EventType_t;
 

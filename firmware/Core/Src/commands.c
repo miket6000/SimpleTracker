@@ -7,6 +7,7 @@
 #include "filesystem.h"
 #include "event.h"
 #include "lora_discovery.h"
+#include "lora.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -92,9 +93,42 @@ void transmit(void *parameter) {
   }
 
   // Route through EVENT_LORA_TX so processLoRaTx() prefixes our UID
-  static char txPayload[32];
+  // Build the over-the-air payload into txPayload
+  static char txPayload[48];
   strncpy(txPayload, cmd, sizeof(txPayload) - 1);
   txPayload[sizeof(txPayload) - 1] = '\0';
+
+  // If this is a T command, check for optional config params:
+  //   USB format: "T &<uid>T <freq> <sf> <bw>"
+  // The cmd already contains "&<uid>T", now read additional params
+  if (cmd[9] == 'T') {
+    char *freqStr = cmd_get_param();
+    if (freqStr != NULL) {
+      char *sfStr = cmd_get_param();
+      char *bwStr = cmd_get_param();
+      if (sfStr != NULL && bwStr != NULL) {
+        uint32_t freq = (uint32_t)atol(freqStr);
+        uint8_t sf    = (uint8_t)atoi(sfStr);
+        uint8_t bw    = (uint8_t)atoi(bwStr);
+
+        // Store config for Ground Station to apply when ACK is received.
+        // Don't set pendingConfigSwitch — that flag is only for the
+        // remote tracker's TX_DONE config switch path.
+        context->pendingFreq = freq;
+        context->pendingSF   = sf;
+        context->pendingBW   = bw;
+
+        // Append config to over-the-air payload as comma-separated decimal
+        // Result: "&<uid>T<freq>,<sf>,<bw>"
+        char tmp[12];
+        strncat(txPayload, itoa(freq, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
+        strncat(txPayload, ",", sizeof(txPayload) - strlen(txPayload) - 1);
+        strncat(txPayload, itoa(sf, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
+        strncat(txPayload, ",", sizeof(txPayload) - strlen(txPayload) - 1);
+        strncat(txPayload, itoa(bw, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
+      }
+    }
+  }
 
   Event_t txEvent;
   txEvent.type = EVENT_LORA_TX;
@@ -134,7 +168,10 @@ void get_config(void *parameter) {
 
 void erase_flash(void *parameter) {
   // delete everything
-  fs_erase();
+  if (fs_erase() != FS_OK) {
+    print("ERR");
+    return;
+  }
 
   // restore current config so it can be loaded on power up
   uint8_t i = 0;
@@ -167,5 +204,33 @@ void discovery_read(void *parameter) {
     print("WAIT ");
     print(tmp);
   }
+}
+
+void channel_switch(void *parameter) {
+  AppContext_t *context = parameter;
+
+  // USB format: "C <freq> <sf> <bw>"  e.g. "C 434000000 9 4"
+  char *freqStr = cmd_get_param();
+  char *sfStr   = cmd_get_param();
+  char *bwStr   = cmd_get_param();
+
+  if (freqStr == NULL || sfStr == NULL || bwStr == NULL) {
+    print("ERR");
+    return;
+  }
+
+  uint32_t freq = (uint32_t)atol(freqStr);
+  uint8_t sf    = (uint8_t)atoi(sfStr);
+  uint8_t bw    = (uint8_t)atoi(bwStr);
+
+  if (freq == 0) {
+    print("ERR");
+    return;
+  }
+
+  LoRa_ApplyConfig(context->lora, freq, sf, bw);
+  LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
+  context->pendingConfigSwitch = false;
+  print("OK");
 }
 

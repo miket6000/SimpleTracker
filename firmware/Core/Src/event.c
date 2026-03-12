@@ -40,6 +40,10 @@ void eventDispatcher(AppContext_t *appContext) {
                 break;
             case EVENT_LORA_TX:
                 processLoRaTx(appContext, event.data);
+                break;
+            case EVENT_LORA_TX_DONE:
+                processLoRaTxDone(appContext);
+                break;
             default:
                 break;
         }

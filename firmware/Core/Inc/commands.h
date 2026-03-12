@@ -20,5 +20,6 @@ void erase_flash(void *parameter);
 void factory_reset(void *parameter);
 void reboot(void *parameter);
 void discovery_read(void *parameter);
+void channel_switch(void *parameter);
 
 #endif // COMMANDS_H

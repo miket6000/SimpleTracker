@@ -166,7 +166,7 @@ void LoRa_Init(LoRa_t *l)
 
 void LoRa_SetFrequency(LoRa_t *l, uint32_t freq_hz)
 {
-    uint64_t frf = ((uint64_t)l->frequency << 25) / 32000000UL;
+    uint64_t frf = ((uint64_t)freq_hz << 25) / 32000000UL;
     uint8_t cmd[5] = {
         CMD_SET_RF_FREQUENCY,
         (frf >> 24) & 0xFF,
@@ -214,6 +214,15 @@ void LoRa_Configure(LoRa_t *l)
 
     LoRa_SetBufferOffsets(l, 0x00, 0x00);
     
+}
+
+void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
+{
+    l->frequency = freq;
+    l->spreadingFactor = sf;
+    l->bandwidth = bw;
+    LoRa_SetFrequency(l, freq);
+    LoRa_Configure(l);
 }
 
 void LoRa_Transmit(LoRa_t *l, uint8_t *data, uint8_t len)

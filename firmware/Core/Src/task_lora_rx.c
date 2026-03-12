@@ -44,10 +44,14 @@ void task_lora_rx(AppContext_t *context, void *param) {
       LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
     }
 
-    // LoRa transmission complete, switch back to Receiving Mode
+    // LoRa transmission complete, push event for higher level handling
     else if (context->lora->events & LORA_EVENT_TX_DONE) {
-      context->lora->events &= ~ LORA_EVENT_TX_DONE;
-      LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
+      context->lora->events &= ~LORA_EVENT_TX_DONE;
+
+      Event_t txDoneEvent;
+      txDoneEvent.type = EVENT_LORA_TX_DONE;
+      txDoneEvent.data = NULL;
+      eventQueue_push(txDoneEvent);
     }
   }
 }

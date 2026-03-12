@@ -196,6 +196,7 @@ int main(void) {
   cmd_add("GET", get_config, NULL);
   cmd_add("UID", print_str, &appContext.uidStr);
   cmd_add("D", discovery_read, &appContext);
+  cmd_add("C", channel_switch, &appContext);
   cmd_add("ERASE", erase_flash, NULL); 
   cmd_add("FACTORY", factory_reset, NULL);
   cmd_set_print_function(print); 

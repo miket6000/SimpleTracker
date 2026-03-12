@@ -3,6 +3,7 @@
 #include "lora_arbitration.h"
 #include "lora_discovery.h"
 #include <string.h>
+#include <stdlib.h>
 #include "lora.h"
 #include "config.h"
 
@@ -23,6 +24,34 @@
 #define OFS_CMD_CHAR  18
 #define OFS_PAYLOAD   19
 #define MIN_CMD_LEN   19  // minimum valid command message length
+
+// Parse comma-separated decimal config: "<freq>,<sf>,<bw>"
+// Returns true if all three fields were parsed successfully.
+static bool parse_config_payload(const char *payload,
+                                 uint32_t *freq, uint8_t *sf, uint8_t *bw) {
+  // freq
+  const char *p = payload;
+  if (*p == '\0') return false;
+  *freq = (uint32_t)atol(p);
+  if (*freq == 0) return false;
+
+  // skip to first comma
+  p = strchr(p, ',');
+  if (p == NULL) return false;
+  p++; // skip ','
+
+  // sf
+  *sf = (uint8_t)atoi(p);
+
+  // skip to second comma
+  p = strchr(p, ',');
+  if (p == NULL) return false;
+  p++; // skip ','
+
+  // bw
+  *bw = (uint8_t)atoi(p);
+  return true;
+}
 
 void processLoRaRx(AppContext_t *context, char *loraMessage) {
   uint16_t len = strlen(loraMessage);
@@ -58,22 +87,61 @@ void processLoRaRx(AppContext_t *context, char *loraMessage) {
           }
           break;
 
-        case 'T': // Change to Transmit Mode
-          // Respond immediately addressed to sender, then switch mode
+        case 'T': // Change to Transmit Mode (with optional config payload)
           {
-            char ack[14];
-            ack[0] = '&';
-            strncpy(&ack[1], senderUid, 8);
-            ack[9] = 'T';
-            strncpy(&ack[10], "ACK", 3);
-            ack[13] = '\0';
-            LoRa_Transmit(context->lora, (uint8_t *)ack, strlen(ack));
-          }
-          context->mode = MODE_TRACKER;
-          if (context->gpsFix) {
-            led_add_sequence(context->led, gps_lock_sequence);
-          } else {
-            led_add_sequence(context->led, gps_search_sequence);
+            const char *payload = &loraMessage[OFS_PAYLOAD];
+            uint16_t payloadLen = len - OFS_PAYLOAD;
+
+            if (context->mode == MODE_GROUND_STATION &&
+                payloadLen >= 3 && strncmp(payload, "ACK", 3) == 0) {
+              // Ground Station received ACK from tracker — apply stored config
+              if (context->pendingFreq != 0) {
+                LoRa_ApplyConfig(context->lora,
+                                 context->pendingFreq,
+                                 context->pendingSF,
+                                 context->pendingBW);
+                context->pendingFreq = 0;
+                LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
+              }
+              // Store the ACK so the PC can read it back via 'R'
+              context->lastLoraMessage = loraMessage;
+            } else {
+              // Tracker received a T command — parse config and ACK
+
+              // Parse config payload if present: "<freq>,<sf>,<bw>"
+              if (payloadLen > 0) {
+                uint32_t freq;
+                uint8_t sf, bw;
+                if (parse_config_payload(payload, &freq, &sf, &bw)) {
+                  context->pendingFreq = freq;
+                  context->pendingSF   = sf;
+                  context->pendingBW   = bw;
+                  context->pendingConfigSwitch = true;
+                }
+              }
+
+              // ACK immediately on the current (discovery) channel
+              char ack[14];
+              ack[0] = '&';
+              strncpy(&ack[1], senderUid, 8);
+              ack[9] = 'T';
+              strncpy(&ack[10], "ACK", 3);
+              ack[13] = '\0';
+              LoRa_Transmit(context->lora, (uint8_t *)ack, strlen(ack));
+
+              // If no config payload, switch to tracker mode immediately
+              // If config payload present, task_lora_rx will apply config
+              // after TX_DONE and then set MODE_TRACKER
+              if (!context->pendingConfigSwitch) {
+                context->mode = MODE_TRACKER;
+              }
+
+              if (context->gpsFix) {
+                led_add_sequence(context->led, gps_lock_sequence);
+              } else {
+                led_add_sequence(context->led, gps_search_sequence);
+              }
+            }
           }
           break;
 
@@ -108,4 +176,17 @@ void processLoRaRx(AppContext_t *context, char *loraMessage) {
     strncat(loraMessage, rssi, 5);
     context->lastLoraMessage = loraMessage;
   }
+}
+
+void processLoRaTxDone(AppContext_t *context) {
+  // Apply pending config switch (only set by remote tracker after ACK TX)
+  if (context->pendingConfigSwitch) {
+    LoRa_ApplyConfig(context->lora,
+                     context->pendingFreq,
+                     context->pendingSF,
+                     context->pendingBW);
+    context->pendingConfigSwitch = false;
+    context->mode = MODE_TRACKER;
+  }
+  LoRa_Receive(context->lora, LORA_RX_TIMEOUT_MS);
 }

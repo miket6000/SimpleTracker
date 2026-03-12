@@ -142,6 +142,7 @@ void LoRa_Reset(LoRa_t *lora);
 
 void LoRa_SetFrequency(LoRa_t *lora, uint32_t freq_hz);
 void LoRa_Configure(LoRa_t *lora);
+void LoRa_ApplyConfig(LoRa_t *lora, uint32_t freq, uint8_t sf, uint8_t bw);
 
 void LoRa_Transmit(LoRa_t *lora, uint8_t *data, uint8_t length);
 void LoRa_Receive(LoRa_t *lora, uint32_t timeout_ms);

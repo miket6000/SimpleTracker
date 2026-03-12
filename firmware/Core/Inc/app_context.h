@@ -24,6 +24,11 @@ typedef struct {
   uint8_t mode;
   usb_state_t *usb;
   uint16_t voltage;
+  // Pending LoRa config (applied after ACK TX completes)
+  uint32_t pendingFreq;
+  uint8_t  pendingSF;
+  uint8_t  pendingBW;
+  bool     pendingConfigSwitch;
 } AppContext_t;
 
 #endif // APP_CONTEXT_H

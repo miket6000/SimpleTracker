@@ -7,5 +7,6 @@
 void processGPSData(AppContext_t *context, char *nmeaSentence);
 void processLoRaRx(AppContext_t *context, char *message);
 void processLoRaTx(AppContext_t *context, char *message);
+void processLoRaTxDone(AppContext_t *context);
 
 #endif // EVENT_PROCESSORS_H
