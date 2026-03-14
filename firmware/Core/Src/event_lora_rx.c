@@ -120,17 +120,24 @@ void processLoRaRx(AppContext_t *context, char *loraMessage) {
                 }
               }
 
-              // ACK immediately on the current (discovery) channel
-              char ack[14];
-              ack[0] = '&';
-              strncpy(&ack[1], senderUid, 8);
-              ack[9] = 'T';
-              strncpy(&ack[10], "ACK", 3);
-              ack[13] = '\0';
-              LoRa_Transmit(context->lora, (uint8_t *)ack, strlen(ack));
+              // ACK on the current (discovery) channel, routed through
+              // processLoRaTx so the sender UID is prepended automatically.
+              // This also ensures processLoRaTxDone fires after the ACK
+              // completes, which is where pendingConfigSwitch is applied.
+              static char ackPayload[14];
+              ackPayload[0] = '&';
+              strncpy(&ackPayload[1], senderUid, 8);
+              ackPayload[9] = 'T';
+              strncpy(&ackPayload[10], "ACK", 3);
+              ackPayload[13] = '\0';
+
+              Event_t ackEvent;
+              ackEvent.type = EVENT_LORA_TX;
+              ackEvent.data = ackPayload;
+              eventQueue_push(ackEvent);
 
               // If no config payload, switch to tracker mode immediately
-              // If config payload present, task_lora_rx will apply config
+              // If config payload present, task_lora will apply config
               // after TX_DONE and then set MODE_TRACKER
               if (!context->pendingConfigSwitch) {
                 context->mode = MODE_TRACKER;

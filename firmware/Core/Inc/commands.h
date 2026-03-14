@@ -13,6 +13,8 @@ void print_str(void *parameter);
 void print_remote(void *parameter);
 void print_str_ptr(void *parameter);
 void transmit(void *parameter);
+void scan(void *parameter);
+void pair(void *parameter);
 void set_config(void *parameter);
 void get_config(void *parameter);
 void set_mode(void *parameter);

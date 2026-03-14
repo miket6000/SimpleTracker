@@ -10,7 +10,7 @@ char bufferB[LORA_MAX_MSG_LEN];
 char *lastLoraMessage = bufferA;
 char *workingBuffer = bufferB;
 
-void task_lora_rx(AppContext_t *context, void *param) {
+void task_lora(AppContext_t *context, void *param) {
   LoRaRxInfo_t info;
 
   if (context->mode & MODE_GROUND_STATION) {

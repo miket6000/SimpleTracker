@@ -213,16 +213,41 @@ void LoRa_Configure(LoRa_t *l)
     SpiCmd(l, pkt, rx2, sizeof(pkt));
 
     LoRa_SetBufferOffsets(l, 0x00, 0x00);
+
+    uint8_t tmp = LoRa_ReadRegister(l, 0x08D8);
+    LoRa_WriteRegister(l, 0x08D8, tmp | 0x1E);
     
 }
 
 void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
 {
+    // Disable the DIO1 EXTI while reconfiguring to prevent the ISR from
+    // firing (e.g. a timeout when we abort RX with SET_STANDBY) and
+    // re-entering the SPI bus mid-transaction, which corrupts commands.
+    HAL_NVIC_DisableIRQ(EXTI0_1_IRQn);
+
+    // SX1262 requires STDBY mode before changing modulation/frequency params
+    uint8_t cmd[] = { CMD_SET_STANDBY, 0x00 };
+    uint8_t rx[2];
+    SpiCmd(l, cmd, rx, sizeof(cmd));
+    l->currentMode = LORA_MODE_STDBY;
+
     l->frequency = freq;
     l->spreadingFactor = sf;
     l->bandwidth = bw;
     LoRa_SetFrequency(l, freq);
     LoRa_Configure(l);
+
+    // Clear any IRQ the SX1262 raised during the transition (e.g. RX timeout
+    // from the aborted receive) so DIO1 is de-asserted before we re-enable
+    // the EXTI, preventing a spurious interrupt with stale state.
+    LoRa_ClearIrq(l, 0xFFFF);
+    l->events = 0;
+
+    // Clear the EXTI pending bit in case DIO1 pulsed while we were disabled,
+    // then re-enable the interrupt.
+    __HAL_GPIO_EXTI_CLEAR_IT(l->dio1_pin);
+    HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
 }
 
 void LoRa_Transmit(LoRa_t *l, uint8_t *data, uint8_t len)

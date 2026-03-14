@@ -192,12 +192,14 @@ int main(void) {
   cmd_add("R", print_remote, &appContext);
   cmd_add("L", print_str_ptr, &appContext.lastGpsSentence);
   cmd_add("T", transmit, &appContext);
+  cmd_add("SCAN", scan, &appContext);
+  cmd_add("PAIR", pair, &appContext);
   cmd_add("SET", set_config, NULL);
   cmd_add("GET", get_config, NULL);
   cmd_add("UID", print_str, &appContext.uidStr);
   cmd_add("D", discovery_read, &appContext);
   cmd_add("C", channel_switch, &appContext);
-  cmd_add("ERASE", erase_flash, NULL); 
+  //cmd_add("ERASE", erase_flash, NULL); 
   cmd_add("FACTORY", factory_reset, NULL);
   cmd_set_print_function(print); 
 
@@ -223,10 +225,11 @@ int main(void) {
 
   /* create task, arguments are init_delay, period, callback, parameter */
   task_build(0, 25, task_led, &appContext);
-  task_build(0, 100, task_lora_rx, &appContext);
+  task_build(0, 100, task_lora, &appContext);
   task_build(0, 0, task_usb, &appContext);
   task_build(0, 2500, task_measure_voltage, &appContext);
   task_build(0, 10, task_gps, &appContext);
+  task_build(0, 0, lora_process_delayed_response, &appContext);
   
   // Rx needs to be started once, will restart itself
   LoRa_Receive(&hlora, LORA_RX_TIMEOUT_MS);
@@ -244,7 +247,6 @@ int main(void) {
     // Time dependant task
     task_run();
     eventDispatcher(&appContext);
-    lora_process_delayed_response(&appContext);
     //power_management();
   }
 

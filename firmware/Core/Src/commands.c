@@ -86,49 +86,77 @@ void transmit(void *parameter) {
     return;
   }
 
-  // If this is a broadcast UID request, start a discovery window
-  // Command format: "&ffffffffU"
-  if (strncmp(cmd, "&ffffffffU", 10) == 0) {
-    discovery_start();
-  }
-
   // Route through EVENT_LORA_TX so processLoRaTx() prefixes our UID
   // Build the over-the-air payload into txPayload
   static char txPayload[48];
   strncpy(txPayload, cmd, sizeof(txPayload) - 1);
   txPayload[sizeof(txPayload) - 1] = '\0';
 
-  // If this is a T command, check for optional config params:
-  //   USB format: "T &<uid>T <freq> <sf> <bw>"
-  // The cmd already contains "&<uid>T", now read additional params
-  if (cmd[9] == 'T') {
-    char *freqStr = cmd_get_param();
-    if (freqStr != NULL) {
-      char *sfStr = cmd_get_param();
-      char *bwStr = cmd_get_param();
-      if (sfStr != NULL && bwStr != NULL) {
-        uint32_t freq = (uint32_t)atol(freqStr);
-        uint8_t sf    = (uint8_t)atoi(sfStr);
-        uint8_t bw    = (uint8_t)atoi(bwStr);
+  Event_t txEvent;
+  txEvent.type = EVENT_LORA_TX;
+  txEvent.data = txPayload;
+  eventQueue_push(txEvent);
 
-        // Store config for Ground Station to apply when ACK is received.
-        // Don't set pendingConfigSwitch — that flag is only for the
-        // remote tracker's TX_DONE config switch path.
-        context->pendingFreq = freq;
-        context->pendingSF   = sf;
-        context->pendingBW   = bw;
+  print("OK");
+}
 
-        // Append config to over-the-air payload as comma-separated decimal
-        // Result: "&<uid>T<freq>,<sf>,<bw>"
-        char tmp[12];
-        strncat(txPayload, itoa(freq, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
-        strncat(txPayload, ",", sizeof(txPayload) - strlen(txPayload) - 1);
-        strncat(txPayload, itoa(sf, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
-        strncat(txPayload, ",", sizeof(txPayload) - strlen(txPayload) - 1);
-        strncat(txPayload, itoa(bw, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
-      }
-    }
+void scan(void *parameter) {
+  // Send a broadcast UID request and start a discovery window
+  // Over-the-air payload: "&ffffffffU"
+  static char txPayload[] = "&ffffffffU";
+
+  discovery_start();
+
+  Event_t txEvent;
+  txEvent.type = EVENT_LORA_TX;
+  txEvent.data = txPayload;
+  eventQueue_push(txEvent);
+
+  print("OK");
+}
+
+void pair(void *parameter) {
+  AppContext_t *context = parameter;
+
+  // USB format: "PAIR <uid> <freq> <sf> <bw>"
+  char *uidStr  = cmd_get_param();
+  char *freqStr = cmd_get_param();
+  char *sfStr   = cmd_get_param();
+  char *bwStr   = cmd_get_param();
+
+  if (uidStr == NULL || freqStr == NULL || sfStr == NULL || bwStr == NULL) {
+    print("ERR");
+    return;
   }
+
+  uint32_t freq = (uint32_t)atol(freqStr);
+  uint8_t sf    = (uint8_t)atoi(sfStr);
+  uint8_t bw    = (uint8_t)atoi(bwStr);
+
+  if (freq == 0) {
+    print("ERR");
+    return;
+  }
+
+  // Store config for Ground Station to apply when ACK is received.
+  // Don't set pendingConfigSwitch — that flag is only for the
+  // remote tracker's TX_DONE config switch path.
+  context->pendingFreq = freq;
+  context->pendingSF   = sf;
+  context->pendingBW   = bw;
+
+  // Build over-the-air payload: "&<uid>T<freq>,<sf>,<bw>"
+  static char txPayload[48];
+  txPayload[0] = '&';
+  txPayload[1] = '\0';
+  strncat(txPayload, uidStr, sizeof(txPayload) - strlen(txPayload) - 1);
+  strncat(txPayload, "T", sizeof(txPayload) - strlen(txPayload) - 1);
+  char tmp[12];
+  strncat(txPayload, itoa(freq, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
+  strncat(txPayload, ",", sizeof(txPayload) - strlen(txPayload) - 1);
+  strncat(txPayload, itoa(sf, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
+  strncat(txPayload, ",", sizeof(txPayload) - strlen(txPayload) - 1);
+  strncat(txPayload, itoa(bw, tmp, 10), sizeof(txPayload) - strlen(txPayload) - 1);
 
   Event_t txEvent;
   txEvent.type = EVENT_LORA_TX;

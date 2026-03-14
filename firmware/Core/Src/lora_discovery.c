@@ -60,10 +60,13 @@ void discovery_get_results(char *outBuffer, uint16_t maxLen) {
 
   // Format: "<count> <uid1>,<rssi1> <uid2>,<rssi2> ..."
   char tmp[8];
-  itoa(discovery.count, tmp, 10);
+  uint8_t reportCount = discovery.count;
+  discovery.count = 0;  // Reset so subsequent 'D' commands return "NONE"
+
+  itoa(reportCount, tmp, 10);
   strncpy(outBuffer, tmp, maxLen);
 
-  for (uint8_t i = 0; i < discovery.count; i++) {
+  for (uint8_t i = 0; i < reportCount; i++) {
     strncat(outBuffer, " ", maxLen - strlen(outBuffer) - 1);
     strncat(outBuffer, discovery.uids[i], maxLen - strlen(outBuffer) - 1);
     strncat(outBuffer, ",", maxLen - strlen(outBuffer) - 1);
