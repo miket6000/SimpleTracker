@@ -6,14 +6,19 @@
 
 #define SEQUENCE_LEN 12
 
+/*
+ * Indices into the codes[] table.
+ * 0-9 represent blink counts, followed by special commands.
+ */
 #define SHORT_PAUSE 10
-#define PAUSE 11
-#define NOTHING 12
-#define END_OF_SEQUENCE 0x80
+#define PAUSE       11
+#define NOTHING     12
+#define ON_HOLD     13
+#define NUM_CODES   14
 
 typedef enum {
-  LED_OFF, 
-  LED_ON, 
+  LED_OFF,
+  LED_ON,
   LED_TOGGLE
 } LedState;
 
@@ -21,9 +26,9 @@ typedef struct {
   GPIO_TypeDef *port;
   uint16_t pin;
   uint8_t sequence_index;
-  uint8_t blink_index;
-  uint8_t blink_off_counter;
+  uint8_t bit_index;
   uint8_t sequence_head;
+  uint8_t off_counter; /* remaining ticks for stretched off-bit */
   int8_t sequence[SEQUENCE_LEN];
 } LedHandle;
 

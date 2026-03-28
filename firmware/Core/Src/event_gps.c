@@ -8,7 +8,7 @@
  * This should be corrected by making this atomic, or stopping the UART until we return.
  */
 
-
+static GpsPacket_t gpsPacket;
 
 void processGPSData(AppContext_t *context, char *gpsSentence) {
   static uint8_t counter = 0;
@@ -24,9 +24,10 @@ void processGPSData(AppContext_t *context, char *gpsSentence) {
   if (context->mode & MODE_TRACKER) {
     // push an event for every second message to avoid swamping the lora modules
     if (counter & 0x01) {
+        gps_pack_sentence(gpsSentence, &gpsPacket);
         Event_t newEvent;
-        newEvent.type = EVENT_LORA_TX;
-        newEvent.data = context->lastGpsSentence;
+        newEvent.type = EVENT_LORA_TX_GPS;
+        newEvent.data = &gpsPacket;
         eventQueue_push(newEvent);
     }
     if (context->gpsFix) {

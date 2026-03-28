@@ -26,6 +26,7 @@ void task_lora(AppContext_t *context, void *param) {
         workingBuffer = tmpBuffer;
 
         context->rssi = info.rssi;
+        context->loraRxLen = len;
 
         // Push new event for higher level code
         Event_t newEvent;

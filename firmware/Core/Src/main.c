@@ -172,6 +172,7 @@ int main(void) {
   fs_init();
   load_settings();
   led_init(&status_led, LED_GPIO_Port, LED_Pin);
+  led_add_sequence(&status_led, idle_sequence);
   tusb_init();
 
   /* populate appContext with values that are now available */
@@ -224,7 +225,7 @@ int main(void) {
   gps_init(&huart2);
 
   /* create task, arguments are init_delay, period, callback, parameter */
-  task_build(0, 25, task_led, &appContext);
+  task_build(0, 100, task_led, &appContext);
   task_build(0, 100, task_lora, &appContext);
   task_build(0, 0, task_usb, &appContext);
   task_build(0, 2500, task_measure_voltage, &appContext);

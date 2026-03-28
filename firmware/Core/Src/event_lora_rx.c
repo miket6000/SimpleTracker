@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "lora.h"
 #include "config.h"
+#include "gps.h"
 
 #define BROADCAST_ADDRESS "ffffffff"
 
@@ -53,8 +54,7 @@ static bool parse_config_payload(const char *payload,
   return true;
 }
 
-void processLoRaRx(AppContext_t *context, char *loraMessage) {
-  uint16_t len = strlen(loraMessage);
+void processLoRaRx(AppContext_t *context, char *loraMessage, uint8_t len) {
 
   // Check if the message is a structured command with sender prefix
   if (len >= MIN_CMD_LEN && loraMessage[OFS_CMD_START] == '&') {
@@ -175,8 +175,32 @@ void processLoRaRx(AppContext_t *context, char *loraMessage) {
           break;
       }
     }
+  } else if (len == 9 + GPS_PACKET_SIZE) {
+    // Binary GPS packet: "<uid> <19-byte GpsPacket_t>"
+    // Save sender UID (first 8 chars)
+    char senderUid[9];
+    memcpy(senderUid, loraMessage, 8);
+    senderUid[8] = '\0';
+
+    // Decode binary packet to NMEA, rebuilding the message in the same buffer
+    // as: "<uid> <NMEA sentence> <rssi>"
+    GpsPacket_t packet;
+    memcpy(&packet, &loraMessage[9], GPS_PACKET_SIZE);
+
+    // Reconstruct: "<uid> <NMEA> <rssi>"
+    memcpy(loraMessage, senderUid, 8);
+    loraMessage[8] = ' ';
+    gps_unpack_to_nmea(&packet, &loraMessage[9], LORA_MAX_MSG_LEN - 9 - 6);
+
+    // Append RSSI
+    char rssi[5] = {0};
+    itoa(context->rssi, rssi, 10);
+    strncat(loraMessage, " ", 2);
+    strncat(loraMessage, rssi, 5);
+
+    context->lastLoraMessage = loraMessage;
   } else {
-    // Non-command message (e.g. GPS tracking data): append RSSI and store
+    // Non-command, non-GPS message: append RSSI and store
     char rssi[5] = {0};
     itoa(context->rssi, rssi, 10);
     strncat(loraMessage, " ", 2);

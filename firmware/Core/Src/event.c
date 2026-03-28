@@ -36,10 +36,13 @@ void eventDispatcher(AppContext_t *appContext) {
                 processGPSData(appContext, event.data);
                 break;
             case EVENT_LORA_RX:
-                processLoRaRx(appContext, event.data);
+                processLoRaRx(appContext, event.data, appContext->loraRxLen);
                 break;
             case EVENT_LORA_TX:
                 processLoRaTx(appContext, event.data);
+                break;
+            case EVENT_LORA_TX_GPS:
+                processLoRaGpsTx(appContext, event.data);
                 break;
             case EVENT_LORA_TX_DONE:
                 processLoRaTxDone(appContext);

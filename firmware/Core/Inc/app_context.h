@@ -21,6 +21,7 @@ typedef struct {
   char *lastGpsSentence;
   char *lastLoraMessage;
   int16_t rssi;
+  uint8_t loraRxLen;
   uint8_t mode;
   usb_state_t *usb;
   uint16_t voltage;
