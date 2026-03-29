@@ -42,7 +42,7 @@ uint32_t UID_Get(void) {
   return uid96_to_32(HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
 }
 
-char *UID_GetStr(void) {
+char *UID_GetString(void) {
   static char buf[9];
   uint32_to_hex(UID_Get(), buf);
   return buf;
