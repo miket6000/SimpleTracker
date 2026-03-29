@@ -140,7 +140,8 @@ void pair(void *parameter) {
 
   // Store config for Ground Station to apply when ACK is received.
   // Don't set pendingConfigSwitch — that flag is only for the
-  // remote tracker's TX_DONE config switch path.
+  // remote tracker's TX_DONE config switch path. Ground Station will change to new parameters on receiving
+  // the ACK from the remote tracker.
   context->pendingFreq = freq;
   context->pendingSF   = sf;
   context->pendingBW   = bw;

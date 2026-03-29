@@ -181,8 +181,9 @@ int main(void) {
   //appContext.mode = MODE_TRACKER;
   appContext.mode = MODE_GROUND_STATION;
   appContext.uid = UID_Get();
-  itoa(appContext.uid, appContext.uidStr, 16);
-  
+  strncpy(appContext.uidStr, UID_GetString(), 8);
+  appContext.uidStr[8] = '\0';
+
   /* Seed the PRNG for LoRa collision avoidance with device UID */
   lora_seed_prng(appContext.uid);
   

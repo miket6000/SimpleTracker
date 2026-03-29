@@ -63,7 +63,7 @@ static void step_sequencer(LedHandle *hled);
 /* How many ticks each "off" bit should last (permanently stretched).
  * Value of 1 = normal (each bit = 1 tick). Use 2 to make off twice as long as on.
  */
-#define OFF_TICKS 4
+#define OFF_TICKS 2
 
 void led(LedHandle *hled, const LedState state) {
   switch (state) {
