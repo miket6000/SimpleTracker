@@ -11,17 +11,9 @@ The hardware is fairly minimal. It consist of a battery charger, two 3.3V linear
 The tracker can be powered by either USB (such as when used as a ground station) or via an AltusMetrum compatible 1s lithium battery. There is an included battery charger that will charge the battery at 100mA if USB is plugged in, so it is recommended that the tracker battery be between 100mAh (to avoid charging it too fast) and 300mAh (to avoid taking too long to charge). Of course there is no upper limit on the capacity of the battery, you can always unplug it to use an external charger if the charge is too slow.
 
 ## Firmware
+The firmware is "good enough". It can be flashed to the tracker by disconnecting the battery and shorting the "boot" pin to the 3V3 pin right beside it and then plugging in the USB C cable. This will put the tracker into DFU bootloader mode where it can be programmed using CubeIDE or dfu-util.
 
-The firmware is currently a work in progress but the current status as of updating this document the following is working:
- - Flash driver to allow storing and updating of parameters.
- - LED driver
- - GNSS module driver
- - Command interpreter for configuration, Ground Station mode and debug
-
-The below is still WIP:
- - The LoRa module Tx/Rx code
-
-Default settings are to broadcast on 434MHz. With the broadcast message consisting of a UID and the NMEA GPGGA message, this results in an on-air time of ~600ms every 2 seconds and a proven range of at least 10km with a simple omnidirectional 1/4 wave antenna.
+On power up the module will listen on 434MHz SF 9 BW 125kHz for a command asking for it's UID, or telling it to start transmitting on another channel. Alternatively it can recieve a command via USB if it's acting as a ground station in which case it will issue commands to other trackers. This is all orchestrated by the application.
 
 The LED provides status information via as follows:
  - 1 flash followed by 1 flash - Tracker mode, Waiting for GPS fix
@@ -29,11 +21,6 @@ The LED provides status information via as follows:
  - 2 flashes followed by 1 flash - Ground station mode, waiting for remote tracker GNSS fix
  - 2 flashes followed by 2 flashes - Ground station mode, remote tracker has GNSS fix
  - 3 flahses - Ground station mode, no remote tracker detected on the current channel in the last 10 seconds
-
-In receive\_mode the tracker outputs three different messages.
- 1. A local NMEA message (identified by the characters '<-') followed by an 8 character UID of the local device, and the raw NMEA GPGGA message.
- 2. A remote NMEA message (identified by the characters '->') followed by the 8 character UID of the remote transmitter and the raw NMEA GPGGA message.
- 3. The RSSI of the last message received from the remote transmitter (identified by the characters 'RSSI:')
 
 ## Application
 
