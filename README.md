@@ -24,5 +24,5 @@ The LED provides status information via as follows:
 
 ## Application
 
-I decided the application deserved it's own repository, so has been moved to [https://github.com/miket6000/SimpleSuite](SimpleSuite). It is built and tested in Linux, with plans on supporting Android. 
+I decided the application deserved it's own repository, so has been moved to [https://github.com/miket6000/SimpleSuite](https://github.com/miket6000/SimpleSuite). It is built and tested in Linux, with plans on supporting Android. 
 
