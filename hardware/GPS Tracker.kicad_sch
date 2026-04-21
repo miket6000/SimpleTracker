@@ -5,9 +5,9 @@
 	(uuid "1342bbf7-72bc-4277-a73a-932aa6a5d42a")
 	(paper "A3")
 	(title_block
-		(title "SimpleTracker")
-		(date "2025-10-26")
-		(rev "0.5")
+		(title "SimpleTrackerPro")
+		(date "2026-04-01")
+		(rev "0.1")
 		(company "Blueskin Design Ltd")
 		(comment 1 "CERN-OHL-W-2.0 license")
 	)

@@ -8,7 +8,7 @@
 
 #define DEFAULT_FREQ      434000000UL
 #define DEFAULT_SF        LORA_SF9
-#define DEFAULT_BW        LORA_BW_125
+#define DEFAULT_BW        LORA_BW_62
 #define DEFAULT_CR        LORA_CR_4_5
 #define DEFAULT_POWER     LORA_TX_POWER_22_DBM
 #define DEFAULT_OC        150

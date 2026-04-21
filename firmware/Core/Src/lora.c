@@ -14,6 +14,7 @@
 
 #define CMD_SET_SLEEP               0x84
 #define CMD_SET_STANDBY             0x80
+#define CMD_GET_STATUS              0xC0
 #define CMD_SET_FS                  0xC1
 #define CMD_SET_TX                  0x83
 #define CMD_SET_RX                  0x82
@@ -30,6 +31,10 @@
 #define CMD_SET_PACKET_TYPE         0x8A
 #define CMD_SET_BUFFER_BASE_ADDRESS 0x8F
 
+#define CMD_SET_DIO3_AS_TCXO_CTRL       0x97
+#define CMD_SET_DIO2_AS_RF_SWITCH_CTRL  0x9D
+#define CMD_SET_REGULATOR_MODE          0x96 
+
 #define CMD_SET_DIO_IRQ_PARAMS      0x08
 #define CMD_GET_IRQ_STATUS          0x12
 #define CMD_CLEAR_IRQ_STATUS        0x02
@@ -37,7 +42,14 @@
 #define CMD_GET_RX_BUFFER_STATUS    0x13
 #define CMD_GET_PACKET_STATUS       0x14
 
+
 /* ================= Helpers ================= */
+
+#define TCXO_CTRL_3V3   0x07
+#define USE_DCDC        0x01
+#define REG_XTA_TRIM    0x0911
+#define STDBY_RC        0x00
+#define STDBY_TCXO      0x01
 
 static void NSS_Low(LoRa_t *l) {
     HAL_GPIO_WritePin(l->nss_port, l->nss_pin, GPIO_PIN_RESET);
@@ -139,12 +151,64 @@ static void LoRa_WriteRegister(LoRa_t *l, uint16_t address, uint8_t data) {
   SpiCmd(l, cmd, rx, sizeof(cmd));
 }
 
+static void LoRa_SetDio3AsTcxoCtrl(LoRa_t *l, uint8_t ctrl, uint32_t timeout) {
+    uint8_t cmd[] = {
+        CMD_SET_DIO3_AS_TCXO_CTRL,
+        ctrl,
+        (timeout >> 24) & 0xFF,
+        (timeout >> 16) & 0xFF,
+        (timeout >> 8)  & 0xFF,
+        timeout & 0xFF
+    };
+    uint8_t rx[sizeof(cmd)];
+    SpiCmd(l, cmd, rx, sizeof(cmd));
+}
+
+static void LoRa_SetDio2AsRfSwitchCtrl(LoRa_t *l, uint8_t ctrl) {
+    uint8_t cmd[] = {
+        CMD_SET_DIO2_AS_RF_SWITCH_CTRL,
+        ctrl
+    };
+    uint8_t rx[sizeof(cmd)];
+    SpiCmd(l, cmd, rx, sizeof(cmd));
+}
+
+static void LoRa_SetRegulatorMode (LoRa_t *l, uint8_t mode) {
+    uint8_t cmd[] = {
+        CMD_SET_REGULATOR_MODE,
+        mode
+    };
+    uint8_t rx[sizeof(cmd)];
+    SpiCmd(l, cmd, rx, sizeof(cmd));
+}
+
+static void LoRa_SetStandby(LoRa_t *l, uint8_t mode) {
+    uint8_t cmd[] = {
+        CMD_SET_STANDBY,
+        mode
+    };
+    uint8_t rx[sizeof(cmd)];
+    SpiCmd(l, cmd, rx, sizeof(cmd));
+}
+
+static void LoRa_WakeUp(LoRa_t *l) {
+    uint8_t cmd[] = {
+        CMD_GET_STATUS,
+        0x00
+    };
+    uint8_t rx[sizeof(cmd)];
+    NSS_Low(l);
+    HAL_SPI_TransmitReceive(l->hspi, cmd, rx, sizeof(cmd), HAL_MAX_DELAY);
+    NSS_High(l);
+    WaitBusy(l);
+}
+
 /* ================= Core ================= */
 
 void LoRa_Reset(LoRa_t *l)
 {
     HAL_GPIO_WritePin(l->reset_port, l->reset_pin, GPIO_PIN_RESET);
-    HAL_Delay(2);
+    HAL_Delay(10);
     HAL_GPIO_WritePin(l->reset_port, l->reset_pin, GPIO_PIN_SET);
     HAL_Delay(10);
 }
@@ -152,6 +216,17 @@ void LoRa_Reset(LoRa_t *l)
 void LoRa_Init(LoRa_t *l)
 {
     LoRa_Reset(l);
+    LoRa_WakeUp( l );
+    LoRa_SetStandby( l, STDBY_RC );
+    
+
+    //LoRa_SetDio3AsTcxoCtrl( l, TCXO_CTRL_3V3, 320 );
+    LoRa_WriteRegister( l, REG_XTA_TRIM, 0x2F ); // Redundant, SetDio3AsTcxoCtrl does this automatically
+    LoRa_SetStandby( l, STDBY_TCXO );
+    LoRa_SetDio2AsRfSwitchCtrl( l, 1 );
+    
+    LoRa_SetRegulatorMode ( l, USE_DCDC );
+    
 
     // ApplyConfig handles standby, frequency, modulation, packet params, IRQ clear
     LoRa_ApplyConfig(l, l->frequency, l->spreadingFactor, l->bandwidth);
@@ -182,17 +257,14 @@ void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
     // re-entering the SPI bus mid-transaction, which corrupts commands.
     HAL_NVIC_DisableIRQ(EXTI0_1_IRQn);
 
-    // SX1262 requires STDBY mode before changing modulation/frequency params
-    uint8_t cmd[] = { CMD_SET_STANDBY, 0x00 };
-    uint8_t rx[2];
-    SpiCmd(l, cmd, rx, sizeof(cmd));
-    l->currentMode = LORA_MODE_STDBY;
+    LoRa_SetStandby( l, STDBY_TCXO );
 
     l->frequency = freq;
     l->spreadingFactor = sf;
     l->bandwidth = bw;
     LoRa_SetFrequency(l, freq);
 
+    // Set the packet type to LoRa (1)
     uint8_t type[2] = {
       CMD_SET_PACKET_TYPE,
       1
@@ -201,17 +273,19 @@ void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
     uint8_t rx0[2];
     SpiCmd(l, type, rx0, sizeof(type));
 
+    // Set the lora modulation parameters
     uint8_t mod[5] = {
         CMD_SET_MODULATION_PARAMS,
         l->spreadingFactor,
         l->bandwidth,
         l->codingRate,
-        0x00
+        0x01 // 1 = LowDataRateOptimization
     };
 
     uint8_t rx1[5];
     SpiCmd(l, mod, rx1, sizeof(mod));
 
+    // Set the lora packet parameters
     uint8_t pkt[7] = {
         CMD_SET_PACKET_PARAMS,
         (l->preambleLength >> 8) & 0xFF,
@@ -225,6 +299,7 @@ void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
     uint8_t rx2[7];
     SpiCmd(l, pkt, rx2, sizeof(pkt));
 
+    // use a single buffer at location 0x00
     LoRa_SetBufferOffsets(l, 0x00, 0x00);
 
     // Reduce sensitivity of OVP per datasheet known limitations.

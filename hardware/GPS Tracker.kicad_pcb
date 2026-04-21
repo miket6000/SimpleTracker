@@ -8,9 +8,9 @@
 	)
 	(paper "A4")
 	(title_block
-		(title "SimpleTracker")
-		(date "2025-10-26")
-		(rev "0.5")
+		(title "SimpleTrackerPro")
+		(date "2026-04-01")
+		(rev "0.1")
 		(company "Blueskin Design Ltd")
 		(comment 1 "CERN-OHL-W-2.0 license")
 	)
@@ -14414,7 +14414,7 @@
 		(layer "Edge.Cuts")
 		(uuid "fa573154-3110-4684-b986-3343c0d280b9")
 	)
-	(gr_text "V0.5"
+	(gr_text "V0.1"
 		(at 153.843 105.367 270)
 		(layer "F.SilkS")
 		(uuid "19b79826-e042-4dff-8e79-4d5ba65b8d3f")
@@ -14426,9 +14426,9 @@
 			(justify left bottom)
 		)
 	)
-	(gr_text "SimpleTracker"
+	(gr_text "SimpleTrackerPro"
 		(at 154.986 107.399 270)
-		(layer "F.SilkS" knockout)
+		(layer "F.SilkS")
 		(uuid "ecc41e29-c9f3-4562-8564-87523e89ed1a")
 		(effects
 			(font

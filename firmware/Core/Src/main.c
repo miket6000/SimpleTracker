@@ -169,8 +169,8 @@ int main(void) {
 
   //led(&status_led, LED_ON);
   /* Initialize flash filesystem and load settings */
-  fs_init();
-  load_settings();
+  //fs_init();
+  //load_settings();
   led_init(&status_led, LED_GPIO_Port, LED_Pin);
   led_add_sequence(&status_led, idle_sequence);
   tusb_init();
