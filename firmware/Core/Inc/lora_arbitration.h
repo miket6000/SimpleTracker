@@ -23,13 +23,12 @@ void lora_schedule_delayed_response(uint8_t *responseData, uint16_t responseLeng
 
 /**
  * Poll for a pending delayed response and fire it when the delay expires.
- * Call this from the main loop. When the delay has elapsed it pushes an
- * EVENT_LORA_TX event rather than transmitting directly, keeping all
- * transmissions routed through processLoRaTx().
+ * Call this from the task scheduler (task_build), i.e. with a plain
+ * void* callback signature like the other task callbacks.
  *
- * @param context The application context (needed to push the TX event)
+ * @param parameter Unused; present for the task_build callback signature
  */
-void lora_process_delayed_response(AppContext_t *context);
+void lora_process_delayed_response(void *parameter);
 
 /**
  * Calculate a random delay within the configured slot range.

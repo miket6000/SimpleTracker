@@ -48,7 +48,7 @@ void lora_schedule_delayed_response(uint8_t *responseData, uint16_t responseLeng
   lora_response_pending = true;
 }
 
-void lora_process_delayed_response(AppContext_t *context) {
+void lora_process_delayed_response(void *parameter) {
   if (!lora_response_pending) return;
 
   if ((HAL_GetTick() - lora_response_target_time) < 0x80000000U) {
