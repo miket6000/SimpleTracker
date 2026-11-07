@@ -13,7 +13,7 @@ The tracker can be powered by either USB (such as when used as a ground station)
 ## Firmware
 The firmware is "good enough". It can be flashed to the tracker by disconnecting the battery and shorting the "boot" pin to the 3V3 pin right beside it and then plugging in the USB C cable. This will put the tracker into DFU bootloader mode where it can be programmed using CubeIDE or dfu-util.
 
-On power up the module will listen on 434MHz SF 9 BW 125kHz for a command asking for it's UID, or telling it to start transmitting on another channel. Alternatively it can recieve a command via USB if it's acting as a ground station in which case it will issue commands to other trackers. This is all orchestrated by the application.
+On power up the module will listen on 434MHz SF 9 BW 62.5kHz for a command asking for it's UID, or telling it to start transmitting on another channel. Alternatively it can recieve a command via USB if it's acting as a ground station in which case it will issue commands to other trackers. This is all orchestrated by the application.
 
 The LED provides status information via as follows:
  - 1 flash followed by 1 flash - Tracker mode, Waiting for GPS fix
