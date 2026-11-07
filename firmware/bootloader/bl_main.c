@@ -265,10 +265,18 @@ void bl_resp(uint8_t type, const uint8_t *payload, uint8_t len) {
   f[5 + len] = (uint8_t)(c >> 8);
 
   if (tud_cdc_connected()) {
-    tud_cdc_write(f, 6 + len);
+    // chunked write: tud_cdc_write truncates silently when the 256 B TX
+    // buffer fills — only READ responses (up to 254 B) overflow one call,
+    // but the loss is silent, so the TX path is correct for any length
+    uint32_t total = 6 + len, off = 0;
+    while (off < total) {
+      uint32_t n = tud_cdc_write(&f[off], total - off);
+      off += n;
+      if (n == 0) for (int i = 0; i < 100; i++) bl_usbp();
+    }
     tud_cdc_write_flush();
   }
-  for (int i = 0; i < 200; i++) bl_usbp();   // let the final IN go out
+  for (int i = 0; i < 100; i++) bl_usbp();   // let the final IN go out
 }
 
 static __attribute__((noinline))
@@ -310,10 +318,10 @@ static void bl_handle_frame(void) {
 
 // per-frame handlers (split out of the dispatcher: one shared copy each)
 static void bl_fr_info(void) {
-  uint8_t out[16];
+  uint8_t out[20];
   char uid[9];
   uid_string(uid);
-  for (int i = 0; i < 16; i++) out[i] = 0;
+  for (int i = 0; i < 20; i++) out[i] = 0;
   out[0] = BL_PROTO_VERSION;
   out[1] = BL_VERSION;
   out[2] = BL_REVISION;
@@ -321,7 +329,11 @@ static void bl_fr_info(void) {
   memcpy(&out[4], uid, 8);
   uint32_t bid = info_valid() ? g_info->buildId : 0;
   memcpy(&out[12], &bid, 4);
-  bl_resp(FR_INFO | 0x80, out, sizeof(out));
+  // app boot breadcrumbs: noinit SRAM word stamped by the bench app at each
+  // boot stage; Fault_Handler marks the failing stage. see boot_common.h
+  uint32_t bcr = *(volatile uint32_t *)0x200017A0UL;
+  memcpy(&out[16], &bcr, 4);
+  bl_resp(FR_INFO | 0x80, out, 20);
 }
 
 static void bl_fr_erase(void) {

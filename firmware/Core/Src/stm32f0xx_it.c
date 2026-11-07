@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "boot_common.h"
 #include "tusb.h"
 #include "stm32f0xx_it.h"
 /* Private includes ----------------------------------------------------------*/
@@ -86,6 +87,8 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
+  boot_breadcrumb(BL_BOOTBCR_Fault);   // bench: flag fault for BL INFO post-mortem
+  __disable_irq();
 
   /* USER CODE END HardFault_IRQn 0 */
   while (1)

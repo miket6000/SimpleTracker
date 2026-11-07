@@ -51,6 +51,7 @@
 #include <stdlib.h>
 #include "tusb.h"
 #include "uid.h"
+#include "boot_common.h"
 
 /* USER CODE END Includes */
 
@@ -149,6 +150,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  * @retval int
  */
 int main(void) {
+  boot_breadcrumb(1);   // main entered (bench build breadcrumbs, boot_common.h)
 
   /* USER CODE BEGIN 1 */
 
@@ -160,11 +162,13 @@ int main(void) {
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  boot_breadcrumb(2);   /* HAL_Init done */
 
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
+  boot_breadcrumb(3);   /* clock done */
 
   /* USER CODE BEGIN SysInit */
 
@@ -174,6 +178,7 @@ int main(void) {
   MX_GPIO_Init();
   MX_SPI1_Init();
   MX_USB_PCD_Init();   // sets up USB clock/pin mux; TinyUSB assumes it
+  boot_breadcrumb(4);  /* GPIO+SPI+USB PCD init done */
 #ifndef APP_LINKTEST
   MX_USART2_UART_Init();
   MX_TIM16_Init();
@@ -190,6 +195,7 @@ int main(void) {
   led_add_sequence(&status_led, idle_sequence);
 #endif
   tusb_init();
+  boot_breadcrumb(5);  /* tusb_init done */
 
 #ifdef APP_LINKTEST
   /* linktest build: no GPS/LED/ADC/tasks/settings/arbitration.
@@ -199,6 +205,7 @@ int main(void) {
 
   while (1)
   {
+    boot_breadcrumb(8);
     linktest_tick();
   }
 #else
@@ -296,6 +303,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+  boot_breadcrumb(BL_BOOTBCR_Fault);   // bench: flag fault for BL INFO post-mortem
   __disable_irq();
   
   while (1)

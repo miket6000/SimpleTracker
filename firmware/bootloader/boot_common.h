@@ -28,6 +28,16 @@
 #define BL_BOOTFLAG_ADDR       (*(volatile uint32_t *)0x200017F0UL)
 #define BL_BOOTFLAG_MAGIC      0xB007B01DUL
 
+// boot breadcrumbs (bench build only): the app stamps this noinit SRAM word
+// at each stage; BL_BOOTBCR_Fault bit is set by the fault handler. The
+// bootloader echoes the word in INFO for post-mortem diagnosis.
+// Stage values: 1 main-entered, 2 HAL_Init done, 3 clock done, 4 GPIO+SPI
+// done, 5 USB_PCD done, 6 tusb_init done, 7 linktest_boot done, 8 loop tick.
+#define BL_BOOTBCR_ADDR   (*(volatile uint32_t *)0x200017A0UL)
+#define BL_BOOTBCR_Fault  0x80000000UL
+
+inline static void boot_breadcrumb(uint32_t stage) { BL_BOOTBCR_ADDR = stage; }
+
 // memory map
 #define BL_APP_BASE  0x08002800UL
 #define BL_APP_END   0x08007C00UL

@@ -318,8 +318,9 @@ def flash_unit(image_path, uid=None, bl_mode=False):
 
     # 7b. read-back verify: compare flash against the image we sent
     bad = 0
-    for off in range(0, sent, 254):
-        n = min(254, sent - off)
+    for off in range(0, sent, 56):
+        n = min(56, sent - off)  # one USB packet: 6+56=62 <= 64 (v4 dcd drops
+        # multi-packet IN streams; revisit when V2 USB work starts)
         got = bl.read(APP_BASE + off, n)
         if got != img[off:off+n]:
             print(f"MISMATCH at {APP_BASE+off:#x}: sent {img[off:off+n].hex()} got {got.hex()}")
@@ -409,8 +410,8 @@ def main():
         if not bl_path:
             sys.exit("no bootloader port for --read")
         bl = Bootloader(port_path(bl_path[0]))
-        for off in range(0, n, 254):
-            chunk = bl.read(addr + off, min(254, n - off))
+        for off in range(0, n, 56):
+            chunk = bl.read(addr + off, min(56, n - off))
             print(f"{addr+off:#010x}: {chunk.hex()}")
         bl.ser.close()
         return
