@@ -135,8 +135,11 @@ static bool bl_page_erase(uint32_t pageAddr) {
 
 static bool bl_word_program(uint32_t addr, uint16_t val) {
   volatile uint16_t *fa = (volatile uint16_t *)addr;
+  FLASH->CR |= FLASH_CR_PG;      // program enable: without PG flash writes
+                                 // are silently ignored (bench-found bug)
   *fa = val;
   bl_flash_wait();
+  FLASH->CR &= ~FLASH_CR_PG;
   return !bl_flash_err();
 }
 
