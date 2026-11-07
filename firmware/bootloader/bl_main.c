@@ -57,6 +57,7 @@
 #define FR_FINAL    0x40
 #define FR_GO       0x50
 #define FR_RESET    0x60
+#define FR_READ     0x70
 
 // update-mode state
 static struct {
@@ -291,6 +292,7 @@ static void bl_fr_erase(void);
 static void bl_fr_write(const uint8_t *pl);
 static void bl_fr_final(const uint8_t *pl);
 static void bl_fr_go(void);
+static void bl_fr_read(const uint8_t *pl);
 
 static void bl_handle_frame(void) {
   const uint8_t *pl = &frm_buf[4];   // payload
@@ -301,6 +303,7 @@ static void bl_handle_frame(void) {
   else if (t == FR_WRITE)  bl_fr_write(pl);
   else if (t == FR_FINAL)  bl_fr_final(pl);
   else if (t == FR_GO)     bl_fr_go();
+  else if (t == FR_READ)   bl_fr_read(pl);
   else if (t == FR_RESET)  { bl_resp(FR_RESET | 0x80, NULL, 0); NVIC_SystemReset(); }
   else                     bl_err(BL_ERR_TYPE, t);
 }
@@ -409,6 +412,21 @@ static void bl_fr_go(void) {
   uint8_t ack = 0;
   bl_resp(FR_GO | 0x80, &ack, 1);
   bl_jump();
+}
+
+// FR_READ: payload = addr u32 LE + n u8 (<=254); resp = FR_READ|0x80 + data
+static void bl_fr_read(const uint8_t *pl) {
+  if (frm_len < 5) { bl_err(BL_ERR_LEN, 0); return; }
+  uint32_t addr;
+  memcpy(&addr, pl, 4);
+  uint8_t n = pl[4];
+  if (n == 0 || n > FRAME_MAX - 7) { bl_err(BL_ERR_LEN, 1); return; }
+  if (addr < 0x08000000UL || addr + n > BL_INFO_ADDR + PAGE_SIZE) {
+    bl_err(BL_ERR_ADDR, 0); return;
+  }
+  uint8_t data[FRAME_MAX - 6];
+  memcpy(data, (const void *)addr, n);
+  bl_resp(FR_READ | 0x80, data, n);
 }
 
 // input parser: accumulates bytes into frm_buf, dispatches complete frames

@@ -19,12 +19,12 @@ boots back into update mode and can be redone from the same USB cable.
 """
 
 import argparse
-import glob
 import sys
 import time
 
 try:
     import serial
+    import serial.tools.list_ports
 except ImportError:
     sys.exit("pyserial required:  sudo apt install python3-serial   (or pip3 install pyserial)")
 
@@ -43,9 +43,58 @@ WRITE_CHUNK = 240                     # <=251 payload data, even, multiple of 16
 VID = 0xCafe
 PID_APP, PID_BL = 0x4000, 0x4001
 
-BY_ID = "/dev/serial/by-id"
-GLOB_APP = "usb-Blueskin_Design_Ltd_SimpleTracker_*"
-GLOB_BL = "usb-Blueskin_Design_Ltd_SimpleTracker_BL_*"
+# port discovery: pyserial comports() (VID/PID/serial straight from USB
+# descriptors) — /dev/serial/by-id may not exist on all hosts
+
+
+def _comports():
+    for info in serial.tools.list_ports.comports():
+        if info.vid is None:
+            continue
+        yield info
+
+
+def app_ports():
+    out = []
+    for info in _comports():
+        if info.vid == VID and info.pid == PID_APP:
+            out.append(info)
+    return out
+
+
+def bl_ports():
+    out = []
+    for info in _comports():
+        if info.vid == VID and info.pid == PID_BL:
+            out.append(info)
+    return out
+
+
+def port_path(info):
+    return info.device
+
+
+def port_uid(info):
+    return (info.serial_number or "").lower()
+
+
+def port_desc(info):
+    return f"{info.device} {info.pid:04x} {port_uid(info)} {getattr(info, 'description', '')}".strip()
+
+
+def list_all():
+    return list(_comports())
+
+
+def wait_for(pred, timeout, what):
+    """Poll comports until pred(info) is true; returns info or exits."""
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        for info in list_all():
+            if pred(info):
+                return info
+        time.sleep(0.15)
+    sys.exit(f"timeout: no {what} appeared within {timeout}s")
 
 
 # ---------------------------------------------------------------------------
@@ -81,29 +130,6 @@ def drain(port):
         return len(discarded) if discarded else 0
     except Exception:
         return 0
-
-
-def list_devs(pattern):
-    return sorted(glob.glob(f"{BY_ID}/{pattern}"))
-
-
-def app_ports():
-    return [p for p in list_devs(GLOB_APP) if "_BL_" not in p]
-
-
-def bl_ports():
-    return list_devs(GLOB_BL)
-
-
-def wait_for(pattern, pred, timeout, what):
-    """Poll for a device that satisfies pred; returns path or exits."""
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        for p in list_devs(pattern):
-            if pred(p):
-                return p
-        time.sleep(0.15)
-    sys.exit(f"timeout: no {what} appeared within {timeout}s")
 
 
 def frame_decode(port):
@@ -177,6 +203,17 @@ class Bootloader:
     def go(self):
         self.step(FR_GO, b"", want=None, timeout=2.0)
 
+    def read(self, addr, n):
+        # FR_READ: addr u32 + n u8; response payload = raw bytes
+        self.ser.timeout = 2.0
+        send_frame(self.ser, 0x70, addr.to_bytes(4, "little") + bytes([n]))
+        rtyp, rp = frame_decode(self.ser)
+        if rtyp == ERR_TYPE:
+            sys.exit(f"read error at {addr:#x}: {rp.hex()}")
+        if rtyp != (0x70 | ACK):
+            sys.exit(f"unexpected response to READ: 0x{rtyp:02X}")
+        return rp
+
 
 # ---------------------------------------------------------------------------
 # flashing flow
@@ -213,20 +250,20 @@ def flash_unit(image_path, uid=None, bl_mode=False):
             print("no app port but bootloader present -> continuing in BL mode")
             bl_mode = True
         elif not sel:
-            sys.exit(f"no app CDC ports ({GLOB_APP}); is a unit plugged in?")
+            sys.exit("no app CDC ports (PID 4000); is a unit plugged in?")
         else:
             if len(sel) > 1 and not uid:
-                sys.exit(f"multiple app ports; disambiguate with --uid: {sel}")
-            if len(sel) > 1 and uid:
-                sel = [p for p in sel if uid.lower() in p.lower()]
+                sys.exit(f"multiple app ports; disambiguate with --uid: {[port_desc(p) for p in sel]}")
+            if uid:
+                sel = [p for p in sel if uid.lower() in port_uid(p)]
                 if not sel:
                     sys.exit(f"no app port matches --uid {uid}")
             port_app = sel[0]
-            print(f"app port: {port_app}")
+            print(f"app port: {port_desc(port_app)}")
 
     if not bl_mode:
         # 2. banner + unit identity --------------------------------------------
-        ser = open_port(port_app)
+        ser = open_port(port_path(port_app))
         drain(ser)
         ver = send_line(ser, "VER", expect="LT v")
         print(f"app VER: {ver!r}")
@@ -238,13 +275,14 @@ def flash_unit(image_path, uid=None, bl_mode=False):
 
     # 4. bootloader port ---------------------------------------------------------
     if bl_mode:
-        sel = [p for p in bl_ports() if not uid or uid.lower() in p.lower()]
+        sel = [p for p in bl_ports() if not uid or uid.lower() in port_uid(p)]
         if not sel:
-            sys.exit(f"--bl-mode but no bootloader port ({GLOB_BL})")
-        bl_path = sel[0]
+            sys.exit("--bl-mode but no bootloader port (PID 4001)")
+        bl_info = sel[0]
     else:
-        bl_path = wait_for(GLOB_BL, lambda p: True, 10.0, "bootloader CDC")
-    print(f"BL port: {bl_path}")
+        bl_info = wait_for(lambda p: p.pid == PID_BL, 10.0, "bootloader CDC")
+    print(f"BL port: {port_desc(bl_info)}")
+    bl_path = port_path(bl_info)
     time.sleep(0.3)
     bl = Bootloader(bl_path)
     time.sleep(0.3)
@@ -278,16 +316,33 @@ def flash_unit(image_path, uid=None, bl_mode=False):
     bl.finalize(sent, crc, build)
     print(f"FINALIZE: {sent}B crc={crc:04X} build={build}")
 
+    # 7b. read-back verify: compare flash against the image we sent
+    bad = 0
+    for off in range(0, sent, 254):
+        n = min(254, sent - off)
+        got = bl.read(APP_BASE + off, n)
+        if got != img[off:off+n]:
+            print(f"MISMATCH at {APP_BASE+off:#x}: sent {img[off:off+n].hex()} got {got.hex()}")
+            bad += 1
+            if bad > 3:
+                sys.exit("read-back verify failed (3+ chunks), image not as sent")
+    if bad:
+        sys.exit(f"read-back verify: {bad} mismatching chunk(s)")
+    print("read-back verify OK")
+
     # 8. go -----------------------------------------------------------------
     bl.go()
     print("GO sent")
     bl.ser.close()
 
     # 9. verify app back -------------------------------------------------------
-    app_path = wait_for(GLOB_APP, lambda p: "_BL_" not in p, 8.0, "app CDC")
-    if app_path != port_app:
+    old_uid = port_uid(bl_info)
+    app_info = wait_for(lambda p: p.pid == PID_APP, 8.0, "app CDC")
+    app_path = port_path(app_info)
+    if port_app and app_path != port_path(port_app):
         print(f"note: app re-enumerated at {app_path} (port shuffle)")
     time.sleep(0.3)
+    ok = False
     ver2 = ""
     for attempt in range(4):
         try:
@@ -300,10 +355,13 @@ def flash_unit(image_path, uid=None, bl_mode=False):
         ver2 = send_line(ser2, "VER", expect="LT v", timeout=2.0)
         ser2.close()
         if "LT v" in ver2:
+            ok = True
             break
         time.sleep(1.0)
-    if "LT v" not in ver2:
+    if not ok:
         sys.exit(f"app did not answer VER after flash: {ver2!r}")
+    if port_uid(app_info) != old_uid:
+        sys.exit(f"UID mismatch after flash: {port_uid(app_info)} != {old_uid}")
     print(f"verify OK: {ver2!r}")
     print("flash complete")
 
@@ -333,6 +391,7 @@ def main():
     ap.add_argument("--uid", help="match by bootloader UID string (8 hex chars)")
     ap.add_argument("--install-bl", action="store_true", help="one-time BL install via dfu-util (ROM DFU)")
     ap.add_argument("--bl-mode", action="store_true", help="unit is already in bootloader update mode")
+    ap.add_argument("--read", nargs=2, metavar=("ADDR", "N"), help="dump N bytes of flash from a BL-mode unit")
     ap.add_argument("--selftest", action="store_true", help="crc16 self-test only")
     args = ap.parse_args()
 
@@ -342,9 +401,21 @@ def main():
     if args.install_bl:
         install_bl()
         return
+    crc16_selftest()
+    if args.read:
+        addr = int(args.read[0], 0)
+        n = int(args.read[1], 0)
+        bl_path = bl_ports()
+        if not bl_path:
+            sys.exit("no bootloader port for --read")
+        bl = Bootloader(port_path(bl_path[0]))
+        for off in range(0, n, 254):
+            chunk = bl.read(addr + off, min(254, n - off))
+            print(f"{addr+off:#010x}: {chunk.hex()}")
+        bl.ser.close()
+        return
     if not args.image:
         ap.error("image required (or --selftest)")
-    crc16_selftest()
     flash_unit(args.image, uid=args.uid, bl_mode=args.bl_mode)
 
 
