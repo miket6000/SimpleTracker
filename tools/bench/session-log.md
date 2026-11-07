@@ -690,3 +690,100 @@ B->A SF9 LDRO1 n=30 -> MAP n=6 clean=6 corrupt=0 mismatch=0 rssi=-33..-33 snr=8.
 - Corruption hunt CLOSED. Three bench-verified root causes total:
   (1) STANDBY-before-TX missing; (2) SetTxParams never issued;
   (3) LDRO disabled at SF9/BW62.5. All fixed in firmware/core drivers.
+dfu-util -a 0 -D build/firmware.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release
+Opening DFU capable USB device...
+Device ID 0483:df11
+Device DFU version 011a
+Claiming USB DFU Interface...
+Setting Alternate Interface #0 ...
+Determining device status...
+DFU state(10) = dfuERROR, status(10) = Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations
+Clearing status
+Determining device status...
+DFU state(2) = dfuIDLE, status(0) = No error condition is present
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Downloading element to address = 0x08000000, size = 31480
+Erase   	[                         ]   0%            0 bytesErase   	[=                        ]   6%         2048 bytesErase   	[===                      ]  13%         4096 bytesErase   	[====                     ]  19%         6144 bytesErase   	[======                   ]  26%         8192 bytesErase   	[========                 ]  32%        10240 bytesErase   	[=========                ]  39%        12288 bytesErase   	[===========              ]  45%        14336 bytesErase   	[=============            ]  52%        16384 bytesErase   	[==============           ]  58%        18432 bytesErase   	[================         ]  65%        20480 bytesErase   	[=================        ]  71%        22528 bytesErase   	[===================      ]  78%        24576 bytesErase   	[=====================    ]  84%        26624 bytesErase   	[======================   ]  91%        28672 bytesErase   	[======================== ]  97%        30720 bytesErase   	[=========================] 100%        31480 bytes
+Erase    done.
+Download	[                         ]   0%            0 bytesDownload	[=                        ]   6%         2048 bytesDownload	[===                      ]  13%         4096 bytesDownload	[====                     ]  19%         6144 bytesDownload	[======                   ]  26%         8192 bytesDownload	[========                 ]  32%        10240 bytesDownload	[=========                ]  39%        12288 bytesDownload	[===========              ]  45%        14336 bytesDownload	[=============            ]  52%        16384 bytesDownload	[==============           ]  58%        18432 bytesDownload	[================         ]  65%        20480 bytesDownload	[=================        ]  71%        22528 bytesDownload	[===================      ]  78%        24576 bytesDownload	[=====================    ]  84%        26624 bytesDownload	[======================   ]  91%        28672 bytesDownload	[======================== ]  97%        30720 bytesDownload	[=========================] 100%        31480 bytes
+Download done.
+File downloaded successfully
+dfu-util -a 0 -D build/firmware.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release
+Opening DFU capable USB device...
+Device ID 0483:df11
+Device DFU version 011a
+Claiming USB DFU Interface...
+Setting Alternate Interface #0 ...
+Determining device status...
+DFU state(10) = dfuERROR, status(10) = Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations
+Clearing status
+Determining device status...
+DFU state(2) = dfuIDLE, status(0) = No error condition is present
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Downloading element to address = 0x08000000, size = 31480
+Erase   	[                         ]   0%            0 bytesErase   	[=                        ]   6%         2048 bytesErase   	[===                      ]  13%         4096 bytesErase   	[====                     ]  19%         6144 bytesErase   	[======                   ]  26%         8192 bytesErase   	[========                 ]  32%        10240 bytesErase   	[=========                ]  39%        12288 bytesErase   	[===========              ]  45%        14336 bytesErase   	[=============            ]  52%        16384 bytesErase   	[==============           ]  58%        18432 bytesErase   	[================         ]  65%        20480 bytesErase   	[=================        ]  71%        22528 bytesErase   	[===================      ]  78%        24576 bytesErase   	[=====================    ]  84%        26624 bytesErase   	[======================   ]  91%        28672 bytesErase   	[======================== ]  97%        30720 bytesErase   	[=========================] 100%        31480 bytes
+Erase    done.
+Download	[                         ]   0%            0 bytesDownload	[=                        ]   6%         2048 bytesDownload	[===                      ]  13%         4096 bytesDownload	[====                     ]  19%         6144 bytesDownload	[======                   ]  26%         8192 bytesDownload	[========                 ]  32%        10240 bytesDownload	[=========                ]  39%        12288 bytesDownload	[===========              ]  45%        14336 bytesDownload	[=============            ]  52%        16384 bytesDownload	[==============           ]  58%        18432 bytesDownload	[================         ]  65%        20480 bytesDownload	[=================        ]  71%        22528 bytesDownload	[===================      ]  78%        24576 bytesDownload	[=====================    ]  84%        26624 bytesDownload	[======================   ]  91%        28672 bytesDownload	[======================== ]  97%        30720 bytesDownload	[=========================] 100%        31480 bytes
+Download done.
+File downloaded successfully
+===== PHASE 0.2 definitive capture (v1 with 3 driver fixes) Sun Nov  8 09:49:54 2026
+PAIR -> OK
+ACK: MISSING
+R poll 0: ''
+R poll 1: ''
+R poll 2: ''
+NOTE: GPS telemetry requires GPS fix on B (bench) - expected absent tonight
+== sanity: B settings + radio state ==
+== A: SCAN -> D (discovery leg) ==
+D final: NONE
+== A: re-PAIR immediately (within/after window) ==
+PAIR: OK
+R poll 0: ''
+R poll 1: ''
+R poll 2: ''
+R poll 3: ''
+map: {'ecceb7e8': '/dev/ttyACM0', 'd0f85e68': '/dev/ttyACM1'}
+===== fresh-boot battery Sun Nov  8 09:54:12 2026
+SCAN->D final: 0
+PAIR: OK
+R poll 0: ''
+R poll 1: ''
+R poll 2: ''
+R poll 3: ''
+(B settings above: f/s/b)
+## 2026-11-08 10:12 — Session wrap (corruption hunt: root cause found & fixed on linktest; v1-path discord open)
+- Swapped both units to the v1 app build (30,988 B, 3 driver fixes + auto-LDRO).
+- v1smoke A-alone smoke v2bench: 10/10 no FAILs (UID/GET/SET/invalid-label checks fine).
+- OPEN: v1 image at SF9/BW62.5 still corrupts ~1 byte per received frame
+  ('CHECKME123' -> 'CHECK'); auto-LDRO rule presence/working on the v1 path
+  unverified. Linktest image's LDRO=1 was bit-perfect, so next session must:
+    1) reflash linktest (2 rounds), STAT-counter battery to split frame-loss
+       vs frame-corruption (frame loss up to 70% of TXTEST bursts observed),
+    2) verify v1-path LDRO computation (possible: rule evaluates differently
+       on the v1 code path),
+    3) v1-PCB gotcha list updated: GET m shows SETTING default (never runtime
+       mode); GET without arg NULL-derefs (M3-class, hit in practice twice).
+- The definitive v1 Phase-0.2 baseline capture still pending; the earlier
+  10/10 v1smoke panel (A-alone) anchored today on tools/bench/v1-baseline.txt.
