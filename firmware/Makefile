@@ -75,17 +75,10 @@ Core/Src/usb.c \
 Core/Src/usb_descriptors.c \
 Core/Src/uid.c \
 Core/Src/command.c \
-tinyusb/src/tusb.c \
-tinyusb/src/common/tusb_fifo.c \
-tinyusb/src/class/cdc/cdc_device.c \
-tinyusb/src/device/usbd.c \
-tinyusb/src/device/usbd_control.c \
-tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c \
-tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
 
 ifeq ($(APP_LINKTEST),1)
-# comms-band debug firmware (GPS/LED/settings/tasks/arbitration excluded,
-# debug console via USB): build with `make linktest`
+# comms-band debug firmware: GPS/LED/settings/tasks/arbitration excluded,
+# dedicated runtime-configurable debug console (linktest.c)
 C_SOURCES += Core/Src/linktest.c Core/Src/task_usb.c
 else
 C_SOURCES += \
@@ -107,6 +100,14 @@ Core/Src/usart.c \
 Core/Src/tim.c \
 Core/Src/adc.c
 endif
+C_SOURCES += \
+tinyusb/src/tusb.c \
+tinyusb/src/common/tusb_fifo.c \
+tinyusb/src/class/cdc/cdc_device.c \
+tinyusb/src/device/usbd.c \
+tinyusb/src/device/usbd_control.c \
+tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c \
+tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -209,17 +210,57 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
-# comms debug firmware (single tree, cut GPS/LED/settings/tasks/arbitration,
-# runtime-configurable radio + test pattern console). Flashes unchanged: the
-# resulting bin goes through make program with BUILD_DIR overridden.
+# comms debug firmware (single tree; GPS/LED/settings/tasks/arbitration cut;
+# runtime-configurable radio console). Build output: build_linktest/.
 linktest:
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) APP_LINKTEST=1 BUILD_DIR=build_linktest TARGET=firmware_lt all
 
-FL=build_linktest/firmware_lt.bin
-program_lt: $(FL)
-	dfu-util -a 0 -D $(FL) -s 0x08000000
+program_lt: $(BUILD_DIR)/firmware_lt.bin
+	dfu-util -a 0 -D $(BUILD_DIR)/firmware_lt.bin -s 0x08000000
 
 
+#######################################
+# build the application
+#######################################
+# list of objects
+OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
+vpath %.c $(sort $(dir $(C_SOURCES)))
+# list of ASM program objects
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
+vpath %.s $(sort $(dir $(ASM_SOURCES)))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASMM_SOURCES:.S=.o)))
+vpath %.S $(sort $(dir $(ASMM_SOURCES)))
+
+$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
+	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+
+$(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
+	$(AS) -c $(CFLAGS) $< -o $@
+$(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
+	$(AS) -c $(CFLAGS) $< -o $@
+
+$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	$(SZ) $@
+
+$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+	$(HEX) $< $@
+	
+$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+	$(BIN) $< $@	
+	
+$(BUILD_DIR):
+	mkdir $@		
+
+#######################################
+# clean up
+#######################################
+clean:
+	-rm -fR $(BUILD_DIR)
+
+#######################################
+# Support tools
+#######################################
 program: $(BUILD_DIR)/$(TARGET).bin | $(BUILD_DIR)
 	dfu-util -a 0 -D $(BUILD_DIR)/$(TARGET).bin -s 0x08000000
 
