@@ -1,0 +1,337 @@
+#!/usr/bin/env python3
+"""flash.py — automated bench flashing for the SimpleTracker STM32F042 units.
+
+Full flash/run cycle with zero manual GPIO operations once the bench
+bootloader is installed on a unit (one-time install needs the ROM DFU =
+BOOT0 pin shorted + power cycle, per the phase plan):
+
+    ./flash.py build_ltapp/firmware_ltapp.bin            # flash + verify
+    ./flash.py --install-bl build_bl/bootloader.bin      # one-time BL install
+
+Sequence: identify unit over CDC -> "REBOOT BL" -> bootloader re-enumerates
+as "SimpleTracker BL" (PID 0x4001, same UID serial) -> binary frame protocol
+(CRC16-CCITT-FALSE, same CRC as the V2 comm spec) -> ERASE / WRITE / FINALIZE
+/ GO -> app re-enumerates -> VER handshake.
+
+The bootloader's torn-image safety lives on the device side: info-page magic
++ whole-image CRC are re-verified on every boot, so an interrupted flash
+boots back into update mode and can be redone from the same USB cable.
+"""
+
+import argparse
+import glob
+import sys
+import time
+
+try:
+    import serial
+except ImportError:
+    sys.exit("pyserial required:  sudo apt install python3-serial   (or pip3 install pyserial)")
+
+# Bootloader frame protocol (see bootloader/bl_main.c)
+SOF = b"\xC6\x6C"
+FR_INFO, FR_ERASE, FR_WRITE, FR_FINAL, FR_GO, FR_RESET = 0x10, 0x20, 0x30, 0x40, 0x50, 0x60
+ACK = 0x80  # response = request | ACK
+ERR_TYPE = 0xFE
+
+# Layout mirrored from bootloader/boot_common.h
+APP_BASE = 0x08002400
+APP_END = 0x08007C00
+APP_MAX = APP_END - APP_BASE          # 22528 (22 KB)
+WRITE_CHUNK = 240                     # <=251 payload data, even, multiple of 16
+
+VID = 0xCafe
+PID_APP, PID_BL = 0x4000, 0x4001
+
+BY_ID = "/dev/serial/by-id"
+GLOB_APP = "usb-Blueskin_Design_Ltd_SimpleTracker_*"
+GLOB_BL = "usb-Blueskin_Design_Ltd_SimpleTracker_BL_*"
+
+
+# ---------------------------------------------------------------------------
+# CRC16-CCITT-FALSE (poly 0x1021, init 0xFFFF, MSB first, no reflection)
+
+def crc16_calc(data):
+    crc = 0xFFFF
+    for b in data:
+        crc ^= b << 8
+        for _ in range(8):
+            crc = ((crc << 1) ^ 0x1021) if (crc & 0x8000) else (crc << 1)
+        crc &= 0xFFFF
+    return crc
+
+
+def crc16_selftest():
+    if crc16_calc(b"123456789") != 0x29B1:
+        raise SystemExit("crc16 selftest FAILED (expected CCITT-FALSE 0x29B1)")
+    print("crc16 selftest OK")
+
+
+# ---------------------------------------------------------------------------
+# serial helpers
+
+def open_port(path, timeout=1.0):
+    return serial.Serial(path, baudrate=115200, timeout=timeout, write_timeout=2.0)
+
+
+def drain(port):
+    try:
+        time.sleep(0.05)
+        discarded = port.read(port.in_waiting or 1)
+        return len(discarded) if discarded else 0
+    except Exception:
+        return 0
+
+
+def list_devs(pattern):
+    return sorted(glob.glob(f"{BY_ID}/{pattern}"))
+
+
+def app_ports():
+    return [p for p in list_devs(GLOB_APP) if "_BL_" not in p]
+
+
+def bl_ports():
+    return list_devs(GLOB_BL)
+
+
+def wait_for(pattern, pred, timeout, what):
+    """Poll for a device that satisfies pred; returns path or exits."""
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        for p in list_devs(pattern):
+            if pred(p):
+                return p
+        time.sleep(0.15)
+    sys.exit(f"timeout: no {what} appeared within {timeout}s")
+
+
+def frame_decode(port):
+    """Read one response frame (SOF, type, len, payload, CRC16). Blocking."""
+    def rd(n):
+        data = port.read(n)
+        if len(data) != n:
+            sys.exit(f"frame read timeout (wanted {n}, got {len(data)} bytes)")
+        return data
+
+    # resync
+    b = rd(1)
+    tries = 0
+    while b != SOF[:1]:
+        tries += 1
+        if tries > 512:
+            sys.exit("no frame start found")
+        b = rd(1)
+    if rd(1) != SOF[1:]:
+        sys.exit("bad SOF2")
+    typ, ln = rd(2)
+    payload = rd(ln)
+    crc = int.from_bytes(rd(2), "little")
+    calc = crc16_calc(bytes([typ, ln]) + payload)
+    if calc != crc:
+        sys.exit(f"frame crc mismatch: got {crc:04X} want {calc:04X}")
+    return typ, payload
+
+
+def send_frame(port, typ, payload=b""):
+    frame = SOF + bytes([typ, len(payload)]) + payload
+    frame += crc16_calc(bytes([typ, len(payload)]) + payload).to_bytes(2, "little")
+    port.write(frame)
+    port.flush()
+
+
+class Bootloader:
+    def __init__(self, port):
+        self.ser = open_port(port)
+        drain(self.ser)
+
+    def info(self):
+        send_frame(self.ser, FR_INFO)
+        typ, p = frame_decode(self.ser)
+        return typ, p
+
+    # request/expect wrappers -------------------
+    def step(self, typ, payload, want, timeout=2.0):
+        self.ser.timeout = timeout
+        send_frame(self.ser, typ, payload)
+        rtyp, rp = frame_decode(self.ser)
+        if rtyp == ERR_TYPE:
+            code = rp[0] if rp else 0
+            sys.exit(f"bootloader error {code} on request 0x{typ:02X} (payload {rp.hex() if rp else '-'})")
+        if (rtyp & 0x7F) != typ:
+            sys.exit(f"unexpected response type 0x{rtyp:02X} to 0x{typ:02X}")
+        return rp
+
+    def erase(self):
+        return self.step(FR_ERASE, b"", want=None, timeout=4.0)
+
+    def write(self, addr, data):
+        payload = addr.to_bytes(4, "little") + data
+        self.step(FR_WRITE, payload, want=None, timeout=2.0)
+
+    def finalize(self, length, crc, build_id):
+        payload = length.to_bytes(4, "little") + crc.to_bytes(2, "little")
+        payload += build_id.to_bytes(4, "little")
+        self.step(FR_FINAL, payload, want=None, timeout=3.0)
+
+    def go(self):
+        self.step(FR_GO, b"", want=None, timeout=2.0)
+
+
+# ---------------------------------------------------------------------------
+# flashing flow
+
+def send_line(port, line, expect=None, timeout=1.0):
+    port.timeout = timeout
+    port.reset_input_buffer()
+    port.write(line.encode() + b"\n")
+    port.flush()
+    if expect is None:
+        return ""
+    resp = b""
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        resp += port.read(port.in_waiting or 1)
+        if expect.encode() in resp:
+            return resp.decode(errors="replace").strip()
+    return resp.decode(errors="replace").strip()
+
+
+def flash_unit(image_path, uid=None, go_to_bl=False):
+    print(f"flash: {image_path}")
+    img = open(image_path, "rb").read()
+    if len(img) % 2:
+        img += b"\xFF"          # pad to halfword; CRC includes padding (BL-identical)
+    if len(img) > APP_MAX:
+        sys.exit(f"image too large: {len(img)} > {APP_MAX} (app region {APP_BASE:#x}..{APP_END:#x})")
+
+    # 1. locate app port -------------------------------------------------------
+    sel = app_ports()
+    if not sel:
+        sys.exit(f"no app CDC ports ({GLOB_APP}); is a unit plugged in?")
+    if len(sel) > 1 and not uid:
+        sys.exit(f"multiple app ports; disambiguate with --uid: {sel}")
+    if len(sel) > 1 and uid:
+        sel = [p for p in sel if uid.lower() in p.lower()]
+    port_app = sel[0]
+    print(f"app port: {port_app}")
+
+    # 2. banner + unit identity ------------------------------------------------
+    ser = open_port(port_app)
+    drain(ser)
+    ver = send_line(ser, "VER", expect="LT v")
+    print(f"app VER: {ver!r}")
+    # UID string from app? linktest has no UID cmd today; identity comes via BL INFO
+    # 3. reboot into BL ----------------------------------------------------------
+    rb = send_line(ser, "REBOOT BL", timeout=1.0)
+    if "OK" not in rb:
+        print(f"warning: REBOOT BL reply {rb!r} (reset may have cut the reply)")
+    ser.close()
+
+    # 4. wait for the bootloader to enumerate -------------------------------------
+    bl_path = wait_for(GLOB_BL, lambda p: True, 10.0, "bootloader CDC")
+    print(f"BL port: {bl_path}")
+    time.sleep(0.3)
+    bl = Bootloader(bl_path)
+    time.sleep(0.3)
+    ityp, inf = bl.info()     # INFO: handshake (also drains any stale frames)
+    proto, uidc = inf[0], inf[4:12].decode()
+    if proto != 1:
+        sys.exit(f"bootloader protocol version {proto} != 1")
+    app_valid = bool(inf[3] & 1)
+    old_build = int.from_bytes(inf[12:16], "little")
+    print(f"BL INFO: uid={uidc} proto={proto} app_valid={app_valid} build={old_build}")
+    if uid and uidc != uid.lower():
+        sys.exit(f"unit UID {uidc} does not match --uid {uid}")
+
+    # 5. erase --------------------------------------------------------------------
+    pages = int.from_bytes(bl.erase(), "little")
+    print(f"ERASE: {pages} pages")
+
+    # 6. write ----------------------------------------------------------------------
+    crc = 0xFFFF
+    sent = 0
+    for off in range(0, len(img), WRITE_CHUNK):
+        chunk = img[off:off + WRITE_CHUNK]
+        bl.write(APP_BASE + sent, chunk)
+        sent += len(chunk)
+        if (sent // WRITE_CHUNK) % 40 == 0 or sent == len(img):
+            print(f"  wrote {sent}/{len(img)}")
+        crc = crc16_cont(crc, chunk)
+
+    # 7. finalize ----------------------------------------------------------
+    build = old_build + 1
+    bl.finalize(sent, crc, build)
+    print(f"FINALIZE: {sent}B crc={crc:04X} build={build}")
+
+    # 8. go -----------------------------------------------------------------
+    bl.go()
+    print("GO sent")
+    bl.ser.close()
+
+    # 9. verify app back -------------------------------------------------------
+    app_path = wait_for(GLOB_APP, lambda p: "_BL_" not in p, 8.0, "app CDC")
+    if app_path != port_app:
+        print(f"note: app re-enumerated at {app_path} (port shuffle)")
+    time.sleep(0.3)
+    ver2 = ""
+    for attempt in range(4):
+        try:
+            ser2 = open_port(app_path)
+        except Exception as e:
+            print(f"  app open retry {attempt}: {e}")
+            time.sleep(1.0)
+            continue
+        drain(ser2)
+        ver2 = send_line(ser2, "VER", expect="LT v", timeout=2.0)
+        ser2.close()
+        if "LT v" in ver2:
+            break
+        time.sleep(1.0)
+    if "LT v" not in ver2:
+        sys.exit(f"app did not answer VER after flash: {ver2!r}")
+    print(f"verify OK: {ver2!r}")
+    print("flash complete")
+
+
+def crc16_cont(crc, data):
+    """Continue a CCITT-FALSE CRC over new bytes (matches BL crc16_cont)."""
+    for b in data:
+        crc ^= b << 8
+        for _ in range(8):
+            crc = ((crc << 1) ^ 0x1021) if (crc & 0x8000) else (crc << 1)
+        crc %= 0x10000
+    return crc
+
+
+def install_bl(port=None):
+    """One-time: unit must be in ROM DFU (BOOT0 high at power-up)."""
+    print("== one-time bootloader install ==")
+    print("Requires the unit in ROM DFU mode: short BOOT0 to 3V/1, power cycle.")
+    print("This is the LAST manual flash operation ever needed on this unit.")
+    import subprocess
+    subprocess.run(["dfu-util", "-a", "0", "-D", "build_bl/bootloader.bin", "-s", "0x08000000"], check=True)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("image", nargs="?", help="application .bin to flash")
+    ap.add_argument("--uid", help="match by bootloader UID string (8 hex chars)")
+    ap.add_argument("--install-bl", action="store_true", help="one-time BL install via dfu-util (ROM DFU)")
+    ap.add_argument("--selftest", action="store_true", help="crc16 self-test only")
+    args = ap.parse_args()
+
+    if args.selftest:
+        crc16_selftest()
+        return
+    if args.install_bl:
+        install_bl()
+        return
+    if not args.image:
+        ap.error("image required (or --selftest)")
+    crc16_selftest()
+    flash_unit(args.image, uid=args.uid)
+
+
+if __name__ == "__main__":
+    main()

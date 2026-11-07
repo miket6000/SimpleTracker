@@ -24,6 +24,7 @@
 //   STAT           event counters
 //   RST            radio reset + re-apply config
 //   REBOOT         system reset
+//   REBOOT BL      reset into bench bootloader update mode (noinit SRAM flag)
 //
 // The test pattern is 64 bytes: bytes 0-1 = burst sequence (LE16), bytes
 // 2-63 = known constant (00 FF A5 5A single-bit family ...). CAP stores
@@ -38,6 +39,7 @@
 #include "usb.h"
 #include "app_context.h"
 #include "stm32f0xx_hal.h"
+#include "boot_common.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -389,6 +391,12 @@ static void lt_reset(void *parameter) {
 }
 
 static void lt_reboot(void *parameter) {
+  char *arg = cmd_get_param();
+  if (arg && arg[0] == 'B' && arg[1] == 'L' && arg[2] == '\0') {
+    // reboot into bench bootloader update mode: magic word in .noinit SRAM
+    print("OK\n");
+    BL_BOOTFLAG_ADDR = BL_BOOTFLAG_MAGIC;
+  }
   HAL_NVIC_SystemReset();
 }
 

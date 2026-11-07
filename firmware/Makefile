@@ -166,11 +166,13 @@ C_DEFS += -DAPP_LINKTEST
 endif
 
 
+
 # AS includes
 AS_INCLUDES = 
 
 # C includes
 C_INCLUDES =  \
+-Ibootloader \
 -ICore/Inc \
 -IUSB_DEVICE/App \
 -IUSB_DEVICE/Target \
@@ -181,6 +183,29 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include \
 -IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
 -Itinyusb/src
+
+# bench bootloader (Phase 1, branch bench-comms): standalone CDC flash server.
+# Layout: BL @ 0x08000000 (9K) | bench app @ 0x08002400 (22K) | info page 0x08007C00
+# One-time install per unit needs the ROM DFU + BOOT0 pin; afterwards all
+# flashing is automated through tools/flash.py over the USB CDC cable.
+ifeq ($(BUILD_BL),1)
+C_SOURCES =  \
+bootloader/bl_main.c \
+bootloader/bl_descriptors.c \
+tinyusb/src/tusb.c \
+tinyusb/src/common/tusb_fifo.c \
+tinyusb/src/class/cdc/cdc_device.c \
+tinyusb/src/device/usbd.c \
+tinyusb/src/device/usbd_control.c \
+tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c \
+tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
+C_INCLUDES = -Ibootloader -ICore/Inc -Itinyusb/src \
+-IDrivers/CMSIS/Device/ST/STM32F0xx/Include \
+-IDrivers/CMSIS/Include
+# HAL headers are unused in the bootloader, but the CMSIS device header still
+# needs its target selector
+C_DEFS = -DSTM32F042x6
+endif
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections
@@ -207,13 +232,35 @@ LIBS = -lc -lm -lnosys
 LIBDIR = 
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
+# link-time optimization gets the CDC-only bootloader within its budget:
+# -flto: TU fifo + CDC core cannot shrink further; -nostartfiles drops crt0
+# (our own startup asm does data/bss init; SystemInit is a local stub)
+ifeq ($(BUILD_BL),1)
+CFLAGS += -flto
+LDFLAGS += -flto -nostartfiles
+endif
+
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
 # comms debug firmware (single tree; GPS/LED/settings/tasks/arbitration cut;
 # runtime-configurable radio console). Build output: build_linktest/.
+.PHONY: all clean program linktest linktestbl bootloader install_bl program_lt
+
 linktest:
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) APP_LINKTEST=1 BUILD_DIR=build_linktest TARGET=firmware_lt all
+
+# bench app for the bootloader slot (points SysTick/VTOR at its own vector
+# table at 0x08001800; flashed through tools/flash.py, not dfu-util)
+linktestbl:
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) APP_LINKTEST=1 BUILD_DIR=build_ltapp TARGET=firmware_ltapp LDSCRIPT=STM32F042G6Ux_FLASH_APP.ld all
+
+# bench bootloader server (standalone, linked at 0x08000000)
+bootloader:
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) BUILD_BL=1 BUILD_DIR=build_bl TARGET=bootloader LDSCRIPT=bootloader/bl.ld all
+
+install_bl: bootloader
+	dfu-util -a 0 -D build_bl/bootloader.bin -s 0x08000000
 
 program_lt: build_linktest/firmware_lt.bin
 	dfu-util -a 0 -D build_linktest/firmware_lt.bin -s 0x08000000
