@@ -215,8 +215,8 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET
 linktest:
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) APP_LINKTEST=1 BUILD_DIR=build_linktest TARGET=firmware_lt all
 
-program_lt: $(BUILD_DIR)/firmware_lt.bin
-	dfu-util -a 0 -D $(BUILD_DIR)/firmware_lt.bin -s 0x08000000
+program_lt: build_linktest/firmware_lt.bin
+	dfu-util -a 0 -D build_linktest/firmware_lt.bin -s 0x08000000
 
 
 #######################################
