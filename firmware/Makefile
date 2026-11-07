@@ -215,53 +215,11 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET
 linktest:
 	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) APP_LINKTEST=1 BUILD_DIR=build_linktest TARGET=firmware_lt all
 
-program_lt: BUILD_DIR=build_linktest
-program_lt: $(BUILD_DIR)/$(TARGET).bin | $(BUILD_DIR)
-	dfu-util -a 0 -D $(BUILD_DIR)/$(TARGET).bin -s 0x08000000
+FL=build_linktest/firmware_lt.bin
+program_lt: $(FL)
+	dfu-util -a 0 -D $(FL) -s 0x08000000
 
 
-#######################################
-# build the application
-#######################################
-# list of objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
-# list of ASM program objects
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
-vpath %.s $(sort $(dir $(ASM_SOURCES)))
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(ASMM_SOURCES:.S=.o)))
-vpath %.S $(sort $(dir $(ASMM_SOURCES)))
-
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
-
-$(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
-$(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
-
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
-	$(SZ) $@
-
-$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(HEX) $< $@
-	
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@	
-	
-$(BUILD_DIR):
-	mkdir $@		
-
-#######################################
-# clean up
-#######################################
-clean:
-	-rm -fR $(BUILD_DIR)
-
-#######################################
-# Support tools
-#######################################
 program: $(BUILD_DIR)/$(TARGET).bin | $(BUILD_DIR)
 	dfu-util -a 0 -D $(BUILD_DIR)/$(TARGET).bin -s 0x08000000
 

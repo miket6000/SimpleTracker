@@ -173,8 +173,8 @@ int main(void) {
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
+  MX_USB_PCD_Init();   // sets up USB clock/pin mux; TinyUSB assumes it
 #ifndef APP_LINKTEST
-  MX_USB_PCD_Init();
   MX_USART2_UART_Init();
   MX_TIM16_Init();
   MX_ADC_Init();
