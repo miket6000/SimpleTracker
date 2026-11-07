@@ -1,0 +1,114 @@
+
+===== Sat Nov  7 20:29:53 2026 v1smoke on /dev/ttyACM0 =====
+# disable interactive mode in case a previous session left it on>>> 'i'<<< None  (2002 ms)>>> 'UID'<<< 'd0f85e68'  (1002 ms)PASS  UID: 8 hex chars>>> 'GET b'<<< '3'  (1002 ms)PASS  GET b == 3 (62.5 kHz default, H1)>>> 'GET f'<<< '434000000'  (1002 ms)PASS  GET f == 434000000>>> 'SET b 2'<<< 'OK'  (1001 ms)PASS  SET b 2 -> OK>>> 'GET b'<<< '2'  (1002 ms)PASS  GET b == 2 after SET>>> 'SET b 3'<<< 'OK'  (1002 ms)PASS  SET b 3 (restore) -> OK>>> 'GET b'<<< '3'  (1002 ms)PASS  GET b == 3 restored>>> 'SET zz 1'<<< 'ERR'  (1002 ms)PASS  SET zz invalid label -> ERR# read last LoRa message (may be empty, H2 >64B check)>>> 'R'<<< None  (2003 ms)# R response length: 0v1smoke: 8/8 checks passed
+===== Sat Nov  7 20:30:10 2026 v1smoke on /dev/ttyACM0 =====
+# disable interactive mode in case a previous session left it on>>> 'i'<<< None  (2003 ms)>>> 'UID'<<< 'd0f85e68'  (1001 ms)PASS  UID: 8 hex chars>>> 'GET b'<<< '3'  (1002 ms)PASS  GET b == 3 (62.5 kHz default, H1)>>> 'GET f'<<< '434000000'  (1002 ms)PASS  GET f == 434000000>>> 'SET b 2'<<< 'OK'  (1002 ms)PASS  SET b 2 -> OK>>> 'GET b'<<< '2'  (1002 ms)PASS  GET b == 2 after SET>>> 'SET b 3'<<< 'OK'  (1001 ms)PASS  SET b 3 (restore) -> OK>>> 'GET b'<<< '3'  (1002 ms)PASS  GET b == 3 restored>>> 'SET zz 1'<<< 'ERR'  (1002 ms)PASS  SET zz invalid label -> ERR# --- SCAN + D (needs unit B powered, tracker boot) --->>> 'SCAN'<<< 'OK'  (1002 ms)PASS  SCAN -> OK<<< (D poll 1, in-progress) 'WAIT 1'<<< (D poll 2, in-progress) 'WAIT 1'<<< (D poll 3, final) '1 ecceb7e8,-25'# re-confirm after the 6 s window>>> 'D'<<< 'NONE'  (1002 ms)PASS  SCAN -> D reaches a completed result set (count line)# read last LoRa message (may be empty, H2 >64B check)>>> 'R'<<< None  (2003 ms)# R response length: 0v1smoke: 10/10 checks passed===== PAIR + tracker-traffic leg (unit B = ecceb7e8) Sat Nov  7 20:30:50 2026
+>>> 'PAIR ecceb7e8'<<< 'ERR'
+PAIR -> ERR
+R poll 0: len=0 ''
+R poll 1: len=0 ''
+R poll 2: len=0 ''
+R poll 3: len=0 ''
+>>> 'SCAN'<<< 'OK'
+post-pair D -> 0
+===== PAIR leg retry (correct 4-arg form) =====
+>>> 'PAIR ecceb7e8 434000000 9 3'<<< 'OK'
+R poll 0: len=0 ''
+R poll 1: len=0 ''
+R poll 2: len=0 ''
+R poll 3: len=0 ''
+===== REBOOT + Java-style SCAN/D/PAIR/R flow Sat Nov  7 20:38:50 2026
+  [2] 'SCAN' -> 'OK'
+  [2] 'D' -> 'WAIT 0'
+  [2] 'D' -> 'WAIT 0'
+  [2] 'D' -> '0'
+  [2] 'PAIR ecceb7e8 434000000 9 3' -> 'OK'
+  [2] 'R' -> ''
+  [2] 'R' -> ''
+  [2] 'R' -> ''
+  [2] 'R' -> ''
+RESULT: ACK still missing
+===== FINDINGS NOTE (2026-11-07, post-baseline probe battery) =====
+# Units ~cm apart on desk -> RSSI -25..-26 dBm -> RX front-end saturation.
+# Observed byte drops on air in BOTH directions at close range:
+#   A->B: 'T' frames with config payload arrive corrupted (B flips to
+#         MODE_TRACKER via the no-config fallback with config NOT applied,
+#         e.g. PAIR ... 8 3 accepted while B GET s stays 9).
+#   B->A: direct TX probe arrived as 'direct-test\x1d022' (1 byte lost).
+# Consequences for baseline interpretation:
+#   * SCAN/D discovery works (short frames survive).
+#   * PAIR ACK readback via 'R' unreliable at desk range (corrupt ACK was
+#     misparsed; v1 air has no CRC - v2 air plane fixes this: LEN + CRC16).
+#   * When the discovery window expired, PAIR still transmitted the T frame
+#     correctly; failure is RF corruption, not firmware path logic.
+# Anchor transcript: smoke 10/10 (b==3 H1 default, SET/GET round-trip,
+# SET zz -> ERR, SCAN -> D result '1 ecceb7e8,-25').
+# Port map today: A d0f85e68 (fresh after reboots), B ecceb7e8; port numbers
+# shuffle between ttyACM0/1/2 on reboots - always re-query UID before use.
+# Action before re-verification: separate units >= 2 m.
+===== SEPARATED-UNITS Java-style flow Sat Nov  7 20:45:13 2026
+  [0] 'SCAN' -> 'OK'
+  [0] 'D' -> 'WAIT 0'
+  [0] 'D' -> 'WAIT 0'
+  [0] 'D' -> '0'
+  !! discovery empty again
+===== LoRa_Transmit STANDBY-fix verification Sat Nov  7 21:03:40 2026
+  [0] 'PAIR ecceb7e8 434000000 9 3' -> 'OK'
+  [0] 'R' -> 'ecceb7e8 &dPf85U>8T �K'
+  -> ACK captured (poll 0.4s): 'ecceb7e8 &dPf85U>8T �K'
+ACK: CAPTURED
+  [1] 'GET m' -> '1'
+B DBG trace:
+  [1] 'DBG' -> 'F4 01 A2 F4 01 A6 F4 01 A6 F4 01 A6 F6 01 A4 20 F4 01 A4 F0 03 F1 A2 A2 F2 A2 F3 A2 A2'
+F4 01 A2 F4 01 A6 F4 01 A6 F4 01 A6 F6 01 A4 20 F4 01 A4 F0 03 F1 A2 A2 F2 A2 F3 A2 A2
+===== FULL FLOW, both fresh (A fix not needed; B has STANDBY fix) Sat Nov  7 21:05:17 2026
+-- modes --
+  [0] 'GET m' -> '1'
+  [2] 'GET m' -> '1'
+-- discovery --
+  [0] 'SCAN' -> 'OK'
+  [0] 'D' -> 'WAIT 0'
+  [0] 'D' -> 'WAIT 0'
+  [0] 'D' -> '0'
+-- pair + ACK --
+  [0] 'PAIR ecceb7e8 434000000 9 3' -> 'OK'
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+-- verify roles --
+  [0] 'GET m' -> '1'
+  [2] 'GET m' -> '1'
+RESULT: DISCOVERY FAIL | ACK MISSING
+  [2] 'DBG' -> 'F4 01 A2 F4 01 A6 F4 01 A6 F4 01 A6 F4 01 A6 F6 01 A4 13 F4 01 A4 F0 03 F1 A2 A2 F2 A2 F3 A2 A2 F4 0'
+===== BOTH-UNITS-FIXED full flow probe Sat Nov  7 21:19:13 2026
+-- discovery (B delayed-reply now STANDBY-fixed) --
+  [0] 'SCAN' -> 'OK'
+  [0] 'D' -> 'WAIT 0'
+  [0] 'D' -> 'WAIT 0'
+  [0] 'D' -> '0'
+-- pair + ACK --
+  [0] 'PAIR ecceb7e8 434000000 9 3' -> 'OK'
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+-- B trace tail --
+  [2] 'DBG' -> 'F4 01 A2 F4 01 A6 F4 01 A6 F4 01 A6 F4 01 A6 F6 01 A4 13 F4 01 A4 F0 03 F1 A2 A2 F2 A2 F3 A2 A2 F4 01 AC F4 01'
+   F4 01 A2 F4 01 A6 F4 01 A6 F4 01 A6 F4 01 A6 F6 01 A4 13 F4 01 A4 F0 03 F1 A2 A2 F2 A2 F3 A2 A2 F4 01 AC F4 01 A6 F4 01 A6 F6 01
+RESULT: DISCOVERY FAIL | ACK MISSING
+===== SpiCmd critical-section fix, both units Sat Nov  7 21:31:24 2026
+-- discovery --
+  [0] 'SCAN' -> 'OK'
+  [0] 'D' -> 'WAIT 0'
+  [0] 'D' -> 'WAIT 0'
+  [0] 'D' -> '0'
+-- pair + ACK --
+  [0] 'PAIR ecceb7e8 434000000 9 3' -> 'OK'
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+  [0] 'R' -> ''
+-- B trace after PAIR --
+  [1] 'DBG' -> 'F4 01 A2 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00 F8 00'
+RESULT: DISCOVERY FAIL | ACK MISSING
