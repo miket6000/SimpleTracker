@@ -1,4 +1,13 @@
-# Next session: tracking down the 1-byte-per-burst corruption
+# SOLVED 2026-11-11: root cause = LDRO (low data rate optimize) disabled at SF9/BW62.5
+
+Symbol time 8.19 ms sits in the SX1262's demodulation-degraded zone without
+LDRO; corruption = 1-5 bytes/burst at drifting center positions. LDRO=1 makes
+the SAME config bit-perfect (verified 13+8 receipts, both directions).
+Driver now auto-computes LDRO from symbol time in LoRa_ApplyConfig
+(rule: symbol >= 8.1 ms -> 1; verified bounds: SF9/62.5=8.19 bad-off,
+SF8/62.5=4.1 clean-off, SF9/125=4.1 clean-off, SF12 mandatory-fix).
+
+Historical hunt notes below (kept for the record):
 
 ## Symptom (established 2026-11-07)
 Every received burst carries 0-2 corrupted bytes; many bursts exactly ONE byte

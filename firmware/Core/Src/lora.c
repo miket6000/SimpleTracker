@@ -212,6 +212,25 @@ void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
     uint8_t rx1[5];
     SpiCmd(l, mod, rx1, sizeof(mod));
 
+    // LDRO (low data rate optimize): auto-compute from symbol time.
+    // Bench-verified 2026-11-08 with corruption map firmware: at SF9/BW62.5
+    // (symbol 8.19 ms) every received frame carried 1-5 corrupted bytes with
+    // LDRO disabled; identical units at SF7/SF8/SF9-BW125 (symbol <= 4.1 ms)
+    // were bit-perfect. The datasheet mandates LDRO only above 16 ms, but
+    // this silicon revision needs it from ~8 ms up. SF12 uniformly requires
+    // it regardless of silicon revision.
+    uint32_t bw_hz, sym_us;
+    if      (l->bandwidth == (uint8_t)LORA_BW_7)   bw_hz = 7800UL;
+    else if (l->bandwidth == (uint8_t)LORA_BW_31)  bw_hz = 31250UL;
+    else if (l->bandwidth == (uint8_t)LORA_BW_41)  bw_hz = 41700UL;
+    else if (l->bandwidth == (uint8_t)LORA_BW_62)  bw_hz = 62500UL;
+    else if (l->bandwidth == (uint8_t)LORA_BW_125) bw_hz = 125000UL;
+    else if (l->bandwidth == (uint8_t)LORA_BW_250) bw_hz = 250000UL;
+    else if (l->bandwidth == (uint8_t)LORA_BW_500) bw_hz = 500000UL;
+    else                                           bw_hz = 125000UL;   // incl. the 0x08 alias pair (10.4k/20.8k mis-mapped in enum)
+    sym_us = ((1UL << l->spreadingFactor) * 1000000UL) / bw_hz;
+    l->ldroEnabled = (sym_us >= 8100UL) ? 1 : 0;  // 2^9/62.5k = 8192 us
+
     uint8_t pkt[7] = {
         CMD_SET_PACKET_PARAMS,
         (l->preambleLength >> 8) & 0xFF,

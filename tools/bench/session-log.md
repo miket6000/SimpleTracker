@@ -396,3 +396,297 @@ VARIANT 1c SUMMARY: {'b2a': 2, 'disc': 1, 'ack': 0}
 - Units remain flashed with the diagnostic image; clean build flashes next
   session (2 DFU rounds). Definitive Phase 0.2 capture happens on the clean build.
 - Next-session brief written: tools/bench/corruption-prep.md
+dfu-util -a 0 -D build_linktest/firmware.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Could not open file build_linktest/firmware.bin for reading: No such file or directory
+make: *** [Makefile:220: program_lt] Error 66
+make: *** No rule to make target 'build/.bin', needed by 'program_lt'.  Stop.
+dfu-util -a 0 -D build_linktest/firmware_lt.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release
+Opening DFU capable USB device...
+Device ID 0483:df11
+Device DFU version 011a
+Claiming USB DFU Interface...
+Setting Alternate Interface #0 ...
+Determining device status...
+DFU state(10) = dfuERROR, status(10) = Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations
+Clearing status
+Determining device status...
+DFU state(2) = dfuIDLE, status(0) = No error condition is present
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Downloading element to address = 0x08000000, size = 21748
+Erase   	[                         ]   0%            0 bytesErase   	[==                       ]   9%         2048 bytesErase   	[====                     ]  18%         4096 bytesErase   	[=======                  ]  28%         6144 bytesErase   	[=========                ]  37%         8192 bytesErase   	[===========              ]  47%        10240 bytesErase   	[==============           ]  56%        12288 bytesErase   	[================         ]  65%        14336 bytesErase   	[==================       ]  75%        16384 bytesErase   	[=====================    ]  84%        18432 bytesErase   	[=======================  ]  94%        20480 bytesErase   	[=========================] 100%        21748 bytes
+Erase    done.
+Download	[                         ]   0%            0 bytesDownload	[==                       ]   9%         2048 bytesDownload	[====                     ]  18%         4096 bytesDownload	[=======                  ]  28%         6144 bytesDownload	[=========                ]  37%         8192 bytesDownload	[===========              ]  47%        10240 bytesDownload	[==============           ]  56%        12288 bytesDownload	[================         ]  65%        14336 bytesDownload	[==================       ]  75%        16384 bytesDownload	[=====================    ]  84%        18432 bytesDownload	[=======================  ]  94%        20480 bytesDownload	[=========================] 100%        21748 bytes
+Download done.
+File downloaded successfully
+dfu-util -a 0 -D build_linktest/firmware_lt.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release
+Opening DFU capable USB device...
+Device ID 0483:df11
+Device DFU version 011a
+Claiming USB DFU Interface...
+Setting Alternate Interface #0 ...
+Determining device status...
+DFU state(10) = dfuERROR, status(10) = Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations
+Clearing status
+Determining device status...
+DFU state(2) = dfuIDLE, status(0) = No error condition is present
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Downloading element to address = 0x08000000, size = 21748
+Erase   	[                         ]   0%            0 bytesErase   	[                         ]   0%            0 bytesErase   	[==                       ]   9%         2048 bytesErase   	[====                     ]  18%         4096 bytesErase   	[=======                  ]  28%         6144 bytesErase   	[=========                ]  37%         8192 bytesErase   	[===========              ]  47%        10240 bytesErase   	[==============           ]  56%        12288 bytesErase   	[================         ]  65%        14336 bytesErase   	[==================       ]  75%        16384 bytesErase   	[=====================    ]  84%        18432 bytesErase   	[=======================  ]  94%        20480 bytesErase   	[=========================] 100%        21748 bytes
+Erase    done.
+Download	[                         ]   0%            0 bytesDownload	[==                       ]   9%         2048 bytesDownload	[====                     ]  18%         4096 bytesDownload	[=======                  ]  28%         6144 bytesDownload	[=========                ]  37%         8192 bytesDownload	[===========              ]  47%        10240 bytesDownload	[==============           ]  56%        12288 bytesDownload	[================         ]  65%        14336 bytesDownload	[==================       ]  75%        16384 bytesDownload	[=====================    ]  84%        18432 bytesDownload	[=======================  ]  94%        20480 bytesDownload	[=========================] 100%        21748 bytes
+Download done.
+File downloaded successfully
+dfu-util -a 0 -D build_linktest/firmware_lt.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release
+Opening DFU capable USB device...
+Device ID 0483:df11
+Device DFU version 011a
+Claiming USB DFU Interface...
+Setting Alternate Interface #0 ...
+Determining device status...
+DFU state(10) = dfuERROR, status(10) = Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations
+Clearing status
+Determining device status...
+DFU state(2) = dfuIDLE, status(0) = No error condition is present
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Downloading element to address = 0x08000000, size = 21748
+Erase   	[                         ]   0%            0 bytesErase   	[==                       ]   9%         2048 bytesErase   	[====                     ]  18%         4096 bytesErase   	[=======                  ]  28%         6144 bytesErase   	[=========                ]  37%         8192 bytesErase   	[===========              ]  47%        10240 bytesErase   	[==============           ]  56%        12288 bytesErase   	[================         ]  65%        14336 bytesErase   	[==================       ]  75%        16384 bytesErase   	[=====================    ]  84%        18432 bytesErase   	[=======================  ]  94%        20480 bytesErase   	[=========================] 100%        21748 bytes
+Erase    done.
+Download	[                         ]   0%            0 bytesDownload	[==                       ]   9%         2048 bytesDownload	[====                     ]  18%         4096 bytesDownload	[=======                  ]  28%         6144 bytesDownload	[=========                ]  37%         8192 bytesDownload	[===========              ]  47%        10240 bytesDownload	[==============           ]  56%        12288 bytesDownload	[================         ]  65%        14336 bytesDownload	[==================       ]  75%        16384 bytesDownload	[=====================    ]  84%        18432 bytesDownload	[=======================  ]  94%        20480 bytesDownload	[=========================] 100%        21748 bytes
+Download done.
+File downloaded successfully
+dfu-util -a 0 -D build_linktest/firmware_lt.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release
+Opening DFU capable USB device...
+Device ID 0483:df11
+Device DFU version 011a
+Claiming USB DFU Interface...
+Setting Alternate Interface #0 ...
+Determining device status...
+DFU state(10) = dfuERROR, status(10) = Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations
+Clearing status
+Determining device status...
+DFU state(2) = dfuIDLE, status(0) = No error condition is present
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Downloading element to address = 0x08000000, size = 21748
+Erase   	[                         ]   0%            0 bytesErase   	[==                       ]   9%         2048 bytesErase   	[====                     ]  18%         4096 bytesErase   	[=======                  ]  28%         6144 bytesErase   	[=========                ]  37%         8192 bytesErase   	[===========              ]  47%        10240 bytesErase   	[==============           ]  56%        12288 bytesErase   	[================         ]  65%        14336 bytesErase   	[==================       ]  75%        16384 bytesErase   	[=====================    ]  84%        18432 bytesErase   	[=======================  ]  94%        20480 bytesErase   	[=========================] 100%        21748 bytes
+Erase    done.
+Download	[                         ]   0%            0 bytesDownload	[==                       ]   9%         2048 bytesDownload	[====                     ]  18%         4096 bytesDownload	[=======                  ]  28%         6144 bytesDownload	[=========                ]  37%         8192 bytesDownload	[===========              ]  47%        10240 bytesDownload	[==============           ]  56%        12288 bytesDownload	[================         ]  65%        14336 bytesDownload	[==================       ]  75%        16384 bytesDownload	[=====================    ]  84%        18432 bytesDownload	[=======================  ]  94%        20480 bytesDownload	[=========================] 100%        21748 bytes
+Download done.
+File downloaded successfully
+make: *** No rule to make target 'build/firmware_lt.bin', needed by 'program_lt'.  Stop.
+dfu-util -a 0 -D build_linktest/firmware_lt.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release
+Opening DFU capable USB device...
+Device ID 0483:df11
+Device DFU version 011a
+Claiming USB DFU Interface...
+Setting Alternate Interface #0 ...
+Determining device status...
+DFU state(10) = dfuERROR, status(10) = Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations
+Clearing status
+Determining device status...
+DFU state(2) = dfuIDLE, status(0) = No error condition is present
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Downloading element to address = 0x08000000, size = 22072
+Erase   	[                         ]   0%            0 bytesErase   	[==                       ]   9%         2048 bytesErase   	[====                     ]  18%         4096 bytesErase   	[======                   ]  27%         6144 bytesErase   	[=========                ]  37%         8192 bytesErase   	[===========              ]  46%        10240 bytesErase   	[=============            ]  55%        12288 bytesErase   	[================         ]  64%        14336 bytesErase   	[==================       ]  74%        16384 bytesErase   	[====================     ]  83%        18432 bytesErase   	[=======================  ]  92%        20480 bytesErase   	[=========================] 100%        22072 bytes
+Erase    done.
+Download	[                         ]   0%            0 bytesDownload	[==                       ]   9%         2048 bytesDownload	[====                     ]  18%         4096 bytesDownload	[======                   ]  27%         6144 bytesDownload	[=========                ]  37%         8192 bytesDownload	[===========              ]  46%        10240 bytesDownload	[=============            ]  55%        12288 bytesDownload	[================         ]  64%        14336 bytesDownload	[==================       ]  74%        16384 bytesDownload	[====================     ]  83%        18432 bytesDownload	[=======================  ]  92%        20480 bytesDownload	[=========================] 100%        22072 bytes
+Download done.
+File downloaded successfully
+dfu-util -a 0 -D build_linktest/firmware_lt.bin -s 0x08000000
+dfu-util 0.11
+
+Copyright 2005-2009 Weston Schmidt, Harald Welte and OpenMoko Inc.
+Copyright 2010-2021 Tormod Volden and Stefan Schmidt
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+dfu-util: Warning: Invalid DFU suffix signature
+dfu-util: A valid DFU suffix will be required in a future dfu-util release
+Opening DFU capable USB device...
+Device ID 0483:df11
+Device DFU version 011a
+Claiming USB DFU Interface...
+Setting Alternate Interface #0 ...
+Determining device status...
+DFU state(10) = dfuERROR, status(10) = Device's firmware is corrupt. It cannot return to run-time (non-DFU) operations
+Clearing status
+Determining device status...
+DFU state(2) = dfuIDLE, status(0) = No error condition is present
+DFU mode device DFU version 011a
+Device returned transfer size 2048
+DfuSe interface name: "Internal Flash  "
+Downloading element to address = 0x08000000, size = 22072
+Erase   	[                         ]   0%            0 bytesErase   	[==                       ]   9%         2048 bytesErase   	[====                     ]  18%         4096 bytesErase   	[======                   ]  27%         6144 bytesErase   	[=========                ]  37%         8192 bytesErase   	[===========              ]  46%        10240 bytesErase   	[=============            ]  55%        12288 bytesErase   	[================         ]  64%        14336 bytesErase   	[==================       ]  74%        16384 bytesErase   	[====================     ]  83%        18432 bytesErase   	[=======================  ]  92%        20480 bytesErase   	[=========================] 100%        22072 bytes
+Erase    done.
+Download	[                         ]   0%            0 bytesDownload	[==                       ]   9%         2048 bytesDownload	[====                     ]  18%         4096 bytesDownload	[======                   ]  27%         6144 bytesDownload	[=========                ]  37%         8192 bytesDownload	[===========              ]  46%        10240 bytesDownload	[=============            ]  55%        12288 bytesDownload	[================         ]  64%        14336 bytesDownload	[==================       ]  74%        16384 bytesDownload	[====================     ]  83%        18432 bytesDownload	[=======================  ]  92%        20480 bytesDownload	[=========================] 100%        22072 bytes
+Download done.
+File downloaded successfully
+===== LINKTEST corruption experiment #1 (dual roles) =====
+-- Phase A: U0 TXTEST -> U1 CAP/MAP --
+TXTEST -> OK
+MAP n=10 clean=0 corrupt=8 mismatch=0 rssi=-36..-36 snr=4..7
+pos 38 xor=0xC0 hits=2
+pos 39 xor=0x04 hits=1
+pos 43 xor=0x20 hits=1
+pos
+-- Phase B: U1 TXTEST -> U0 CAP/MAP --
+TXTEST -> OK
+MAP n=8 clean=0 corrupt=8 mismatch=0 rssi=-37..-37 snr=4..10
+pos 21 xor=0x04 hits=1
+pos 24 xor=0x53 hits=1
+pos 25 xor=0x80 hits=1
+pos
+== repeat MAPs verbosely (raw, full) ==
+U1 MAP (A->B direction):
+MAP n=9 clean=0 corrupt=8 mismatch=0 rssi=-37..-36 snr=3..10
+pos 29 xor=0xC0 hits=1
+pos 33 xor=0x02 hits=1
+pos 34 xor=0x49 hits=1
+pos
+U0 MAP (B->A direction):
+MAP n=6 clean=0 corrupt=6 mismatch=0 rssi=-37..-37 snr=4..10
+pos 15 xor=0x60 hits=1
+pos 17 xor=0x08 hits=1
+pos 21 xor=0x04 hits=1
+pos
+== raw per-burst capture (U1 RXS on, U0 TXTEST 10) ==
+captured 0 frames; showing consecutive frames' bytes 12-45:
+== raw per-burst capture attempt #2 (RXS on both tools' path) ==
+RXS: ON
+RAW U1 stream:
+[RX 229941 rssi=-36 snr=10 len=64 hex=32 00 A5 5A 3C C3 00 FF 0F F0 18 E7 80 7F 01 FE 40 B7 20 DF 10 E3 08 F7 07 DB 02 FD 31 F6 C9 F[RX 231091 rssi=-36 snr=10 len=64 hex=33 00 A5 5A 3C C3 00 FF 0F F0 18 E7 80 7F 01 FE 40 BF 20 DF 10 E7 08 F7 04 DB 02 FD 01 36 C9 F[RX 232240 rssi=-37 snr=6 len=64 hex=34 00 A5 5A 3C C3 00 FF 0F F0 18 E7 80 7F 01 FE 40 BF 20 DF 10 E7 08 F7 04 FB 02 FD 01 36 C9 FF[RX 233390 rssi=-37 snr=8 len=64 hex=35 00 A5 5A 3C C3 00 FF 0F F0 18 E7 80 7F 01 FE 40 BF 20 DF 10 E7 08 F7 04 FB 02 FD 01 36 C9 FF[RX 234540 rssi=-37 snr=5 len=64 hex=36 00 A5 5A 3C C3 00 FF 0F F0 18 E7 80 7F 01 FE 40 BF 20 DF 10 E7 08 F7 04 FB 02 FD 01 36 C9 FF
+===== SF sweep corruption test =====
+-- A->B SF9 (baseline) --
+MAP n=8 clean=0 corrupt=8 mismatch=0 rssi=-36..-36 snr=4..10
+pos 21 xor=0x04 hits=1
+pos 24 xor=0x53 hits=1
+pos 25 xor=0x20 hits=1
+pos
+-- A->B SF12 --
+MAP n=0
+-- B->A SF12 --
+MAP n=0
+-- A->B SF7 (fastest) --
+MAP n=15 clean=8 corrupt=0 mismatch=0 rssi=-35..-34 snr=11..12
+-- B->A SF7 --
+MAP n=7 clean=7 corrupt=0 mismatch=0 rssi=-35..-34 snr=11..12
+restored SF9 both
+===== BW sweep at SF9 =====
+A->B SF9 BW62.5 -> MAP n=9 clean=0 corrupt=8 mismatch=0 rssi=-34..-33 snr=4..9
+pos 29 xor=0xC0 hits=1
+pos 34 xor=0x49 hits=1
+pos 37 xor=0x20 hits=1
+pos 3
+A->B SF9 BW125 -> MAP n=14 clean=8 corrupt=0 mismatch=0 rssi=-35..-34 snr=10..10
+B->A SF9 BW125 -> MAP n=15 clean=8 corrupt=0 mismatch=0 rssi=-34..-34 snr=9..10
+A->B SF8 BW62.5 -> MAP n=13 clean=8 corrupt=0 mismatch=0 rssi=-34..-34 snr=10..11
+B->A SF8 BW62.5 -> MAP n=14 clean=8 corrupt=0 mismatch=0 rssi=-35..-34 snr=8..10
+restored SF9 BW62.5 both
+## 2026-11-08 09:24 — Linktest SF/BW sweep: corruption isolated to SF9/BW62.5
+Both units on identical linktest image (LT v1 2026-11-08 09:17). ERC pattern TX.
+- SF9/BW62.5:  17 receipts, 0 clean, 100% corrupt frames. Multi-bit XoRs
+  (0x49/0x53/0xC0-class) at drifting center positions (15..43), RSSI -34..-37,
+  SNR +4..+10 (radio says demod quality GOOD while bits flip).
+- SF7/BW62.5: 22 receipts, all clean (0 corrupt).
+- SF8/BW62.5: 27 receipts, all clean.
+- SF9/BW125:  29 receipts, all clean (same SF9, doubled bandwidth).
+- SF12/BW62.5 (LDRO off both): 0 received (mutual mod-mismatch - consistent).
+CONCLUSION: corruption is a deterministic function of SYMBOL TIME ONLY
+(symbol ~8.2 ms bad, <=4.1 ms perfect) - NOT distance, noise, SPI reads,
+host-side, TX-path framing, or per-unit hardware. Rules OUT the earlier
+hypotheses (SPI readbacks, tx framing, CDC). Crystal drift argument fails:
+SF change alone (same boards, same BW) flips the behavior within seconds.
+NEXT: check SX1262 datasheet known-limitations/errata symbol-time class;
+test SetRxBoosted vs SetRx; test LDRO=1 at SF9/62.5; note SF9/BW62.5 air
+time per 64-B burst ~278 ms (TXTEST gap 350 ms leaves ~70 ms inter-burst).
+===== hypothesis 1: LDRO at SF9/BW62.5 =====
+U0: f=434000000 s=9 b=0x03 c=1 d=22 p=8 w=1424 i=0 l=1 t=0
+A->B SF9 LDRO1 -> MAP n=5 clean=5 corrupt=0 mismatch=0 rssi=-34..-34 snr=10..13
+B->A SF9 LDRO1 -> MAP n=8 clean=8 corrupt=0 mismatch=0 rssi=-34..-32 snr=8..12
+===== control: LDRO back OFF at SF9/BW62.5 =====
+A->B SF9 LDRO0 -> MAP n=9 clean=0 corrupt=8 mismatch=0 rssi=-35..-34 snr=4..8
+pos 25 xor=0x20 hits=1
+pos 28 xor=0x30 hits=1
+pos 29 xor=0xC0 hits=1
+pos 3
+B->A SF9 LDRO0 -> MAP n=10 clean=0 corrupt=8 mismatch=0 rssi=-34..-32 snr=4..8
+pos 29 xor=0xC0 hits=2
+pos 33 xor=0x02 hits=1
+pos 34 xor=0x09 hits=3
+pos
+===== restore LDRO=1 + sanity long-run =====
+A->B SF9 LDRO1 n=30 -> MAP n=13 clean=8 corrupt=0 mismatch=0 rssi=-34..-33 snr=7..8
+B->A SF9 LDRO1 n=30 -> MAP n=6 clean=6 corrupt=0 mismatch=0 rssi=-33..-33 snr=8..13
+## 2026-11-08 10:05 — ROOT CAUSE #3 CONFIRMED: LDRO required at SF9/BW62.5
+- Causal chain sealed with linktest battery: CFG l 1 => 13 receipts 100% clean
+  (A->B and B->A); control CFG l 0 => corruption returns 8/8 frames both ways;
+  long-run n=30 sanity clean (ring clamps MAP n to 8 - display quirk only).
+- Rule (rule-of-thumb + bench): LDRO=1 when symbol time >= ~8.1 ms.
+  Datasheet mandates LDRO only >16 ms; this silicon degrades earlier.
+- Fix implemented in lora.c LoRa_ApplyConfig: auto-computes ldroEnabled from
+  SF/BW symbol time (>=8.1 ms -> 1). Note: enum has BW_10/20 alias duplicates
+  (0x08) and BW_20 mis-keyed (SX1262 20.8k = 0x09); if/else chain handles it.
+- Corruption hunt CLOSED. Three bench-verified root causes total:
+  (1) STANDBY-before-TX missing; (2) SetTxParams never issued;
+  (3) LDRO disabled at SF9/BW62.5. All fixed in firmware/core drivers.
