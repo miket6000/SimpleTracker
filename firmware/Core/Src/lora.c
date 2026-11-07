@@ -225,6 +225,14 @@ void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
     uint8_t rx2[7];
     SpiCmd(l, pkt, rx2, sizeof(pkt));
 
+    // Explicitly configure TX power + ramp. SetTxParams was never issued by
+    // this driver, so the radio transmitted at its per-unit power-on default
+    // (one bench unit only closed links under ~1 m). txPower already carries
+    // the authored setting 'd' (LORA_TX_POWER_22_DBM); ramp = 200 us (0x04).
+    uint8_t txp[3] = { CMD_SET_TX_PARAMS, (uint8_t)l->txPower, 0x04 };
+    uint8_t rxX[3];
+    SpiCmd(l, txp, rxX, sizeof(txp));
+
     LoRa_SetBufferOffsets(l, 0x00, 0x00);
 
     // Reduce sensitivity of OVP per datasheet known limitations.
@@ -258,6 +266,17 @@ void LoRa_Transmit(LoRa_t *l, uint8_t *data, uint8_t len)
     uint8_t rx_pkt[7];
     SpiCmd(l, pkt, rx_pkt, sizeof(pkt));
     
+    // SX1262 requires STANDBY before SetPacketParams/WriteBuffer. When this
+    // is called from post-RX contexts (ACK builds, NAK paths, delayed
+    // discovery replies) the radio is in FS/RX and those SPI commands are
+    // rejected (cmd timeout), silently dropping the transmission. Same
+    // NVIC guidance pattern as LoRa_ApplyConfig() below.
+    HAL_NVIC_DisableIRQ(EXTI0_1_IRQn);
+    uint8_t sb_cmd[] = { CMD_SET_STANDBY, 0x00 };
+    uint8_t sb_rx[2];
+    SpiCmd(l, sb_cmd, sb_rx, sizeof(sb_cmd));
+    l->currentMode = LORA_MODE_STDBY;
+
     uint8_t buf[1 + 1 + 255];
     buf[0] = CMD_WRITE_BUFFER;
     buf[1] = 0x00;
@@ -274,6 +293,8 @@ void LoRa_Transmit(LoRa_t *l, uint8_t *data, uint8_t len)
     LoRa_ClearIrq(l, 0xFFFF);
     
     SpiCmd(l, tx_cmd, rx2, sizeof(tx_cmd));
+
+    HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
 
     l->currentMode = LORA_MODE_TX;
 }
