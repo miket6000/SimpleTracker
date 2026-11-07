@@ -236,6 +236,12 @@ void USB_IRQHandler(void) {
 }
 
 static void bl_tud_ready(void) {
+  // USB pin remap: the tracker board wires D-/D+ onto PA9/PA10; the app does
+  // this in HAL_MspInit() (__HAL_REMAP_PIN_ENABLE(HAL_REMAP_PA11_PA12)) —
+  // without it the PHY stays on PA11/PA12 and enumeration fails
+  RCC->APB2ENR |= RCC_APB2ENR_SYSCFGCOMPEN;
+  SYSCFG->CFGR1 |= SYSCFG_CFGR1_PA11_PA12_RMP;
+
   // USB clock enable (mirrors app MX_USB_PCD_Init; TinyUSB sees bare clocks)
   RCC->APB1ENR |= RCC_APB1ENR_USBEN;
   NVIC_EnableIRQ(USB_IRQn);
