@@ -50,7 +50,7 @@
 */
 
 /* bench app image: linked behind the 6 KB bootloader (bootloader/bl.ld).
-** App base 0x08002400, 22 KB, info page 0x08007C00.*/
+** App base 0x08002800, 21 KB, info page 0x08007C00.*/
 /* Entry Point */
 ENTRY(Reset_Handler)
 
@@ -64,7 +64,7 @@ _Min_Stack_Size = 0x400; /* required amount of stack, was 0x400 */
 MEMORY
 {
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 6K
-FLASH (rx)      : ORIGIN = 0x8024000, LENGTH = 22K
+FLASH (rx)      : ORIGIN = 0x8028000, LENGTH = 21K
 }
 
 /* Define output sections */

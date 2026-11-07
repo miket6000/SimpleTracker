@@ -229,6 +229,12 @@ void uid_string(char buf[9]) {
 // ---------------------------------------------------------------------------
 // CDC plumbing
 
+// startup vector table's USB_IRQHandler weak-points to Default_Handler — a
+// wedge on the first USB interrupt; wire it to TinyUSB like the app does
+void USB_IRQHandler(void) {
+  tud_int_handler(0);
+}
+
 static void bl_tud_ready(void) {
   // USB clock enable (mirrors app MX_USB_PCD_Init; TinyUSB sees bare clocks)
   RCC->APB1ENR |= RCC_APB1ENR_USBEN;
@@ -270,127 +276,130 @@ static uint8_t  frm_buf[FRAME_MAX];
 static uint8_t  frm_type, frm_len;
 static uint32_t frm_have;
 
+// per-frame handlers defined below the parser
+static void bl_fr_info(void);
+static void bl_fr_erase(void);
+static void bl_fr_write(const uint8_t *pl);
+static void bl_fr_final(const uint8_t *pl);
+static void bl_fr_go(void);
+
 static void bl_handle_frame(void) {
   const uint8_t *pl = &frm_buf[4];   // payload
+  const uint8_t t = frm_type;
 
-  switch (frm_type) {
-    case FR_INFO: {
-      uint8_t out[16];
-      char uid[9];
-      uid_string(uid);
-      for (int i = 0; i < 16; i++) out[i] = 0;
-      out[0] = BL_PROTO_VERSION;
-      out[1] = BL_VERSION;
-      out[2] = BL_REVISION;
-      out[3] = (uint8_t)(g.appValid ? 0x01 : 0x00);
-      memcpy(&out[4], uid, 8);
-      uint32_t bid = info_valid() ? g_info->buildId : 0;
-      memcpy(&out[12], &bid, 4);
-      bl_resp(FR_INFO | 0x80, out, sizeof(out));
-      break;
-    }
-    case FR_ERASE: {
-      uint16_t pages = 0;
-      bool ok = true;
-      bl_flash_unlock();
-      for (uint32_t a = BL_APP_BASE; a < BL_APP_END && ok; a += PAGE_SIZE) {
-        ok = bl_page_erase(a);
-        if (ok) pages++;
-      }
-      if (ok) {
-        ok = bl_page_erase(BL_INFO_ADDR);
-        if (ok) pages++;
-        bl_clear_flash_err();
-      }
-      if (!ok) { g.armed = false; bl_err(BL_ERR_FLASH, 0); break; }
-      g.armed = true;
-      g.next = BL_APP_BASE;
-      g.crc = 0xFFFF;
-      g.written = 0;
-      g.finalized = false;
-      uint8_t sw[2] = { (uint8_t)(pages & 0xFF), (uint8_t)(pages >> 8) };
-      bl_resp(FR_ERASE | 0x80, sw, 2);
-      break;
-    }
-    case FR_WRITE: {
-      if (!g.armed) { bl_err(BL_ERR_ADDR, 0); break; }
-      if (frm_len < 6) { bl_err(BL_ERR_LEN, 0); break; }
-      uint32_t addr;
-      memcpy(&addr, pl, 4);
-      uint8_t dl = (uint8_t)(frm_len - 4);
-      if (addr != g.next)                  { g.armed = false; bl_err(BL_ERR_ADDR, 1); break; }
-      if (dl & 1)                          { bl_err(BL_ERR_LEN, 1); break; }
-      if (addr + dl > BL_APP_END)          { bl_err(BL_ERR_ADDR, 2); break; }
-      for (uint32_t i = 0; i < dl; i += 2) {
-        uint16_t hw = (uint16_t)(pl[4 + i] | (pl[5 + i] << 8));
-        if (!bl_word_program(addr + i, hw)) {
-          bl_clear_flash_err();
-          g.armed = false;
-          bl_err(BL_ERR_FLASH, 1);
-          return;
-        }
-        if ((i & 0x7F) == 0) bl_usbp();       // keep USB events current
-      }
-      bl_clear_flash_err();
-      g.crc = crc16_cont(g.crc, &pl[4], dl);
-      g.next = addr + dl;
-      g.written += dl;
-      uint8_t sw[4] = { (uint8_t)addr, (uint8_t)(addr >> 8),
-                        (uint8_t)(addr >> 16), (uint8_t)(addr >> 24) };
-      bl_resp(FR_WRITE | 0x80, sw, 4);
-      break;
-    }
-    case FR_FINAL: {
-      if (!g.armed) { bl_err(BL_ERR_ADDR, 1); break; }
-      if (frm_len < 10) { bl_err(BL_ERR_LEN, 2); break; }
-      uint32_t len; uint16_t hcr; uint32_t bid;
-      memcpy(&len, pl, 4);
-      memcpy(&hcr, pl + 4, 2);
-      memcpy(&bid, pl + 6, 4);
-      if (len == 0 || len > (BL_APP_END - BL_APP_BASE) || len != g.written) {
-        bl_err(BL_ERR_LEN, 3);
-        break;
-      }
-      if (hcr != g.crc) { bl_err(BL_ERR_CRC2, 0); break; }
-      if (!bl_page_erase(BL_INFO_ADDR)) { bl_err(BL_ERR_FLASH, 2); break; }
-      InfoPage ip;
-      ip.magic = BL_INFO_MAGIC;
-      ip.base = BL_APP_BASE;
-      ip.len = len;
-      ip.crc = hcr;
-      ip.rsvd = 0xFFFF;
-      ip.buildId = bid;
-      const uint16_t *h = (const uint16_t *)&ip;
-      for (uint32_t i = 0; i < sizeof(ip) / 2; i++) {
-        if (!bl_word_program(BL_INFO_ADDR + 2 * i, h[i])) {
-          bl_clear_flash_err();
-          bl_err(BL_ERR_FLASH, 3);
-          return;
-        }
-      }
-      bl_clear_flash_err();
-      g.finalized = true;
-      g.appValid = app_valid();
-      bl_resp(FR_FINAL | 0x80, NULL, 0);
-      break;
-    }
-    case FR_GO: {
-      if (!g.finalized && !g.appValid) { bl_err(BL_ERR_IMAGE, 0); break; }
-      if (!app_valid()) { bl_err(BL_ERR_IMAGE, 1); break; }
-      uint8_t ack = 0;
-      bl_resp(FR_GO | 0x80, &ack, 1);
-      bl_jump();
-      break;
-    }
-    case FR_RESET: {
-      bl_resp(FR_RESET | 0x80, NULL, 0);
-      NVIC_SystemReset();
-      break;
-    }
-    default:
-      bl_err(BL_ERR_TYPE, frm_type);
-      break;
+  if      (t == FR_INFO)   bl_fr_info();
+  else if (t == FR_ERASE)  bl_fr_erase();
+  else if (t == FR_WRITE)  bl_fr_write(pl);
+  else if (t == FR_FINAL)  bl_fr_final(pl);
+  else if (t == FR_GO)     bl_fr_go();
+  else if (t == FR_RESET)  { bl_resp(FR_RESET | 0x80, NULL, 0); NVIC_SystemReset(); }
+  else                     bl_err(BL_ERR_TYPE, t);
+}
+
+// per-frame handlers (split out of the dispatcher: one shared copy each)
+static void bl_fr_info(void) {
+  uint8_t out[16];
+  char uid[9];
+  uid_string(uid);
+  for (int i = 0; i < 16; i++) out[i] = 0;
+  out[0] = BL_PROTO_VERSION;
+  out[1] = BL_VERSION;
+  out[2] = BL_REVISION;
+  out[3] = (uint8_t)(g.appValid ? 0x01 : 0x00);
+  memcpy(&out[4], uid, 8);
+  uint32_t bid = info_valid() ? g_info->buildId : 0;
+  memcpy(&out[12], &bid, 4);
+  bl_resp(FR_INFO | 0x80, out, sizeof(out));
+}
+
+static void bl_fr_erase(void) {
+  uint16_t pages = 0;
+  bool ok = true;
+  bl_flash_unlock();
+  for (uint32_t a = BL_APP_BASE; a < BL_APP_END && ok; a += PAGE_SIZE) {
+    ok = bl_page_erase(a);
+    if (ok) pages++;
   }
+  if (ok) {
+    ok = bl_page_erase(BL_INFO_ADDR);
+    if (ok) pages++;
+  }
+  bl_clear_flash_err();
+  if (!ok) { g.armed = false; bl_err(BL_ERR_FLASH, 0); return; }
+  g.armed = true;
+  g.next = BL_APP_BASE;
+  g.crc = 0xFFFF;
+  g.written = 0;
+  g.finalized = false;
+  uint8_t sw[2] = { (uint8_t)pages, (uint8_t)(pages >> 8) };
+  bl_resp(FR_ERASE | 0x80, sw, 2);
+}
+
+static void bl_fr_write(const uint8_t *pl) {
+  if (!g.armed) { bl_err(BL_ERR_ADDR, 0); return; }
+  if (frm_len < 6) { bl_err(BL_ERR_LEN, 0); return; }
+  uint32_t addr;
+  memcpy(&addr, pl, 4);
+  uint8_t dl = (uint8_t)(frm_len - 4);
+  if (addr != g.next)         { g.armed = false; bl_err(BL_ERR_ADDR, 1); return; }
+  if (dl & 1)                 { bl_err(BL_ERR_LEN, 1); return; }
+  if (addr + dl > BL_APP_END) { bl_err(BL_ERR_ADDR, 2); return; }
+  for (uint32_t i = 0; i < dl; i += 2) {
+    uint16_t hw = (uint16_t)(pl[4 + i] | (pl[5 + i] << 8));
+    if (!bl_word_program(addr + i, hw)) {
+      bl_clear_flash_err();
+      g.armed = false;
+      bl_err(BL_ERR_FLASH, 1);
+      return;
+    }
+  }
+  bl_clear_flash_err();
+  g.crc = crc16_cont(g.crc, &pl[4], dl);
+  g.next = addr + dl;
+  g.written += dl;
+  bl_resp(FR_WRITE | 0x80, NULL, 0);   // addr echo dropped: host tracks next
+}
+
+static void bl_fr_final(const uint8_t *pl) {
+  if (!g.armed) { bl_err(BL_ERR_ADDR, 1); return; }
+  if (frm_len < 10) { bl_err(BL_ERR_LEN, 2); return; }
+  uint32_t len; uint16_t hcr; uint32_t bid;
+  memcpy(&len, pl, 4);
+  memcpy(&hcr, pl + 4, 2);
+  memcpy(&bid, pl + 6, 4);
+  if (len == 0 || len > (BL_APP_END - BL_APP_BASE) || len != g.written) {
+    bl_err(BL_ERR_LEN, 3);
+    return;
+  }
+  if (hcr != g.crc) { bl_err(BL_ERR_CRC2, 0); return; }
+  if (!bl_page_erase(BL_INFO_ADDR)) { bl_err(BL_ERR_FLASH, 2); return; }
+  InfoPage ip;
+  ip.magic = BL_INFO_MAGIC;
+  ip.base = BL_APP_BASE;
+  ip.len = len;
+  ip.crc = hcr;
+  ip.rsvd = 0xFFFF;
+  ip.buildId = bid;
+  const uint16_t *h = (const uint16_t *)&ip;
+  for (uint32_t i = 0; i < sizeof(ip) / 2; i++) {
+    if (!bl_word_program(BL_INFO_ADDR + 2 * i, h[i])) {
+      bl_clear_flash_err();
+      bl_err(BL_ERR_FLASH, 3);
+      return;
+    }
+  }
+  bl_clear_flash_err();
+  g.finalized = true;
+  g.appValid = app_valid();
+  bl_resp(FR_FINAL | 0x80, NULL, 0);
+}
+
+static void bl_fr_go(void) {
+  if (!g.finalized && !g.appValid) { bl_err(BL_ERR_IMAGE, 0); return; }
+  if (!app_valid()) { bl_err(BL_ERR_IMAGE, 1); return; }
+  uint8_t ack = 0;
+  bl_resp(FR_GO | 0x80, &ack, 1);
+  bl_jump();
 }
 
 // input parser: accumulates bytes into frm_buf, dispatches complete frames
@@ -438,10 +447,29 @@ static void bl_parse_tick(void) {
 // SystemInit stub: this build has no system_stm32f0xx.c — its clock-update
 // math pulls libgcc dividers, and the bootloader configures clocks itself.
 // Same reason we link with -nostartfiles: our own startup asm does data/bss
-// init, and _init/_fini are stubbed so libc's init.c links cleanly.
+// init; _init/_fini/__libc_init_array are stubs so libc's init.c is never
+// linked (we have no constructors).
 void SystemInit(void) { }
 void _init(void) { }
 void _fini(void) { }
+void __libc_init_array(void) { }
+
+// libc memcpy/memset overrides: TinyUSB's FIFO bulk ops are the only users.
+// Local byte-loop versions drop the entire libc_nano memset/memcpy machinery
+// (the app build uses libc freely; the BL build cannot afford it).
+void *memset(void *dst, int val, unsigned n) {
+  unsigned char *d = dst;
+  unsigned char c = (unsigned char)val;
+  while (n--) *d++ = c;
+  return dst;
+}
+
+void *memcpy(void *dst, const void *src, unsigned n) {
+  unsigned char *d = dst;
+  const unsigned char *s = src;
+  while (n--) *d++ = *s++;
+  return dst;
+}
 
 int main(void) {
   // first statement: capture + clear the boot flag before the stack can

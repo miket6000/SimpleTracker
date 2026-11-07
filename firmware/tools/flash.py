@@ -35,9 +35,9 @@ ACK = 0x80  # response = request | ACK
 ERR_TYPE = 0xFE
 
 # Layout mirrored from bootloader/boot_common.h
-APP_BASE = 0x08002400
+APP_BASE = 0x08002800
 APP_END = 0x08007C00
-APP_MAX = APP_END - APP_BASE          # 22528 (22 KB)
+APP_MAX = APP_END - APP_BASE          # 21504 (21 KB)
 WRITE_CHUNK = 240                     # <=251 payload data, even, multiple of 16
 
 VID = 0xCafe
@@ -197,7 +197,7 @@ def send_line(port, line, expect=None, timeout=1.0):
     return resp.decode(errors="replace").strip()
 
 
-def flash_unit(image_path, uid=None, go_to_bl=False):
+def flash_unit(image_path, uid=None, bl_mode=False):
     print(f"flash: {image_path}")
     img = open(image_path, "rb").read()
     if len(img) % 2:
@@ -205,31 +205,45 @@ def flash_unit(image_path, uid=None, go_to_bl=False):
     if len(img) > APP_MAX:
         sys.exit(f"image too large: {len(img)} > {APP_MAX} (app region {APP_BASE:#x}..{APP_END:#x})")
 
-    # 1. locate app port -------------------------------------------------------
-    sel = app_ports()
-    if not sel:
-        sys.exit(f"no app CDC ports ({GLOB_APP}); is a unit plugged in?")
-    if len(sel) > 1 and not uid:
-        sys.exit(f"multiple app ports; disambiguate with --uid: {sel}")
-    if len(sel) > 1 and uid:
-        sel = [p for p in sel if uid.lower() in p.lower()]
-    port_app = sel[0]
-    print(f"app port: {port_app}")
+    port_app = None
+    if not bl_mode:
+        # 1. locate app port (fall back to BL mode if only a BL is present)
+        sel = app_ports()
+        if not sel and bl_ports():
+            print("no app port but bootloader present -> continuing in BL mode")
+            bl_mode = True
+        elif not sel:
+            sys.exit(f"no app CDC ports ({GLOB_APP}); is a unit plugged in?")
+        else:
+            if len(sel) > 1 and not uid:
+                sys.exit(f"multiple app ports; disambiguate with --uid: {sel}")
+            if len(sel) > 1 and uid:
+                sel = [p for p in sel if uid.lower() in p.lower()]
+                if not sel:
+                    sys.exit(f"no app port matches --uid {uid}")
+            port_app = sel[0]
+            print(f"app port: {port_app}")
 
-    # 2. banner + unit identity ------------------------------------------------
-    ser = open_port(port_app)
-    drain(ser)
-    ver = send_line(ser, "VER", expect="LT v")
-    print(f"app VER: {ver!r}")
-    # UID string from app? linktest has no UID cmd today; identity comes via BL INFO
-    # 3. reboot into BL ----------------------------------------------------------
-    rb = send_line(ser, "REBOOT BL", timeout=1.0)
-    if "OK" not in rb:
-        print(f"warning: REBOOT BL reply {rb!r} (reset may have cut the reply)")
-    ser.close()
+    if not bl_mode:
+        # 2. banner + unit identity --------------------------------------------
+        ser = open_port(port_app)
+        drain(ser)
+        ver = send_line(ser, "VER", expect="LT v")
+        print(f"app VER: {ver!r}")
+        # 3. reboot into BL ----------------------------------------------------
+        rb = send_line(ser, "REBOOT BL", timeout=1.0)
+        if "OK" not in rb:
+            print(f"warning: REBOOT BL reply {rb!r} (reset may have cut the reply)")
+        ser.close()
 
-    # 4. wait for the bootloader to enumerate -------------------------------------
-    bl_path = wait_for(GLOB_BL, lambda p: True, 10.0, "bootloader CDC")
+    # 4. bootloader port ---------------------------------------------------------
+    if bl_mode:
+        sel = [p for p in bl_ports() if not uid or uid.lower() in p.lower()]
+        if not sel:
+            sys.exit(f"--bl-mode but no bootloader port ({GLOB_BL})")
+        bl_path = sel[0]
+    else:
+        bl_path = wait_for(GLOB_BL, lambda p: True, 10.0, "bootloader CDC")
     print(f"BL port: {bl_path}")
     time.sleep(0.3)
     bl = Bootloader(bl_path)
@@ -318,6 +332,7 @@ def main():
     ap.add_argument("image", nargs="?", help="application .bin to flash")
     ap.add_argument("--uid", help="match by bootloader UID string (8 hex chars)")
     ap.add_argument("--install-bl", action="store_true", help="one-time BL install via dfu-util (ROM DFU)")
+    ap.add_argument("--bl-mode", action="store_true", help="unit is already in bootloader update mode")
     ap.add_argument("--selftest", action="store_true", help="crc16 self-test only")
     args = ap.parse_args()
 
@@ -330,7 +345,7 @@ def main():
     if not args.image:
         ap.error("image required (or --selftest)")
     crc16_selftest()
-    flash_unit(args.image, uid=args.uid)
+    flash_unit(args.image, uid=args.uid, bl_mode=args.bl_mode)
 
 
 if __name__ == "__main__":

@@ -15,14 +15,15 @@ extern void uid_string(char buf[9]);
 // UTF-16 string descriptor buffer
 static uint16_t _desc_str[32];
 
-// String table
+// String table — kept deliberately short: the bootloader image has ~30 bytes
+// of slack on its page budget, and string rodata was the cheapest trim
 static const char *string_desc_arr[] =
 {
   (const char[]) { 0x09, 0x04 },  // 0: English (0x0409)
-  "Blueskin Design Ltd",          // 1: Manufacturer
-  "SimpleTracker BL",             // 2: Product
+  "ST",                           // 1: Manufacturer (index also emitted by dfu-util -l)
+  "SimpleTracker BL",             // 2: Product (flash.py matches on this)
   NULL,                           // 3: Serial (filled from UID)
-  "Bootloader CDC"                // 4: CDC Interface
+  NULL                            // 4: CDC Interface (no string)
 };
 
 uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)

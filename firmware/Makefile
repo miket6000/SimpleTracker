@@ -185,7 +185,7 @@ C_INCLUDES =  \
 -Itinyusb/src
 
 # bench bootloader (Phase 1, branch bench-comms): standalone CDC flash server.
-# Layout: BL @ 0x08000000 (9K) | bench app @ 0x08002400 (22K) | info page 0x08007C00
+# Layout: BL @ 0x08000000 (10K) | bench app @ 0x08002800 (21K) | info page 0x08007C00
 # One-time install per unit needs the ROM DFU + BOOT0 pin; afterwards all
 # flashing is automated through tools/flash.py over the USB CDC cable.
 ifeq ($(BUILD_BL),1)
@@ -236,8 +236,15 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 # -flto: TU fifo + CDC core cannot shrink further; -nostartfiles drops crt0
 # (our own startup asm does data/bss init; SystemInit is a local stub)
 ifeq ($(BUILD_BL),1)
+CFLAGS += -flto -falign-functions=1 -falign-loops=1 -falign-jumps=1 -falign-labels=1
+LDFLAGS += -flto -nostartfiles -Wl,--gc-sections
+LIBS =
+endif
+
+# optional LTO for app builds (bench build especially; HAL + TU shrink a lot)
+ifneq ($(LTO_APP),)
 CFLAGS += -flto
-LDFLAGS += -flto -nostartfiles
+LDFLAGS += -flto
 endif
 
 # default action: build all
@@ -253,7 +260,7 @@ linktest:
 # bench app for the bootloader slot (points SysTick/VTOR at its own vector
 # table at 0x08001800; flashed through tools/flash.py, not dfu-util)
 linktestbl:
-	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) APP_LINKTEST=1 BUILD_DIR=build_ltapp TARGET=firmware_ltapp LDSCRIPT=STM32F042G6Ux_FLASH_APP.ld all
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) APP_LINKTEST=1 LTO_APP=1 BUILD_DIR=build_ltapp TARGET=firmware_ltapp LDSCRIPT=STM32F042G6Ux_FLASH_APP.ld all
 
 # bench bootloader server (standalone, linked at 0x08000000)
 bootloader:

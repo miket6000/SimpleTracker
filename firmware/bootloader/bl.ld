@@ -1,8 +1,8 @@
 /*
  * bootloader/bl.ld — linker script for the bench bootloader.
  *
- * Bootloader occupies the first 9 KB of flash (pages 0-8); the bench app
- * links at 0x08002400 (STM32F042G6Ux_FLASH_APP.ld), 22 KB, with a 1 KB
+ * Bootloader occupies the first 10 KB of flash (pages 0-9); the bench app
+ * links at 0x08002800 (STM32F042G6Ux_FLASH_APP.ld), 21 KB, with a 1 KB
  * info page at 0x08007C00 kept for bootloader state.
  */
 
@@ -17,7 +17,7 @@ _Min_Stack_Size = 0x200;
 MEMORY
 {
 RAM (xrw)      : ORIGIN = 0x20000000, LENGTH = 6K
-FLASH (rx)     : ORIGIN = 0x8000000, LENGTH = 9K
+FLASH (rx)     : ORIGIN = 0x8000000, LENGTH = 10K
 }
 
 SECTIONS
