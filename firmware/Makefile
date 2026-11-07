@@ -70,28 +70,11 @@ Core/Src/system_stm32f0xx.c \
 Core/Src/sysmem.c \
 Core/Src/syscalls.c \
 Core/Src/clock.c \
-Core/Src/led.c \
-Core/Src/led_sequences.c \
-Core/Src/power.c \
-Core/Src/command.c \
-Core/Src/commands.c \
-Core/Src/task.c \
-$(wildcard Core/Src/task_*.c) \
-Core/Src/event.c \
-$(wildcard Core/Src/event_*.c) \
-Core/Src/usb.c \
-Core/Src/gps.c \
 Core/Src/lora.c \
-Core/Src/lora_arbitration.c \
-Core/Src/lora_discovery.c \
-Core/Src/flash.c \
-Core/Src/setting.c \
-Core/Src/filesystem.c \
-Core/Src/usart.c \
-Core/Src/tim.c \
-Core/Src/adc.c \
-Core/Src/uid.c \
+Core/Src/usb.c \
 Core/Src/usb_descriptors.c \
+Core/Src/uid.c \
+Core/Src/command.c \
 tinyusb/src/tusb.c \
 tinyusb/src/common/tusb_fifo.c \
 tinyusb/src/class/cdc/cdc_device.c \
@@ -99,6 +82,31 @@ tinyusb/src/device/usbd.c \
 tinyusb/src/device/usbd_control.c \
 tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c \
 tinyusb/src/portable/st/stm32_fsdev/dcd_stm32_fsdev.c
+
+ifeq ($(APP_LINKTEST),1)
+# comms-band debug firmware (GPS/LED/settings/tasks/arbitration excluded,
+# debug console via USB): build with `make linktest`
+C_SOURCES += Core/Src/linktest.c Core/Src/task_usb.c
+else
+C_SOURCES += \
+Core/Src/led.c \
+Core/Src/led_sequences.c \
+Core/Src/power.c \
+Core/Src/commands.c \
+Core/Src/task.c \
+$(wildcard Core/Src/task_*.c) \
+Core/Src/event.c \
+$(wildcard Core/Src/event_*.c) \
+Core/Src/gps.c \
+Core/Src/lora_arbitration.c \
+Core/Src/lora_discovery.c \
+Core/Src/flash.c \
+Core/Src/setting.c \
+Core/Src/filesystem.c \
+Core/Src/usart.c \
+Core/Src/tim.c \
+Core/Src/adc.c
+endif
 
 # ASM sources
 ASM_SOURCES =  \
@@ -152,6 +160,10 @@ C_DEFS =  \
 -DUSE_HAL_DRIVER \
 -DSTM32F042x6
 
+ifeq ($(APP_LINKTEST),1)
+C_DEFS += -DAPP_LINKTEST
+endif
+
 
 # AS includes
 AS_INCLUDES = 
@@ -196,6 +208,16 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+
+# comms debug firmware (single tree, cut GPS/LED/settings/tasks/arbitration,
+# runtime-configurable radio + test pattern console). Flashes unchanged: the
+# resulting bin goes through make program with BUILD_DIR overridden.
+linktest:
+	$(MAKE) -f $(firstword $(MAKEFILE_LIST)) APP_LINKTEST=1 BUILD_DIR=build_linktest TARGET=firmware_lt all
+
+program_lt: BUILD_DIR=build_linktest
+program_lt: $(BUILD_DIR)/$(TARGET).bin | $(BUILD_DIR)
+	dfu-util -a 0 -D $(BUILD_DIR)/$(TARGET).bin -s 0x08000000
 
 
 #######################################

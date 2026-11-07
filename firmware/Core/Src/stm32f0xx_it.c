@@ -145,6 +145,7 @@ void SysTick_Handler(void)
 /**
   * @brief This function handles USART2 global interrupt.
   */
+#ifndef APP_LINKTEST
 void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART2_IRQn 0 */
@@ -155,6 +156,7 @@ void USART2_IRQHandler(void)
 
   /* USER CODE END USART2_IRQn 1 */
 }
+#endif // APP_LINKTEST
 
 /**
   * @brief This function handles USB global Interrupt / USB wake-up interrupt through EXTI line 18.

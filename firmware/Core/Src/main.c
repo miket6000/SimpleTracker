@@ -36,6 +36,7 @@
 #include "app_context.h"
 #include "task.h"
 #include "tasks.h"
+#include "linktest.h"
 #include "setting.h"
 #include "filesystem.h"
 #include "command.h"
@@ -100,7 +101,17 @@ void load_settings() {
 }
 
 void lora_init(LoRa_t *hlora) {
-  
+#ifdef APP_LINKTEST
+  // no settings/filesystem in the linktest build: fixed bench defaults.
+  // Runtime overrides happen through the CFG command in linktest.c.
+  hlora->frequency        = 434000000UL;
+  hlora->spreadingFactor  = LORA_SF9;
+  hlora->bandwidth        = LORA_BW_62;
+  hlora->codingRate       = LORA_CR_4_5;
+  hlora->txPower          = LORA_TX_POWER_22_DBM;
+  hlora->preambleLength   = 8;
+  hlora->crcEnabled       = 0;
+#else
   hlora->frequency = setting('f')->value;
   hlora->spreadingFactor = setting('s')->value;
   hlora->bandwidth = setting('b')->value;
@@ -108,6 +119,7 @@ void lora_init(LoRa_t *hlora) {
   hlora->txPower = setting('d')->value;
   hlora->preambleLength = setting('p')->value;
   hlora->crcEnabled = 0;
+#endif
 
   hlora->nss_port = LORA_CS_GPIO_Port;
   hlora->nss_pin = LORA_CS_Pin;
@@ -161,25 +173,41 @@ int main(void) {
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_SPI1_Init();
+#ifndef APP_LINKTEST
   MX_USB_PCD_Init();
   MX_USART2_UART_Init();
   MX_TIM16_Init();
   MX_ADC_Init();
+#endif
   /* USER CODE BEGIN 2 */
 
+#ifndef APP_LINKTEST
   //led(&status_led, LED_ON);
   /* Initialize flash filesystem and load settings */
   fs_init();
   load_settings();
   led_init(&status_led, LED_GPIO_Port, LED_Pin);
   led_add_sequence(&status_led, idle_sequence);
+#endif
   tusb_init();
 
+#ifdef APP_LINKTEST
+  /* linktest build: no GPS/LED/ADC/tasks/settings/arbitration.
+     Same LoRa driver core + dedicated debug console (linktest.c). */
+  lora_init(&hlora);
+  linktest_boot(&appContext);
+
+  while (1)
+  {
+    linktest_tick();
+  }
+#else
   /* populate appContext with values that are now available */
   //appContext.mode = setting('m')->value;
 
   //appContext.mode = MODE_TRACKER;
   appContext.mode = MODE_GROUND_STATION;
+#ifndef APP_LINKTEST
   appContext.uid = UID_Get();
   strncpy(appContext.uidStr, UID_GetString(), 8);
   appContext.uidStr[8] = '\0';
@@ -224,6 +252,7 @@ int main(void) {
   //HAL_Delay(3000); // short delay to allow user to view init over serial.
   lora_init(&hlora);
   gps_init(&huart2);
+#endif // !APP_LINKTEST
 
   /* create task, arguments are init_delay, period, callback, parameter */
   task_build(0, 100, task_led, &appContext);
@@ -251,6 +280,7 @@ int main(void) {
     eventDispatcher(&appContext);
     //power_management();
   }
+#endif // APP_LINKTEST
 
   /* USER CODE END 3 */
 }

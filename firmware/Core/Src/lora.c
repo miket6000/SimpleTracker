@@ -206,7 +206,7 @@ void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
         l->spreadingFactor,
         l->bandwidth,
         l->codingRate,
-        0x00
+        l->ldroEnabled ? 0x01 : 0x00  // low-data-rate optimize (long symbol time)
     };
 
     uint8_t rx1[5];
@@ -250,6 +250,26 @@ void LoRa_ApplyConfig(LoRa_t *l, uint32_t freq, uint8_t sf, uint8_t bw)
     __HAL_GPIO_EXTI_CLEAR_IT(l->dio1_pin);
     HAL_NVIC_EnableIRQ(EXTI0_1_IRQn);
 }
+
+// Set the LoRa sync word (two bytes at registers 0x0740..0x0741).
+// Standard LoRaWAN public = 0x3444, private = 0x1424.
+void LoRa_SetSyncWord(LoRa_t *l, uint8_t msb, uint8_t lsb)
+{
+    LoRa_WriteRegister(l, 0x0740, msb);
+    LoRa_WriteRegister(l, 0x0741, lsb);
+}
+
+#ifdef APP_LINKTEST
+uint8_t LoRa_ReadRegisterDbg(LoRa_t *l, uint16_t address)
+{
+    return LoRa_ReadRegister(l, address);
+}
+
+void LoRa_WriteRegisterDbg(LoRa_t *l, uint16_t address, uint8_t data)
+{
+    LoRa_WriteRegister(l, address, data);
+}
+#endif
 
 void LoRa_Transmit(LoRa_t *l, uint8_t *data, uint8_t len)
 {

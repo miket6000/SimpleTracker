@@ -126,6 +126,7 @@ typedef struct
     uint16_t preambleLength;
     uint8_t  payloadLength;
     uint8_t  crcEnabled;
+    uint8_t  ldroEnabled;
 
     LoRaTxPower_t txPower;
 
@@ -142,6 +143,9 @@ void LoRa_Reset(LoRa_t *lora);
 
 void LoRa_SetFrequency(LoRa_t *lora, uint32_t freq_hz);
 void LoRa_ApplyConfig(LoRa_t *lora, uint32_t freq, uint8_t sf, uint8_t bw);
+void LoRa_SetSyncWord(LoRa_t *lora, uint8_t msb, uint8_t lsb);
+uint8_t LoRa_ReadRegisterDbg(LoRa_t *lora, uint16_t address);
+void LoRa_WriteRegisterDbg(LoRa_t *lora, uint16_t address, uint8_t data);
 
 void LoRa_Transmit(LoRa_t *lora, uint8_t *data, uint8_t length);
 void LoRa_Receive(LoRa_t *lora, uint32_t timeout_ms);
