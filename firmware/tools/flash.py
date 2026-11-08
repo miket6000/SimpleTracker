@@ -292,7 +292,9 @@ def flash_unit(image_path, uid=None, bl_mode=False):
         sys.exit(f"bootloader protocol version {proto} != 1")
     app_valid = bool(inf[3] & 1)
     old_build = int.from_bytes(inf[12:16], "little")
-    print(f"BL INFO: uid={uidc} proto={proto} app_valid={app_valid} build={old_build}")
+    bcr = int.from_bytes(inf[16:20], "little") if len(inf) >= 20 else 0
+    bcr_s = f"{bcr & 0x7FFFFFFF}" + ("+fault" if (bcr & 0x80000000) else "")
+    print(f"BL INFO: uid={uidc} proto={proto} app_valid={app_valid} build={old_build} bcr={bcr_s}")
     if uid and uidc != uid.lower():
         sys.exit(f"unit UID {uidc} does not match --uid {uid}")
 
