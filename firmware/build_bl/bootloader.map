@@ -1,0 +1,690 @@
+Archive member included to satisfy reference by file (symbol)
+
+/usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+                              /tmp/ccclqtdK.ltrans0.ltrans.o (__gnu_thumb1_case_uqi)
+/usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+                              /tmp/ccclqtdK.ltrans0.ltrans.o (__gnu_thumb1_case_shi)
+/usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+                              /tmp/ccclqtdK.ltrans0.ltrans.o (__gnu_thumb1_case_uhi)
+
+Discarded input sections
+
+ .comment       0x00000000       0x27 /tmp/ccGUmUos.debug.temp.o
+ .comment       0x00000000       0x27 /tmp/ccg9bsZy.debug.temp.o
+ .comment       0x00000000       0x27 /tmp/ccu7biVE.debug.temp.o
+ .comment       0x00000000       0x27 /tmp/ccLJp3E8.debug.temp.o
+ .comment       0x00000000       0x27 /tmp/ccAf2TLs.debug.temp.o
+ .comment       0x00000000       0x27 /tmp/ccb8TYnn.debug.temp.o
+ .comment       0x00000000       0x27 /tmp/ccLuaV7n.debug.temp.o
+ .comment       0x00000000       0x27 /tmp/ccn69zb5.debug.temp.o
+ .comment       0x00000000       0x27 /tmp/ccVOedCW.debug.temp.o
+ .data          0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .bss           0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .data          0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .bss           0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .data          0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+ .bss           0x00000000        0x0 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+ .text          0x00000000       0x14 build_bl/startup_stm32f042x6.o
+ .data          0x00000000        0x0 build_bl/startup_stm32f042x6.o
+ .bss           0x00000000        0x0 build_bl/startup_stm32f042x6.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x20000000         0x00001800         xrw
+FLASH            0x08000000         0x00002800         xr
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD build_bl/bl_main.o
+LOAD /tmp/ccclqtdK.ltrans0.ltrans.o
+LOAD /tmp/ccGUmUos.debug.temp.o
+LOAD /tmp/ccg9bsZy.debug.temp.o
+LOAD /tmp/ccu7biVE.debug.temp.o
+LOAD /tmp/ccLJp3E8.debug.temp.o
+LOAD /tmp/ccAf2TLs.debug.temp.o
+LOAD /tmp/ccb8TYnn.debug.temp.o
+LOAD /tmp/ccLuaV7n.debug.temp.o
+LOAD /tmp/ccn69zb5.debug.temp.o
+LOAD /tmp/ccVOedCW.debug.temp.o
+LOAD build_bl/bl_descriptors.o
+LOAD build_bl/tusb.o
+LOAD build_bl/tusb_fifo.o
+LOAD build_bl/cdc_device.o
+LOAD build_bl/usbd.o
+LOAD build_bl/usbd_control.o
+LOAD build_bl/fsdev_common.o
+LOAD build_bl/dcd_stm32_fsdev.o
+LOAD build_bl/startup_stm32f042x6.o
+START GROUP
+LOAD /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a
+LOAD /usr/lib/gcc/arm-none-eabi/14.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a
+END GROUP
+START GROUP
+LOAD /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a
+LOAD /usr/lib/gcc/arm-none-eabi/14.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc_nano.a
+END GROUP
+                0x20001800                        _estack = (ORIGIN (RAM) + LENGTH (RAM))
+                0x00000000                        _Min_Heap_Size = 0x0
+                0x00000200                        _Min_Stack_Size = 0x200
+
+.isr_vector     0x08000000       0xc0
+                0x08000000                        . = ALIGN (0x4)
+ *(.isr_vector)
+ .isr_vector    0x08000000       0xc0 build_bl/startup_stm32f042x6.o
+                0x08000000                g_pfnVectors
+                0x080000c0                        . = ALIGN (0x4)
+
+.text           0x080000c0     0x23c4
+                0x080000c0                        . = ALIGN (0x4)
+ *(.text)
+ .text          0x080000c0     0x1d8c /tmp/ccclqtdK.ltrans0.ltrans.o
+                0x0800063c                SystemInit
+                0x0800063e                __libc_init_array
+                0x08000640                memset
+                0x08000728                memcpy
+                0x08001194                USB_IRQHandler
+ .text          0x08001e4c       0x14 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+                0x08001e4c                __gnu_thumb1_case_uqi
+ .text          0x08001e60       0x14 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+                0x08001e60                __gnu_thumb1_case_shi
+ .text          0x08001e74       0x14 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+                0x08001e74                __gnu_thumb1_case_uhi
+ *(.text*)
+ .text.startup  0x08001e88      0x578 /tmp/ccclqtdK.ltrans0.ltrans.o
+                0x08001e88                main
+ .text.Reset_Handler
+                0x08002400       0x80 build_bl/startup_stm32f042x6.o
+                0x08002400                Reset_Handler
+ .text.Default_Handler
+                0x08002480        0x2 build_bl/startup_stm32f042x6.o
+                0x08002480                TIM1_CC_IRQHandler
+                0x08002480                TSC_IRQHandler
+                0x08002480                HardFault_Handler
+                0x08002480                SysTick_Handler
+                0x08002480                PendSV_Handler
+                0x08002480                NMI_Handler
+                0x08002480                I2C1_IRQHandler
+                0x08002480                RCC_CRS_IRQHandler
+                0x08002480                SPI1_IRQHandler
+                0x08002480                EXTI2_3_IRQHandler
+                0x08002480                ADC1_IRQHandler
+                0x08002480                TIM17_IRQHandler
+                0x08002480                CEC_CAN_IRQHandler
+                0x08002480                RTC_IRQHandler
+                0x08002480                PVD_VDDIO2_IRQHandler
+                0x08002480                TIM16_IRQHandler
+                0x08002480                TIM3_IRQHandler
+                0x08002480                EXTI4_15_IRQHandler
+                0x08002480                DMA1_Channel1_IRQHandler
+                0x08002480                Default_Handler
+                0x08002480                TIM14_IRQHandler
+                0x08002480                DMA1_Channel4_5_IRQHandler
+                0x08002480                EXTI0_1_IRQHandler
+                0x08002480                SPI2_IRQHandler
+                0x08002480                SVC_Handler
+                0x08002480                WWDG_IRQHandler
+                0x08002480                TIM2_IRQHandler
+                0x08002480                DMA1_Channel2_3_IRQHandler
+                0x08002480                USART2_IRQHandler
+                0x08002480                FLASH_IRQHandler
+                0x08002480                USART1_IRQHandler
+                0x08002480                TIM1_BRK_UP_TRG_COM_IRQHandler
+ *(.glue_7)
+ .glue_7        0x08002482        0x0 linker stubs
+ *(.glue_7t)
+ .glue_7t       0x08002482        0x0 linker stubs
+ *(.eh_frame)
+ *(.init)
+ *(.fini)
+                0x08002484                        . = ALIGN (0x4)
+ *fill*         0x08002482        0x2 
+                0x08002484                        _etext = .
+
+.vfp11_veneer   0x08002484        0x0
+ .vfp11_veneer  0x08002484        0x0 linker stubs
+
+.v4_bx          0x08002484        0x0
+ .v4_bx         0x08002484        0x0 linker stubs
+
+.iplt           0x08002484        0x0
+ .iplt          0x08002484        0x0 build_bl/startup_stm32f042x6.o
+
+.rodata         0x08002484       0xc4
+                0x08002484                        . = ALIGN (0x4)
+ *(.rodata)
+ .rodata        0x08002484       0xae /tmp/ccclqtdK.ltrans0.ltrans.o
+ *(.rodata*)
+ .rodata.str1.1
+                0x08002532       0x14 /tmp/ccclqtdK.ltrans0.ltrans.o
+                0x08002548                        . = ALIGN (0x4)
+ *fill*         0x08002546        0x2 
+
+.rel.dyn        0x08002548        0x0
+ .rel.iplt      0x08002548        0x0 build_bl/startup_stm32f042x6.o
+
+.ARM.extab
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+
+.ARM            0x08002548        0x0
+                0x08002548                        __exidx_start = .
+ *(.ARM.exidx*)
+                0x08002548                        __exidx_end = .
+
+.preinit_array  0x08002548        0x0
+                [!provide]                        PROVIDE (__preinit_array_start = .)
+ *(.preinit_array*)
+                [!provide]                        PROVIDE (__preinit_array_end = .)
+
+.init_array     0x08002548        0x0
+                [!provide]                        PROVIDE (__init_array_start = .)
+ *(SORT_BY_NAME(.init_array.*))
+ *(.init_array*)
+                [!provide]                        PROVIDE (__init_array_end = .)
+
+.fini_array     0x08002548        0x0
+                [!provide]                        PROVIDE (__fini_array_start = .)
+ *(SORT_BY_NAME(.fini_array.*))
+ *(.fini_array*)
+                [!provide]                        PROVIDE (__fini_array_end = .)
+                0x08002548                        _sidata = LOADADDR (.data)
+
+.data           0x20000000       0x18 load address 0x08002548
+                0x20000000                        . = ALIGN (0x4)
+                0x20000000                        _sdata = .
+ *(.data)
+ .data          0x20000000       0x18 /tmp/ccclqtdK.ltrans0.ltrans.o
+ *(.data*)
+                0x20000018                        . = ALIGN (0x4)
+                0x20000018                        _edata = .
+
+.igot.plt       0x20000018        0x0 load address 0x08002560
+ .igot.plt      0x20000018        0x0 build_bl/startup_stm32f042x6.o
+                0x20000018                        . = ALIGN (0x4)
+
+.bss            0x20000018      0x524 load address 0x08002560
+                0x20000018                        _sbss = .
+                0x20000018                        __bss_start__ = _sbss
+ *(.bss)
+ .bss           0x20000018      0x524 /tmp/ccclqtdK.ltrans0.ltrans.o
+ *(.bss*)
+ *(COMMON)
+                0x2000053c                        . = ALIGN (0x4)
+                0x2000053c                        _ebss = .
+                0x2000053c                        __bss_end__ = _ebss
+
+._user_heap_stack
+                0x2000053c      0x204 load address 0x08002560
+                0x20000540                        . = ALIGN (0x8)
+ *fill*         0x2000053c        0x4 
+                [!provide]                        PROVIDE (end = .)
+                [!provide]                        PROVIDE (_end = .)
+                0x20000540                        . = (. + _Min_Heap_Size)
+                0x20000740                        . = (. + _Min_Stack_Size)
+ *fill*         0x20000540      0x200 
+                0x20000740                        . = ALIGN (0x8)
+
+/DISCARD/
+ libc.a(*)
+ libm.a(*)
+ libgcc.a(*)
+
+.ARM.attributes
+                0x00000000       0x28
+ *(.ARM.attributes)
+ .ARM.attributes
+                0x00000000       0x2a /tmp/ccclqtdK.ltrans0.ltrans.o
+ .ARM.attributes
+                0x0000002a       0x1e /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .ARM.attributes
+                0x00000048       0x1e /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .ARM.attributes
+                0x00000066       0x1e /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+ .ARM.attributes
+                0x00000084       0x21 build_bl/startup_stm32f042x6.o
+OUTPUT(build_bl/bootloader.elf elf32-littlearm)
+LOAD linker stubs
+LOAD /usr/lib/gcc/arm-none-eabi/14.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libc.a
+LOAD /usr/lib/gcc/arm-none-eabi/14.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a
+LOAD /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a
+
+.debug_info     0x00000000     0xfe82
+ .debug_info    0x00000000     0x6d24 /tmp/ccclqtdK.ltrans0.ltrans.o
+ .debug_info    0x00006d24      0xf9a /tmp/ccGUmUos.debug.temp.o
+                0x00006d24                bl_main.c.548dd311
+ .debug_info    0x00007cbe      0x5d8 /tmp/ccg9bsZy.debug.temp.o
+                0x00007cbe                bl_descriptors.c.7901c6c2
+ .debug_info    0x00008296      0xef0 /tmp/ccu7biVE.debug.temp.o
+                0x00008296                tusb.c.c3471192
+ .debug_info    0x00009186      0xced /tmp/ccLJp3E8.debug.temp.o
+                0x00009186                tusb_fifo.c.ccfacc97
+ .debug_info    0x00009e73     0x156e /tmp/ccAf2TLs.debug.temp.o
+                0x00009e73                cdc_device.c.67f74760
+ .debug_info    0x0000b3e1     0x22ba /tmp/ccb8TYnn.debug.temp.o
+                0x0000b3e1                usbd.c.aa693da5
+ .debug_info    0x0000d69b      0x5d9 /tmp/ccLuaV7n.debug.temp.o
+                0x0000d69b                usbd_control.c.aa03f02c
+ .debug_info    0x0000dc74      0x444 /tmp/ccn69zb5.debug.temp.o
+                0x0000dc74                fsdev_common.c.7035abf7
+ .debug_info    0x0000e0b8     0x1d07 /tmp/ccVOedCW.debug.temp.o
+                0x0000e0b8                dcd_stm32_fsdev.c.4044de3c
+ .debug_info    0x0000fdbf       0x31 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .debug_info    0x0000fdf0       0x31 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .debug_info    0x0000fe21       0x31 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+ .debug_info    0x0000fe52       0x30 build_bl/startup_stm32f042x6.o
+
+.debug_abbrev   0x00000000     0x1aeb
+ .debug_abbrev  0x00000000      0x2fb /tmp/ccclqtdK.ltrans0.ltrans.o
+ .debug_abbrev  0x000002fb      0x2ab /tmp/ccGUmUos.debug.temp.o
+ .debug_abbrev  0x000005a6      0x15a /tmp/ccg9bsZy.debug.temp.o
+ .debug_abbrev  0x00000700      0x287 /tmp/ccu7biVE.debug.temp.o
+ .debug_abbrev  0x00000987      0x207 /tmp/ccLJp3E8.debug.temp.o
+ .debug_abbrev  0x00000b8e      0x2f9 /tmp/ccAf2TLs.debug.temp.o
+ .debug_abbrev  0x00000e87      0x3f5 /tmp/ccb8TYnn.debug.temp.o
+ .debug_abbrev  0x0000127c      0x255 /tmp/ccLuaV7n.debug.temp.o
+ .debug_abbrev  0x000014d1      0x1b0 /tmp/ccn69zb5.debug.temp.o
+ .debug_abbrev  0x00001681      0x3d5 /tmp/ccVOedCW.debug.temp.o
+ .debug_abbrev  0x00001a56       0x28 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .debug_abbrev  0x00001a7e       0x28 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .debug_abbrev  0x00001aa6       0x28 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+ .debug_abbrev  0x00001ace       0x1d build_bl/startup_stm32f042x6.o
+
+.debug_loclists
+                0x00000000     0x5cd7
+ .debug_loclists
+                0x00000000     0x5cd7 /tmp/ccclqtdK.ltrans0.ltrans.o
+
+.debug_aranges  0x00000000       0xb0
+ .debug_aranges
+                0x00000000       0x28 /tmp/ccclqtdK.ltrans0.ltrans.o
+ .debug_aranges
+                0x00000028       0x20 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .debug_aranges
+                0x00000048       0x20 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .debug_aranges
+                0x00000068       0x20 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+ .debug_aranges
+                0x00000088       0x28 build_bl/startup_stm32f042x6.o
+
+.debug_rnglists
+                0x00000000      0xd3d
+ .debug_rnglists
+                0x00000000      0xd3d /tmp/ccclqtdK.ltrans0.ltrans.o
+
+.debug_line     0x00000000     0x50db
+ .debug_line    0x00000000     0x4558 /tmp/ccclqtdK.ltrans0.ltrans.o
+ .debug_line    0x00004558      0x175 /tmp/ccGUmUos.debug.temp.o
+ .debug_line    0x000046cd       0xd4 /tmp/ccg9bsZy.debug.temp.o
+ .debug_line    0x000047a1      0x109 /tmp/ccu7biVE.debug.temp.o
+ .debug_line    0x000048aa       0xb5 /tmp/ccLJp3E8.debug.temp.o
+ .debug_line    0x0000495f      0x132 /tmp/ccAf2TLs.debug.temp.o
+ .debug_line    0x00004a91      0x156 /tmp/ccb8TYnn.debug.temp.o
+ .debug_line    0x00004be7       0xef /tmp/ccLuaV7n.debug.temp.o
+ .debug_line    0x00004cd6      0x10b /tmp/ccn69zb5.debug.temp.o
+ .debug_line    0x00004de1      0x17c /tmp/ccVOedCW.debug.temp.o
+ .debug_line    0x00004f5d       0x52 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .debug_line    0x00004faf       0x53 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .debug_line    0x00005002       0x53 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+ .debug_line    0x00005055       0x86 build_bl/startup_stm32f042x6.o
+
+.debug_str      0x00000000     0x3dd2
+ .debug_str     0x00000000      0x159 /tmp/ccclqtdK.ltrans0.ltrans.o
+ .debug_str     0x00000000      0x8f6 /tmp/ccGUmUos.debug.temp.o
+ .debug_str     0x00000000      0xe6c /tmp/ccg9bsZy.debug.temp.o
+ .debug_str     0x00000000      0xb87 /tmp/ccu7biVE.debug.temp.o
+ .debug_str     0x00000000      0x5d0 /tmp/ccLJp3E8.debug.temp.o
+ .debug_str     0x00000000     0x177f /tmp/ccAf2TLs.debug.temp.o
+ .debug_str     0x00000000     0x1834 /tmp/ccb8TYnn.debug.temp.o
+ .debug_str     0x00000000      0x548 /tmp/ccLuaV7n.debug.temp.o
+ .debug_str     0x00000000      0x4a4 /tmp/ccn69zb5.debug.temp.o
+ .debug_str     0x00000000     0x11f5 /tmp/ccVOedCW.debug.temp.o
+ .debug_str     0x00000000       0xb5 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .debug_str     0x00000000       0xb5 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .debug_str     0x00000000       0xb5 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+ .debug_str     0x00000000     0x3dd2 build_bl/startup_stm32f042x6.o
+                                 0x5b (size before relaxing)
+
+.comment        0x00000000       0x26
+ .comment       0x00000000       0x26 /tmp/ccclqtdK.ltrans0.ltrans.o
+                                 0x27 (size before relaxing)
+
+.debug_frame    0x00000000      0x59c
+ .debug_frame   0x00000000      0x59c /tmp/ccclqtdK.ltrans0.ltrans.o
+
+.debug_line_str
+                0x00000000       0x90
+ .debug_line_str
+                0x00000000       0x90 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+ .debug_line_str
+                0x00000090       0x90 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+ .debug_line_str
+                0x00000090       0x90 /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+
+.debug_ranges   0x00000000       0x20
+ .debug_ranges  0x00000000       0x20 build_bl/startup_stm32f042x6.o
+
+Cross Reference Table
+
+Symbol                                            File
+ADC1_IRQHandler                                   build_bl/startup_stm32f042x6.o
+CEC_CAN_IRQHandler                                build_bl/startup_stm32f042x6.o
+DMA1_Channel1_IRQHandler                          build_bl/startup_stm32f042x6.o
+DMA1_Channel2_3_IRQHandler                        build_bl/startup_stm32f042x6.o
+DMA1_Channel4_5_IRQHandler                        build_bl/startup_stm32f042x6.o
+Default_Handler                                   build_bl/startup_stm32f042x6.o
+EXTI0_1_IRQHandler                                build_bl/startup_stm32f042x6.o
+EXTI2_3_IRQHandler                                build_bl/startup_stm32f042x6.o
+EXTI4_15_IRQHandler                               build_bl/startup_stm32f042x6.o
+FLASH_IRQHandler                                  build_bl/startup_stm32f042x6.o
+HardFault_Handler                                 build_bl/startup_stm32f042x6.o
+I2C1_IRQHandler                                   build_bl/startup_stm32f042x6.o
+NMI_Handler                                       build_bl/startup_stm32f042x6.o
+PVD_VDDIO2_IRQHandler                             build_bl/startup_stm32f042x6.o
+PendSV_Handler                                    build_bl/startup_stm32f042x6.o
+RCC_CRS_IRQHandler                                build_bl/startup_stm32f042x6.o
+RTC_IRQHandler                                    build_bl/startup_stm32f042x6.o
+Reset_Handler                                     build_bl/startup_stm32f042x6.o
+SPI1_IRQHandler                                   build_bl/startup_stm32f042x6.o
+SPI2_IRQHandler                                   build_bl/startup_stm32f042x6.o
+SVC_Handler                                       build_bl/startup_stm32f042x6.o
+SysTick_Handler                                   build_bl/startup_stm32f042x6.o
+SystemInit                                        /tmp/ccclqtdK.ltrans0.ltrans.o
+                                                  build_bl/bl_main.o (symbol from plugin)
+                                                  build_bl/startup_stm32f042x6.o
+TIM14_IRQHandler                                  build_bl/startup_stm32f042x6.o
+TIM16_IRQHandler                                  build_bl/startup_stm32f042x6.o
+TIM17_IRQHandler                                  build_bl/startup_stm32f042x6.o
+TIM1_BRK_UP_TRG_COM_IRQHandler                    build_bl/startup_stm32f042x6.o
+TIM1_CC_IRQHandler                                build_bl/startup_stm32f042x6.o
+TIM2_IRQHandler                                   build_bl/startup_stm32f042x6.o
+TIM3_IRQHandler                                   build_bl/startup_stm32f042x6.o
+TSC_IRQHandler                                    build_bl/startup_stm32f042x6.o
+USART1_IRQHandler                                 build_bl/startup_stm32f042x6.o
+USART2_IRQHandler                                 build_bl/startup_stm32f042x6.o
+USB_IRQHandler                                    /tmp/ccclqtdK.ltrans0.ltrans.o
+                                                  build_bl/startup_stm32f042x6.o
+                                                  build_bl/bl_main.o (symbol from plugin)
+WWDG_IRQHandler                                   build_bl/startup_stm32f042x6.o
+__gnu_thumb1_case_shi                             /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_shi.o)
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+__gnu_thumb1_case_uhi                             /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uhi.o)
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+__gnu_thumb1_case_uqi                             /usr/lib/gcc/arm-none-eabi/14.2.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+__libc_init_array                                 /tmp/ccclqtdK.ltrans0.ltrans.o
+                                                  build_bl/bl_main.o (symbol from plugin)
+                                                  build_bl/startup_stm32f042x6.o
+_ebss                                             build_bl/startup_stm32f042x6.o
+_edata                                            build_bl/startup_stm32f042x6.o
+_estack                                           build_bl/startup_stm32f042x6.o
+_fini                                             build_bl/bl_main.o (symbol from plugin)
+_init                                             build_bl/bl_main.o (symbol from plugin)
+_sbss                                             build_bl/startup_stm32f042x6.o
+_sdata                                            build_bl/startup_stm32f042x6.o
+_sidata                                           build_bl/startup_stm32f042x6.o
+_tusb_rhport_role                                 build_bl/tusb.o (symbol from plugin)
+_usbd_qdef                                        build_bl/usbd.o (symbol from plugin)
+_usbd_qdef_buf                                    build_bl/usbd.o (symbol from plugin)
+bl_descriptors.c.7901c6c2                         /tmp/ccg9bsZy.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+bl_main.c.548dd311                                /tmp/ccGUmUos.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+btable_set_rx_bufsize                             build_bl/fsdev_common.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+cdc_device.c.67f74760                             /tmp/ccAf2TLs.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+cdcd_control_xfer_cb                              build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+cdcd_deinit                                       build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+cdcd_init                                         build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+cdcd_open                                         build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+cdcd_reset                                        build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+cdcd_xfer_cb                                      build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_configure                                     build_bl/usbd.o (symbol from plugin)
+dcd_connect                                       build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_dcache_clean                                  build_bl/usbd.o (symbol from plugin)
+dcd_dcache_clean_invalidate                       build_bl/usbd.o (symbol from plugin)
+dcd_dcache_invalidate                             build_bl/usbd.o (symbol from plugin)
+dcd_deinit                                        build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_disconnect                                    build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_edpt0_status_complete                         build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd_control.o (symbol from plugin)
+dcd_edpt_clear_stall                              build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_edpt_close_all                                build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_edpt_iso_activate                             build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_edpt_iso_alloc                                build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_edpt_open                                     build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_edpt_stall                                    build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd_control.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_edpt_xfer                                     build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_edpt_xfer_fifo                                build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_event_handler                                 build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+dcd_init                                          build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_int_disable                                   build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_int_enable                                    build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_int_handler                                   build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/bl_main.o (symbol from plugin)
+dcd_remote_wakeup                                 build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_set_address                                   build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_sof_enable                                    build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+dcd_stm32_fsdev.c.4044de3c                        /tmp/ccVOedCW.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+desc_configuration                                build_bl/bl_descriptors.o (symbol from plugin)
+desc_device                                       build_bl/bl_descriptors.o (symbol from plugin)
+fsdev_common.c.7035abf7                           /tmp/ccn69zb5.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+fsdev_core_reset                                  build_bl/fsdev_common.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+fsdev_deinit                                      build_bl/fsdev_common.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+g_pfnVectors                                      build_bl/startup_stm32f042x6.o
+main                                              /tmp/ccclqtdK.ltrans0.ltrans.o
+                                                  build_bl/bl_main.o (symbol from plugin)
+                                                  build_bl/startup_stm32f042x6.o
+memcpy                                            /tmp/ccclqtdK.ltrans0.ltrans.o
+                                                  build_bl/bl_main.o (symbol from plugin)
+memset                                            /tmp/ccclqtdK.ltrans0.ltrans.o
+                                                  build_bl/bl_main.o (symbol from plugin)
+pma_align_buffer_size                             build_bl/fsdev_common.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+tu_bind_driver_to_ep_itf                          build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+tu_desc_find                                      build_bl/tusb.o (symbol from plugin)
+tu_desc_find2                                     build_bl/tusb.o (symbol from plugin)
+tu_desc_find3                                     build_bl/tusb.o (symbol from plugin)
+tu_edpt_claim                                     build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+tu_edpt_release                                   build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+tu_edpt_stream_init                               build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_edpt_stream_read                               build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_edpt_stream_read_xfer                          build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_edpt_stream_write                              build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_edpt_stream_write_available                    build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_edpt_stream_write_xfer                         build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_edpt_stream_write_zlp_if_needed                build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_fifo_advance_read_pointer                      build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_advance_write_pointer                     build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_clear                                     build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_fifo_config                                    build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+tu_fifo_correct_read_pointer                      build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_discard_n                                 build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_get_read_info                             build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_fifo_get_write_info                            build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_peek                                      build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_fifo_peek_n                                    build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_peek_n_access_mode                        build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_read                                      build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_read_n_access_mode                        build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+tu_fifo_set_overwritable                          build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tu_fifo_write                                     build_bl/tusb_fifo.o (symbol from plugin)
+tu_fifo_write_n_access_mode                       build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+tu_hwfifo_read                                    build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+tu_hwfifo_write                                   build_bl/tusb_fifo.o (symbol from plugin)
+                                                  build_bl/dcd_stm32_fsdev.o (symbol from plugin)
+tud_cdc_configure                                 build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_line_coding_cb                            build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_line_state_cb                             build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_available                               build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/bl_main.o (symbol from plugin)
+tud_cdc_n_connected                               build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/bl_main.o (symbol from plugin)
+tud_cdc_n_get_line_coding                         build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_get_line_state                          build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_peek                                    build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_read                                    build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/bl_main.o (symbol from plugin)
+tud_cdc_n_read_flush                              build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_ready                                   build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_set_wanted_char                         build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_write                                   build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/bl_main.o (symbol from plugin)
+tud_cdc_n_write_available                         build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_write_clear                             build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_n_write_flush                             build_bl/cdc_device.o (symbol from plugin)
+                                                  build_bl/bl_main.o (symbol from plugin)
+tud_cdc_notify_complete_cb                        build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_rx_cb                                     build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_rx_wanted_cb                              build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_send_break_cb                             build_bl/cdc_device.o (symbol from plugin)
+tud_cdc_tx_complete_cb                            build_bl/cdc_device.o (symbol from plugin)
+tud_configure                                     build_bl/usbd.o (symbol from plugin)
+tud_connect                                       build_bl/usbd.o (symbol from plugin)
+tud_connected                                     build_bl/usbd.o (symbol from plugin)
+tud_control_status                                build_bl/usbd_control.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tud_control_xfer                                  build_bl/usbd_control.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tud_deinit                                        build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+tud_descriptor_bos_cb                             build_bl/usbd.o (symbol from plugin)
+tud_descriptor_configuration_cb                   build_bl/bl_descriptors.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+tud_descriptor_device_cb                          build_bl/bl_descriptors.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+tud_descriptor_device_qualifier_cb                build_bl/usbd.o (symbol from plugin)
+tud_descriptor_other_speed_configuration_cb       build_bl/usbd.o (symbol from plugin)
+tud_descriptor_string_cb                          build_bl/bl_descriptors.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+tud_disconnect                                    build_bl/usbd.o (symbol from plugin)
+tud_event_hook_cb                                 build_bl/usbd.o (symbol from plugin)
+tud_inited                                        build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+tud_mount_cb                                      build_bl/usbd.o (symbol from plugin)
+tud_mounted                                       build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tud_remote_wakeup                                 build_bl/usbd.o (symbol from plugin)
+tud_resume_cb                                     build_bl/usbd.o (symbol from plugin)
+tud_rhport_init                                   build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+tud_sof_cb                                        build_bl/usbd.o (symbol from plugin)
+tud_sof_cb_enable                                 build_bl/usbd.o (symbol from plugin)
+tud_speed_get                                     build_bl/usbd.o (symbol from plugin)
+tud_suspend_cb                                    build_bl/usbd.o (symbol from plugin)
+tud_suspended                                     build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+tud_task_event_ready                              build_bl/usbd.o (symbol from plugin)
+tud_task_ext                                      build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/bl_main.o (symbol from plugin)
+tud_umount_cb                                     build_bl/usbd.o (symbol from plugin)
+tud_vendor_control_xfer_cb                        build_bl/usbd.o (symbol from plugin)
+tusb.c.c3471192                                   /tmp/ccu7biVE.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+tusb_app_phys_to_virt                             build_bl/tusb.o (symbol from plugin)
+tusb_app_virt_to_phys                             build_bl/tusb.o (symbol from plugin)
+tusb_deinit                                       build_bl/tusb.o (symbol from plugin)
+tusb_fifo.c.ccfacc97                              /tmp/ccLJp3E8.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+tusb_inited                                       build_bl/tusb.o (symbol from plugin)
+tusb_int_handler                                  build_bl/tusb.o (symbol from plugin)
+tusb_rhport_init                                  build_bl/tusb.o (symbol from plugin)
+                                                  build_bl/bl_main.o (symbol from plugin)
+tusb_time_delay_ms_api                            build_bl/tusb.o (symbol from plugin)
+tusb_time_millis_api                              build_bl/tusb.o (symbol from plugin)
+uid_string                                        build_bl/bl_main.o (symbol from plugin)
+                                                  build_bl/bl_descriptors.o (symbol from plugin)
+usbd.c.aa693da5                                   /tmp/ccb8TYnn.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+usbd_app_driver_get_cb                            build_bl/usbd.o (symbol from plugin)
+usbd_control.c.aa03f02c                           /tmp/ccLuaV7n.debug.temp.o
+                                                  /tmp/ccclqtdK.ltrans0.ltrans.o
+usbd_control_reset                                build_bl/usbd_control.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+usbd_control_set_complete_callback                build_bl/usbd_control.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+usbd_control_set_request                          build_bl/usbd_control.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+usbd_control_xfer_cb                              build_bl/usbd_control.o (symbol from plugin)
+                                                  build_bl/usbd.o (symbol from plugin)
+usbd_defer_func                                   build_bl/usbd.o (symbol from plugin)
+usbd_edpt_busy                                    build_bl/usbd.o (symbol from plugin)
+usbd_edpt_claim                                   build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+usbd_edpt_clear_stall                             build_bl/usbd.o (symbol from plugin)
+usbd_edpt_close                                   build_bl/usbd.o (symbol from plugin)
+usbd_edpt_iso_activate                            build_bl/usbd.o (symbol from plugin)
+usbd_edpt_iso_alloc                               build_bl/usbd.o (symbol from plugin)
+usbd_edpt_open                                    build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/cdc_device.o (symbol from plugin)
+usbd_edpt_release                                 build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+usbd_edpt_stall                                   build_bl/usbd.o (symbol from plugin)
+usbd_edpt_stalled                                 build_bl/usbd.o (symbol from plugin)
+usbd_edpt_xfer                                    build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/usbd_control.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+usbd_edpt_xfer_fifo                               build_bl/usbd.o (symbol from plugin)
+                                                  build_bl/tusb.o (symbol from plugin)
+usbd_int_set                                      build_bl/usbd.o (symbol from plugin)
+usbd_open_edpt_pair                               build_bl/usbd.o (symbol from plugin)
+usbd_sof_enable                                   build_bl/usbd.o (symbol from plugin)
+usbd_spin_lock                                    build_bl/usbd.o (symbol from plugin)
+usbd_spin_unlock                                  build_bl/usbd.o (symbol from plugin)

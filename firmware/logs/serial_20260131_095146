@@ -1,0 +1,86 @@
+SI	c0 00 
+SO	a2 22 
+CMDW	80
+SI	00 
+SO	a2 
+SI	1d 07 40 00 
+SO	a2 a2 a2 a2 
+CMDW	07
+SI	00 00 
+SO	a2 a2 
+CMDW	97
+SI	00 00 01 40 
+SO	a2 a2 a2 a2 
+CMDW	9d
+SI	01 
+SO	a2 
+CMDW	96
+SI	00 
+SO	a2 
+CMDW	8f
+SI	00 00 
+SO	a2 a2 
+CMDW	8a
+SI	01 
+SO	a2 
+CMDW	95
+SI	04 07 00 01 
+SO	a2 a2 a2 a2 
+CMDW	8e
+SI	16 04 
+SO	a2 a2 
+CMDW	86
+SI	1b 20 00 00 
+SO	a2 a2 a2 a2 
+CMDW	8b
+SI	09 04 01 00 
+SO	a2 a2 a2 a2 
+CMDW	8c
+SI	00 08 00 ff 01 00 00 00 00 
+SO	a2 a2 a2 a2 a2 a2 a2 a2 a2 
+CMDW	08
+SI	02 03 02 03 00 00 00 00 
+SO	a2 a2 a2 a2 a2 a2 a2 a2 
+CMDR	17
+SI	00 00 
+SO	00 00 
+LoRa Init OK
+CMDR	12
+SI	00 00 
+SO	00 00 
+CMDW	8c
+SI	00 08 00 ff 01 00 00 00 00 
+SO	a2 a2 a2 a2 a2 a2 a2 a2 a2 
+CMDW	80
+SI	00 
+SO	a2 
+CMDW	0e 00 
+SI	48 65 6c 6c 6f 00 
+SO	a2 a2 a2 a2 a2 a2 
+CMDW	02
+SI	03 ff 
+SO	a2 a2 
+CMDR	0b
+SI	00 
+SO	a2 
+SI	1d 08 89 00 
+SO	a2 a2 a2 a2 
+CMDW	0d
+SI	08 89 04 
+SO	a2 a2 a2 
+CMDW	80
+SI	00 
+SO	a2 
+CMDW	83
+SI	00 00 00 
+SO	a2 a2 a2 
+CMDR	c0
+SI	00 
+SO	2a 
+CMDR	12
+SI	00 00 
+SO	00 00 
+CMDR	12
+SI	00 00 
+SO	00 00 
+

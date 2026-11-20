@@ -1,0 +1,533 @@
+ARM GAS  /tmp/ccb5lrYo.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"task_usb.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/task_usb.c"
+  18              		.section	.text.task_usb,"ax",%progbits
+  19              		.align	1
+  20              		.global	task_usb
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	task_usb:
+  26              	.LVL0:
+  27              	.LFB143:
+   1:Core/Src/task_usb.c **** #include "usb.h"
+   2:Core/Src/task_usb.c **** #include "tusb.h"
+   3:Core/Src/task_usb.c **** #include "app_context.h"
+   4:Core/Src/task_usb.c **** 
+   5:Core/Src/task_usb.c **** #include "command.h"
+   6:Core/Src/task_usb.c **** 
+   7:Core/Src/task_usb.c **** void task_usb(AppContext_t *context)
+   8:Core/Src/task_usb.c **** {
+  28              		.loc 1 8 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 64
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+   9:Core/Src/task_usb.c ****     tud_task();
+  32              		.loc 1 9 5 view .LVU1
+  33              	.LBB11:
+  34              	.LBI11:
+  35              		.file 2 "tinyusb/src/device/usbd.h"
+   1:tinyusb/src/device/usbd.h **** /*
+   2:tinyusb/src/device/usbd.h ****  * The MIT License (MIT)
+   3:tinyusb/src/device/usbd.h ****  *
+   4:tinyusb/src/device/usbd.h ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
+   5:tinyusb/src/device/usbd.h ****  *
+   6:tinyusb/src/device/usbd.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   7:tinyusb/src/device/usbd.h ****  * of this software and associated documentation files (the "Software"), to deal
+   8:tinyusb/src/device/usbd.h ****  * in the Software without restriction, including without limitation the rights
+   9:tinyusb/src/device/usbd.h ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  10:tinyusb/src/device/usbd.h ****  * copies of the Software, and to permit persons to whom the Software is
+  11:tinyusb/src/device/usbd.h ****  * furnished to do so, subject to the following conditions:
+  12:tinyusb/src/device/usbd.h ****  *
+  13:tinyusb/src/device/usbd.h ****  * The above copyright notice and this permission notice shall be included in
+  14:tinyusb/src/device/usbd.h ****  * all copies or substantial portions of the Software.
+ARM GAS  /tmp/ccb5lrYo.s 			page 2
+
+
+  15:tinyusb/src/device/usbd.h ****  *
+  16:tinyusb/src/device/usbd.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  17:tinyusb/src/device/usbd.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  18:tinyusb/src/device/usbd.h ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  19:tinyusb/src/device/usbd.h ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  20:tinyusb/src/device/usbd.h ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  21:tinyusb/src/device/usbd.h ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  22:tinyusb/src/device/usbd.h ****  * THE SOFTWARE.
+  23:tinyusb/src/device/usbd.h ****  *
+  24:tinyusb/src/device/usbd.h ****  * This file is part of the TinyUSB stack.
+  25:tinyusb/src/device/usbd.h ****  */
+  26:tinyusb/src/device/usbd.h **** 
+  27:tinyusb/src/device/usbd.h **** #ifndef TUSB_USBD_H_
+  28:tinyusb/src/device/usbd.h **** #define TUSB_USBD_H_
+  29:tinyusb/src/device/usbd.h **** 
+  30:tinyusb/src/device/usbd.h **** #include "common/tusb_common.h"
+  31:tinyusb/src/device/usbd.h **** 
+  32:tinyusb/src/device/usbd.h **** #ifdef __cplusplus
+  33:tinyusb/src/device/usbd.h **** extern "C" {
+  34:tinyusb/src/device/usbd.h **** #endif
+  35:tinyusb/src/device/usbd.h **** 
+  36:tinyusb/src/device/usbd.h **** // ConfigID for tud_configure()
+  37:tinyusb/src/device/usbd.h **** enum {
+  38:tinyusb/src/device/usbd.h ****   TUD_CFGID_INVALID = 0,
+  39:tinyusb/src/device/usbd.h ****   TUD_CFGID_DWC2 = 100,
+  40:tinyusb/src/device/usbd.h **** };
+  41:tinyusb/src/device/usbd.h **** 
+  42:tinyusb/src/device/usbd.h **** typedef struct {
+  43:tinyusb/src/device/usbd.h ****   uint16_t bm_double_buffered; // bitmap of IN endpoints to be double buffered, only effective for 
+  44:tinyusb/src/device/usbd.h ****   bool vbus_sensing; // Vbus pin is used for device connection detection, mandatory for tud_umount_
+  45:tinyusb/src/device/usbd.h **** } tud_configure_dwc2_t;
+  46:tinyusb/src/device/usbd.h **** 
+  47:tinyusb/src/device/usbd.h ****   #ifndef CFG_TUD_CONFIGURE_DWC2_DEFAULT
+  48:tinyusb/src/device/usbd.h ****     #define CFG_TUD_CONFIGURE_DWC2_DEFAULT {.bm_double_buffered = 0, .vbus_sensing = CFG_TUD_VBUS_D
+  49:tinyusb/src/device/usbd.h ****   #endif
+  50:tinyusb/src/device/usbd.h **** 
+  51:tinyusb/src/device/usbd.h **** typedef union {
+  52:tinyusb/src/device/usbd.h ****   tud_configure_dwc2_t dwc2;
+  53:tinyusb/src/device/usbd.h **** } tud_configure_param_t;
+  54:tinyusb/src/device/usbd.h **** 
+  55:tinyusb/src/device/usbd.h **** //--------------------------------------------------------------------+
+  56:tinyusb/src/device/usbd.h **** // Application API
+  57:tinyusb/src/device/usbd.h **** //--------------------------------------------------------------------+
+  58:tinyusb/src/device/usbd.h **** 
+  59:tinyusb/src/device/usbd.h **** // Configure device stack behavior with dynamic or port-specific parameters.
+  60:tinyusb/src/device/usbd.h **** // Should be called before initialization of the device stack
+  61:tinyusb/src/device/usbd.h **** // - cfg_id   : configure ID from TUD_CFGID_* enum values
+  62:tinyusb/src/device/usbd.h **** // - cfg_param: configure data, structure depends on the ID
+  63:tinyusb/src/device/usbd.h **** bool tud_configure(uint8_t rhport, uint32_t cfg_id, const void* cfg_param);
+  64:tinyusb/src/device/usbd.h **** 
+  65:tinyusb/src/device/usbd.h **** // New API to replace tud_init() to init device stack on specific roothub port
+  66:tinyusb/src/device/usbd.h **** // Must be called in the same task/context as tud_task() if RTOS is used
+  67:tinyusb/src/device/usbd.h **** bool tud_rhport_init(uint8_t rhport, const tusb_rhport_init_t* rh_init);
+  68:tinyusb/src/device/usbd.h **** 
+  69:tinyusb/src/device/usbd.h **** // Init device stack on roothub port
+  70:tinyusb/src/device/usbd.h **** #if TUSB_VERSION_NUMBER > 2000  // 0.20.0
+  71:tinyusb/src/device/usbd.h **** TU_ATTR_DEPRECATED("Please use tusb_init(rhport, rh_init) instead")
+ARM GAS  /tmp/ccb5lrYo.s 			page 3
+
+
+  72:tinyusb/src/device/usbd.h **** #endif
+  73:tinyusb/src/device/usbd.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_init (uint8_t rhport) {
+  74:tinyusb/src/device/usbd.h ****   const tusb_rhport_init_t rh_init = {
+  75:tinyusb/src/device/usbd.h ****     .role = TUSB_ROLE_DEVICE,
+  76:tinyusb/src/device/usbd.h ****     .speed = TUD_OPT_HIGH_SPEED ? TUSB_SPEED_HIGH : TUSB_SPEED_FULL
+  77:tinyusb/src/device/usbd.h ****   };
+  78:tinyusb/src/device/usbd.h ****   return tud_rhport_init(rhport, &rh_init);
+  79:tinyusb/src/device/usbd.h **** }
+  80:tinyusb/src/device/usbd.h **** 
+  81:tinyusb/src/device/usbd.h **** // Deinit device stack on roothub port
+  82:tinyusb/src/device/usbd.h **** // Must be called in the same task/context as tud_task() if RTOS is used
+  83:tinyusb/src/device/usbd.h **** bool tud_deinit(uint8_t rhport);
+  84:tinyusb/src/device/usbd.h **** 
+  85:tinyusb/src/device/usbd.h **** // Check if device stack is already initialized
+  86:tinyusb/src/device/usbd.h **** bool tud_inited(void);
+  87:tinyusb/src/device/usbd.h **** 
+  88:tinyusb/src/device/usbd.h **** // Task function should be called in main/rtos loop, extended version of tud_task()
+  89:tinyusb/src/device/usbd.h **** // - timeout_ms: millisecond to wait, zero = no wait, 0xFFFFFFFF = wait forever
+  90:tinyusb/src/device/usbd.h **** // - in_isr: if function is called in ISR
+  91:tinyusb/src/device/usbd.h **** void tud_task_ext(uint32_t timeout_ms, bool in_isr);
+  92:tinyusb/src/device/usbd.h **** 
+  93:tinyusb/src/device/usbd.h **** // Task function should be called in main/rtos loop
+  94:tinyusb/src/device/usbd.h **** TU_ATTR_ALWAYS_INLINE static inline
+  95:tinyusb/src/device/usbd.h **** void tud_task (void) {
+  36              		.loc 2 95 6 view .LVU2
+  37              	.LBB12:
+  96:tinyusb/src/device/usbd.h ****   tud_task_ext(UINT32_MAX, false);
+  38              		.loc 2 96 3 view .LVU3
+  39 0000 0120     		movs	r0, #1
+  40              	.LVL1:
+  41              		.loc 2 96 3 is_stmt 0 view .LVU4
+  42              	.LBE12:
+  43              	.LBE11:
+   8:Core/Src/task_usb.c ****     tud_task();
+  44              		.loc 1 8 1 view .LVU5
+  45 0002 00B5     		push	{lr}
+  46              	.LCFI0:
+  47              		.cfi_def_cfa_offset 4
+  48              		.cfi_offset 14, -4
+  49              	.LBB15:
+  50              	.LBB13:
+  51              		.loc 2 96 3 view .LVU6
+  52 0004 4042     		rsbs	r0, r0, #0
+  53              	.LBE13:
+  54              	.LBE15:
+   8:Core/Src/task_usb.c ****     tud_task();
+  55              		.loc 1 8 1 view .LVU7
+  56 0006 91B0     		sub	sp, sp, #68
+  57              	.LCFI1:
+  58              		.cfi_def_cfa_offset 72
+  59              	.LBB16:
+  60              	.LBB14:
+  61              		.loc 2 96 3 view .LVU8
+  62 0008 0021     		movs	r1, #0
+  63 000a FFF7FEFF 		bl	tud_task_ext
+  64              	.LVL2:
+  65              	.LBE14:
+ARM GAS  /tmp/ccb5lrYo.s 			page 4
+
+
+  66              	.LBE16:
+  10:Core/Src/task_usb.c **** 
+  11:Core/Src/task_usb.c ****     if (tud_cdc_connected())
+  67              		.loc 1 11 5 is_stmt 1 view .LVU9
+  68              	.LBB17:
+  69              	.LBI17:
+  70              		.file 3 "tinyusb/src/class/cdc/cdc_device.h"
+   1:tinyusb/src/class/cdc/cdc_device.h **** /*
+   2:tinyusb/src/class/cdc/cdc_device.h ****  * The MIT License (MIT)
+   3:tinyusb/src/class/cdc/cdc_device.h ****  *
+   4:tinyusb/src/class/cdc/cdc_device.h ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
+   5:tinyusb/src/class/cdc/cdc_device.h ****  *
+   6:tinyusb/src/class/cdc/cdc_device.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   7:tinyusb/src/class/cdc/cdc_device.h ****  * of this software and associated documentation files (the "Software"), to deal
+   8:tinyusb/src/class/cdc/cdc_device.h ****  * in the Software without restriction, including without limitation the rights
+   9:tinyusb/src/class/cdc/cdc_device.h ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  10:tinyusb/src/class/cdc/cdc_device.h ****  * copies of the Software, and to permit persons to whom the Software is
+  11:tinyusb/src/class/cdc/cdc_device.h ****  * furnished to do so, subject to the following conditions:
+  12:tinyusb/src/class/cdc/cdc_device.h ****  *
+  13:tinyusb/src/class/cdc/cdc_device.h ****  * The above copyright notice and this permission notice shall be included in
+  14:tinyusb/src/class/cdc/cdc_device.h ****  * all copies or substantial portions of the Software.
+  15:tinyusb/src/class/cdc/cdc_device.h ****  *
+  16:tinyusb/src/class/cdc/cdc_device.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  17:tinyusb/src/class/cdc/cdc_device.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  18:tinyusb/src/class/cdc/cdc_device.h ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  19:tinyusb/src/class/cdc/cdc_device.h ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  20:tinyusb/src/class/cdc/cdc_device.h ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  21:tinyusb/src/class/cdc/cdc_device.h ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  22:tinyusb/src/class/cdc/cdc_device.h ****  * THE SOFTWARE.
+  23:tinyusb/src/class/cdc/cdc_device.h ****  *
+  24:tinyusb/src/class/cdc/cdc_device.h ****  * This file is part of the TinyUSB stack.
+  25:tinyusb/src/class/cdc/cdc_device.h ****  */
+  26:tinyusb/src/class/cdc/cdc_device.h **** 
+  27:tinyusb/src/class/cdc/cdc_device.h **** #ifndef TUSB_CDC_DEVICE_H_
+  28:tinyusb/src/class/cdc/cdc_device.h **** #define TUSB_CDC_DEVICE_H_
+  29:tinyusb/src/class/cdc/cdc_device.h **** 
+  30:tinyusb/src/class/cdc/cdc_device.h **** #include "cdc.h"
+  31:tinyusb/src/class/cdc/cdc_device.h **** 
+  32:tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  33:tinyusb/src/class/cdc/cdc_device.h **** // Class Driver Configuration
+  34:tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  35:tinyusb/src/class/cdc/cdc_device.h **** #ifndef CFG_TUD_CDC_NOTIFY
+  36:tinyusb/src/class/cdc/cdc_device.h ****   #define CFG_TUD_CDC_NOTIFY    0
+  37:tinyusb/src/class/cdc/cdc_device.h **** #endif
+  38:tinyusb/src/class/cdc/cdc_device.h **** 
+  39:tinyusb/src/class/cdc/cdc_device.h **** #ifndef CFG_TUD_CDC_TX_BUFSIZE
+  40:tinyusb/src/class/cdc/cdc_device.h ****   #define CFG_TUD_CDC_TX_BUFSIZE (TUD_OPT_HIGH_SPEED ? 512 : 64)
+  41:tinyusb/src/class/cdc/cdc_device.h **** #endif
+  42:tinyusb/src/class/cdc/cdc_device.h **** 
+  43:tinyusb/src/class/cdc/cdc_device.h **** #ifndef CFG_TUD_CDC_RX_BUFSIZE
+  44:tinyusb/src/class/cdc/cdc_device.h ****   #define CFG_TUD_CDC_RX_BUFSIZE (TUD_OPT_HIGH_SPEED ? 512 : 64)
+  45:tinyusb/src/class/cdc/cdc_device.h **** #endif
+  46:tinyusb/src/class/cdc/cdc_device.h **** 
+  47:tinyusb/src/class/cdc/cdc_device.h **** #if !defined(CFG_TUD_CDC_EP_BUFSIZE) && defined(CFG_TUD_CDC_EPSIZE)
+  48:tinyusb/src/class/cdc/cdc_device.h ****   #warning CFG_TUD_CDC_EPSIZE is renamed to CFG_TUD_CDC_EP_BUFSIZE, please update to use the new na
+  49:tinyusb/src/class/cdc/cdc_device.h ****   #define CFG_TUD_CDC_EP_BUFSIZE    CFG_TUD_CDC_EPSIZE
+  50:tinyusb/src/class/cdc/cdc_device.h **** #endif
+ARM GAS  /tmp/ccb5lrYo.s 			page 5
+
+
+  51:tinyusb/src/class/cdc/cdc_device.h **** 
+  52:tinyusb/src/class/cdc/cdc_device.h **** #ifndef CFG_TUD_CDC_EP_BUFSIZE
+  53:tinyusb/src/class/cdc/cdc_device.h ****   #define CFG_TUD_CDC_EP_BUFSIZE    (TUD_OPT_HIGH_SPEED ? 512 : 64)
+  54:tinyusb/src/class/cdc/cdc_device.h **** #endif
+  55:tinyusb/src/class/cdc/cdc_device.h **** 
+  56:tinyusb/src/class/cdc/cdc_device.h **** #ifdef __cplusplus
+  57:tinyusb/src/class/cdc/cdc_device.h ****  extern "C" {
+  58:tinyusb/src/class/cdc/cdc_device.h **** #endif
+  59:tinyusb/src/class/cdc/cdc_device.h **** 
+  60:tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  61:tinyusb/src/class/cdc/cdc_device.h **** // Driver Configuration
+  62:tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  63:tinyusb/src/class/cdc/cdc_device.h **** typedef struct TU_ATTR_PACKED {
+  64:tinyusb/src/class/cdc/cdc_device.h ****   bool rx_persistent : 1; // keep rx fifo data even with bus reset or disconnect
+  65:tinyusb/src/class/cdc/cdc_device.h ****   bool tx_persistent : 1; // keep tx fifo data even with reset or disconnect
+  66:tinyusb/src/class/cdc/cdc_device.h ****   bool tx_overwritabe_if_not_connected : 1; // if not connected, tx fifo can be overwritten
+  67:tinyusb/src/class/cdc/cdc_device.h **** } tud_cdc_configure_t;
+  68:tinyusb/src/class/cdc/cdc_device.h **** TU_VERIFY_STATIC(sizeof(tud_cdc_configure_t) == 1, "size is not correct");
+  69:tinyusb/src/class/cdc/cdc_device.h **** 
+  70:tinyusb/src/class/cdc/cdc_device.h **** #define TUD_CDC_CONFIGURE_DEFAULT() { \
+  71:tinyusb/src/class/cdc/cdc_device.h ****   .rx_persistent = false, \
+  72:tinyusb/src/class/cdc/cdc_device.h ****   .tx_persistent = false, \
+  73:tinyusb/src/class/cdc/cdc_device.h ****   .tx_overwritabe_if_not_connected = true, \
+  74:tinyusb/src/class/cdc/cdc_device.h **** }
+  75:tinyusb/src/class/cdc/cdc_device.h **** 
+  76:tinyusb/src/class/cdc/cdc_device.h **** // Configure CDC driver behavior
+  77:tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_configure(const tud_cdc_configure_t* driver_cfg);
+  78:tinyusb/src/class/cdc/cdc_device.h **** 
+  79:tinyusb/src/class/cdc/cdc_device.h **** // Backward compatible
+  80:tinyusb/src/class/cdc/cdc_device.h **** #define tud_cdc_configure_fifo_t tud_cdc_configure_t
+  81:tinyusb/src/class/cdc/cdc_device.h **** #define tud_cdc_configure_fifo   tud_cdc_configure
+  82:tinyusb/src/class/cdc/cdc_device.h **** 
+  83:tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  84:tinyusb/src/class/cdc/cdc_device.h **** // Application API (Multiple Ports) i.e. CFG_TUD_CDC > 1
+  85:tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+  86:tinyusb/src/class/cdc/cdc_device.h **** 
+  87:tinyusb/src/class/cdc/cdc_device.h **** // Check if interface is ready
+  88:tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_ready(uint8_t itf);
+  89:tinyusb/src/class/cdc/cdc_device.h **** 
+  90:tinyusb/src/class/cdc/cdc_device.h **** // Check if terminal is connected to this port
+  91:tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_connected(uint8_t itf);
+  92:tinyusb/src/class/cdc/cdc_device.h **** 
+  93:tinyusb/src/class/cdc/cdc_device.h **** // Get current line state. Bit 0:  DTR (Data Terminal Ready), Bit 1: RTS (Request to Send)
+  94:tinyusb/src/class/cdc/cdc_device.h **** uint8_t tud_cdc_n_get_line_state(uint8_t itf);
+  95:tinyusb/src/class/cdc/cdc_device.h **** 
+  96:tinyusb/src/class/cdc/cdc_device.h **** // Get current line encoding: bit rate, stop bits parity etc ..
+  97:tinyusb/src/class/cdc/cdc_device.h **** void tud_cdc_n_get_line_coding(uint8_t itf, cdc_line_coding_t* coding);
+  98:tinyusb/src/class/cdc/cdc_device.h **** 
+  99:tinyusb/src/class/cdc/cdc_device.h **** // Set special character that will trigger tud_cdc_rx_wanted_cb() callback on receiving
+ 100:tinyusb/src/class/cdc/cdc_device.h **** void tud_cdc_n_set_wanted_char(uint8_t itf, char wanted);
+ 101:tinyusb/src/class/cdc/cdc_device.h **** 
+ 102:tinyusb/src/class/cdc/cdc_device.h **** // Get the number of bytes available for reading
+ 103:tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_available(uint8_t itf);
+ 104:tinyusb/src/class/cdc/cdc_device.h **** 
+ 105:tinyusb/src/class/cdc/cdc_device.h **** // Read received bytes
+ 106:tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_read(uint8_t itf, void* buffer, uint32_t bufsize);
+ 107:tinyusb/src/class/cdc/cdc_device.h **** 
+ARM GAS  /tmp/ccb5lrYo.s 			page 6
+
+
+ 108:tinyusb/src/class/cdc/cdc_device.h **** // Read a byte, return -1 if there is none
+ 109:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline int32_t tud_cdc_n_read_char(uint8_t itf) {
+ 110:tinyusb/src/class/cdc/cdc_device.h ****   uint8_t ch;
+ 111:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_read(itf, &ch, 1) ? (int32_t) ch : -1;
+ 112:tinyusb/src/class/cdc/cdc_device.h **** }
+ 113:tinyusb/src/class/cdc/cdc_device.h **** 
+ 114:tinyusb/src/class/cdc/cdc_device.h **** // Clear the received FIFO
+ 115:tinyusb/src/class/cdc/cdc_device.h **** void tud_cdc_n_read_flush(uint8_t itf);
+ 116:tinyusb/src/class/cdc/cdc_device.h **** 
+ 117:tinyusb/src/class/cdc/cdc_device.h **** // Get a byte from FIFO without removing it
+ 118:tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_peek(uint8_t itf, uint8_t* ui8);
+ 119:tinyusb/src/class/cdc/cdc_device.h **** 
+ 120:tinyusb/src/class/cdc/cdc_device.h **** // Write bytes to TX FIFO, data may remain in the FIFO for a while
+ 121:tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_write(uint8_t itf, void const* buffer, uint32_t bufsize);
+ 122:tinyusb/src/class/cdc/cdc_device.h **** 
+ 123:tinyusb/src/class/cdc/cdc_device.h **** // Write a byte
+ 124:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_n_write_char(uint8_t itf, char ch) {
+ 125:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write(itf, &ch, 1);
+ 126:tinyusb/src/class/cdc/cdc_device.h **** }
+ 127:tinyusb/src/class/cdc/cdc_device.h **** 
+ 128:tinyusb/src/class/cdc/cdc_device.h **** // Write a null-terminated string
+ 129:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_n_write_str(uint8_t itf, char const* str) {
+ 130:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_write(itf, str, strlen(str));
+ 131:tinyusb/src/class/cdc/cdc_device.h **** }
+ 132:tinyusb/src/class/cdc/cdc_device.h **** 
+ 133:tinyusb/src/class/cdc/cdc_device.h **** // Force sending data if possible, return number of forced bytes
+ 134:tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_write_flush(uint8_t itf);
+ 135:tinyusb/src/class/cdc/cdc_device.h **** 
+ 136:tinyusb/src/class/cdc/cdc_device.h **** // Return the number of bytes (characters) available for writing to TX FIFO buffer in a single n_wr
+ 137:tinyusb/src/class/cdc/cdc_device.h **** uint32_t tud_cdc_n_write_available(uint8_t itf);
+ 138:tinyusb/src/class/cdc/cdc_device.h **** 
+ 139:tinyusb/src/class/cdc/cdc_device.h **** // Clear the transmit FIFO
+ 140:tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_write_clear(uint8_t itf);
+ 141:tinyusb/src/class/cdc/cdc_device.h **** 
+ 142:tinyusb/src/class/cdc/cdc_device.h **** 
+ 143:tinyusb/src/class/cdc/cdc_device.h **** #if CFG_TUD_CDC_NOTIFY
+ 144:tinyusb/src/class/cdc/cdc_device.h **** bool tud_cdc_n_notify_msg(uint8_t itf, cdc_notify_msg_t *msg);
+ 145:tinyusb/src/class/cdc/cdc_device.h **** 
+ 146:tinyusb/src/class/cdc/cdc_device.h **** // Send UART status notification: DCD, DSR etc ..
+ 147:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_n_notify_uart_state(uint8_t                       
+ 148:tinyusb/src/class/cdc/cdc_device.h ****                                                                      const cdc_notify_uart_state_t 
+ 149:tinyusb/src/class/cdc/cdc_device.h ****   cdc_notify_msg_t notify_msg;
+ 150:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.bmRequestType = CDC_REQ_TYPE_NOTIF;
+ 151:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.bRequest      = CDC_NOTIF_SERIAL_STATE;
+ 152:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.wValue        = 0;
+ 153:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.wIndex        = 0; // filled later
+ 154:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.wLength       = sizeof(cdc_notify_uart_state_t);
+ 155:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.serial_state          = *state;
+ 156:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_notify_msg(itf, &notify_msg);
+ 157:tinyusb/src/class/cdc/cdc_device.h **** }
+ 158:tinyusb/src/class/cdc/cdc_device.h **** 
+ 159:tinyusb/src/class/cdc/cdc_device.h **** // Send connection speed change notification
+ 160:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool
+ 161:tinyusb/src/class/cdc/cdc_device.h **** tud_cdc_n_notify_conn_speed_change(uint8_t itf, const cdc_notify_conn_speed_change_t *conn_speed_ch
+ 162:tinyusb/src/class/cdc/cdc_device.h ****   cdc_notify_msg_t notify_msg;
+ 163:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.bmRequestType = CDC_REQ_TYPE_NOTIF;
+ 164:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.bRequest      = CDC_NOTIF_CONNECTION_SPEED_CHANGE;
+ARM GAS  /tmp/ccb5lrYo.s 			page 7
+
+
+ 165:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.wValue        = 0;
+ 166:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.wIndex        = 0; // filled later
+ 167:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.request.wLength       = sizeof(cdc_notify_conn_speed_change_t);
+ 168:tinyusb/src/class/cdc/cdc_device.h ****   notify_msg.conn_speed_change     = *conn_speed_change;
+ 169:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_notify_msg(itf, &notify_msg);
+ 170:tinyusb/src/class/cdc/cdc_device.h **** }
+ 171:tinyusb/src/class/cdc/cdc_device.h **** 
+ 172:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_notify_msg(cdc_notify_msg_t *msg) {
+ 173:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_notify_msg(0, msg);
+ 174:tinyusb/src/class/cdc/cdc_device.h **** }
+ 175:tinyusb/src/class/cdc/cdc_device.h **** 
+ 176:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_notify_uart_state(const cdc_notify_uart_state_t* s
+ 177:tinyusb/src/class/cdc/cdc_device.h ****  return tud_cdc_n_notify_uart_state(0, state);
+ 178:tinyusb/src/class/cdc/cdc_device.h **** }
+ 179:tinyusb/src/class/cdc/cdc_device.h **** 
+ 180:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_notify_conn_speed_change(const cdc_notify_conn_spe
+ 181:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_notify_conn_speed_change(0, conn_speed_change);
+ 182:tinyusb/src/class/cdc/cdc_device.h **** }
+ 183:tinyusb/src/class/cdc/cdc_device.h **** #endif
+ 184:tinyusb/src/class/cdc/cdc_device.h **** 
+ 185:tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+ 186:tinyusb/src/class/cdc/cdc_device.h **** // Application API (Single Port)
+ 187:tinyusb/src/class/cdc/cdc_device.h **** //--------------------------------------------------------------------+
+ 188:tinyusb/src/class/cdc/cdc_device.h **** 
+ 189:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_ready(void) {
+ 190:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_ready(0);
+ 191:tinyusb/src/class/cdc/cdc_device.h **** }
+ 192:tinyusb/src/class/cdc/cdc_device.h **** 
+ 193:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline bool tud_cdc_connected(void) {
+  71              		.loc 3 193 42 view .LVU10
+  72              	.LBB18:
+ 194:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_connected(0);
+  73              		.loc 3 194 3 view .LVU11
+  74              		.loc 3 194 10 is_stmt 0 view .LVU12
+  75 000e 0020     		movs	r0, #0
+  76 0010 FFF7FEFF 		bl	tud_cdc_n_connected
+  77              	.LVL3:
+  78              	.LBE18:
+  79              	.LBE17:
+  80              		.loc 1 11 8 discriminator 1 view .LVU13
+  81 0014 0028     		cmp	r0, #0
+  82 0016 0AD1     		bne	.L2
+  83              	.L1:
+  12:Core/Src/task_usb.c ****     {
+  13:Core/Src/task_usb.c ****         while (tud_cdc_available())
+  14:Core/Src/task_usb.c ****         {
+  15:Core/Src/task_usb.c ****             uint8_t buf[64];
+  16:Core/Src/task_usb.c ****             uint32_t count = tud_cdc_read(buf, sizeof(buf));
+  17:Core/Src/task_usb.c **** 
+  18:Core/Src/task_usb.c ****             cmd_read_input((char *)buf, count);
+  19:Core/Src/task_usb.c ****         }
+  20:Core/Src/task_usb.c ****     }
+  21:Core/Src/task_usb.c **** }
+  84              		.loc 1 21 1 view .LVU14
+  85 0018 11B0     		add	sp, sp, #68
+  86              		@ sp needed
+  87 001a 00BD     		pop	{pc}
+ARM GAS  /tmp/ccb5lrYo.s 			page 8
+
+
+  88              	.L3:
+  89              	.LBB19:
+  15:Core/Src/task_usb.c ****             uint32_t count = tud_cdc_read(buf, sizeof(buf));
+  90              		.loc 1 15 13 is_stmt 1 view .LVU15
+  16:Core/Src/task_usb.c **** 
+  91              		.loc 1 16 13 view .LVU16
+  92              	.LVL4:
+  93              	.LBB20:
+  94              	.LBI20:
+ 195:tinyusb/src/class/cdc/cdc_device.h **** }
+ 196:tinyusb/src/class/cdc/cdc_device.h **** 
+ 197:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tud_cdc_get_line_state(void) {
+ 198:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_get_line_state(0);
+ 199:tinyusb/src/class/cdc/cdc_device.h **** }
+ 200:tinyusb/src/class/cdc/cdc_device.h **** 
+ 201:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline void tud_cdc_get_line_coding(cdc_line_coding_t* coding) {
+ 202:tinyusb/src/class/cdc/cdc_device.h ****   tud_cdc_n_get_line_coding(0, coding);
+ 203:tinyusb/src/class/cdc/cdc_device.h **** }
+ 204:tinyusb/src/class/cdc/cdc_device.h **** 
+ 205:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline void tud_cdc_set_wanted_char(char wanted) {
+ 206:tinyusb/src/class/cdc/cdc_device.h ****   tud_cdc_n_set_wanted_char(0, wanted);
+ 207:tinyusb/src/class/cdc/cdc_device.h **** }
+ 208:tinyusb/src/class/cdc/cdc_device.h **** 
+ 209:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_available(void) {
+ 210:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_available(0);
+ 211:tinyusb/src/class/cdc/cdc_device.h **** }
+ 212:tinyusb/src/class/cdc/cdc_device.h **** 
+ 213:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline int32_t tud_cdc_read_char(void) {
+ 214:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_read_char(0);
+ 215:tinyusb/src/class/cdc/cdc_device.h **** }
+ 216:tinyusb/src/class/cdc/cdc_device.h **** 
+ 217:tinyusb/src/class/cdc/cdc_device.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tud_cdc_read(void* buffer, uint32_t bufsize) {
+  95              		.loc 3 217 46 view .LVU17
+  96              	.LBB21:
+ 218:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_read(0, buffer, bufsize);
+  97              		.loc 3 218 3 view .LVU18
+  98              		.loc 3 218 10 is_stmt 0 view .LVU19
+  99 001c 6946     		mov	r1, sp
+ 100 001e 4022     		movs	r2, #64
+ 101 0020 0020     		movs	r0, #0
+ 102 0022 FFF7FEFF 		bl	tud_cdc_n_read
+ 103              	.LVL5:
+ 104              		.loc 3 218 10 view .LVU20
+ 105              	.LBE21:
+ 106              	.LBE20:
+  18:Core/Src/task_usb.c ****         }
+ 107              		.loc 1 18 13 is_stmt 1 view .LVU21
+ 108 0026 C1B2     		uxtb	r1, r0
+ 109 0028 6846     		mov	r0, sp
+ 110              	.LVL6:
+  18:Core/Src/task_usb.c ****         }
+ 111              		.loc 1 18 13 is_stmt 0 view .LVU22
+ 112 002a FFF7FEFF 		bl	cmd_read_input
+ 113              	.LVL7:
+ 114              	.L2:
+  18:Core/Src/task_usb.c ****         }
+ 115              		.loc 1 18 13 view .LVU23
+ARM GAS  /tmp/ccb5lrYo.s 			page 9
+
+
+ 116              	.LBE19:
+  13:Core/Src/task_usb.c ****         {
+ 117              		.loc 1 13 16 is_stmt 1 view .LVU24
+ 118              	.LBB22:
+ 119              	.LBI22:
+ 209:tinyusb/src/class/cdc/cdc_device.h ****   return tud_cdc_n_available(0);
+ 120              		.loc 3 209 46 view .LVU25
+ 121              	.LBB23:
+ 210:tinyusb/src/class/cdc/cdc_device.h **** }
+ 122              		.loc 3 210 3 view .LVU26
+ 210:tinyusb/src/class/cdc/cdc_device.h **** }
+ 123              		.loc 3 210 10 is_stmt 0 view .LVU27
+ 124 002e 0020     		movs	r0, #0
+ 125 0030 FFF7FEFF 		bl	tud_cdc_n_available
+ 126              	.LVL8:
+ 127              	.LBE23:
+ 128              	.LBE22:
+  13:Core/Src/task_usb.c ****         {
+ 129              		.loc 1 13 16 discriminator 1 view .LVU28
+ 130 0034 0028     		cmp	r0, #0
+ 131 0036 F1D1     		bne	.L3
+ 132 0038 EEE7     		b	.L1
+ 133              		.cfi_endproc
+ 134              	.LFE143:
+ 136              		.text
+ 137              	.Letext0:
+ 138              		.file 4 "/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdint.h"
+ 139              		.file 5 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f042x6.h"
+ 140              		.file 6 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
+ 141              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h"
+ 142              		.file 8 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_spi.h"
+ 143              		.file 9 "Core/Inc/usb.h"
+ 144              		.file 10 "Core/Inc/led.h"
+ 145              		.file 11 "Core/Inc/lora.h"
+ 146              		.file 12 "Core/Inc/app_context.h"
+ 147              		.file 13 "Core/Inc/command.h"
+ARM GAS  /tmp/ccb5lrYo.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 task_usb.c
+     /tmp/ccb5lrYo.s:19     .text.task_usb:00000000 $t
+     /tmp/ccb5lrYo.s:25     .text.task_usb:00000000 task_usb
+
+UNDEFINED SYMBOLS
+tud_task_ext
+tud_cdc_n_connected
+tud_cdc_n_read
+cmd_read_input
+tud_cdc_n_available

@@ -1,0 +1,237 @@
+ARM GAS  /tmp/cckU1njw.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"clock.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/clock.c"
+  18              		.section	.text.SystemClock_Config,"ax",%progbits
+  19              		.align	1
+  20              		.global	SystemClock_Config
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	SystemClock_Config:
+  26              	.LFB40:
+   1:Core/Src/clock.c **** #include "main.h"
+   2:Core/Src/clock.c **** /**
+   3:Core/Src/clock.c ****  * @brief System Clock Configuration
+   4:Core/Src/clock.c ****  * @retval None
+   5:Core/Src/clock.c ****  */
+   6:Core/Src/clock.c **** void SystemClock_Config(void)
+   7:Core/Src/clock.c **** {
+  27              		.loc 1 7 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+   8:Core/Src/clock.c ****     uint32_t timeout;
+  31              		.loc 1 8 5 view .LVU1
+   9:Core/Src/clock.c **** 
+  10:Core/Src/clock.c ****     /* Enable HSI48 */
+  11:Core/Src/clock.c ****     __HAL_RCC_HSI48_ENABLE();
+  32              		.loc 1 11 5 view .LVU2
+  33 0000 8023     		movs	r3, #128
+   7:Core/Src/clock.c ****     uint32_t timeout;
+  34              		.loc 1 7 1 is_stmt 0 view .LVU3
+  35 0002 70B5     		push	{r4, r5, r6, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 4, -16
+  39              		.cfi_offset 5, -12
+  40              		.cfi_offset 6, -8
+  41              		.cfi_offset 14, -4
+  12:Core/Src/clock.c **** 
+  13:Core/Src/clock.c ****     timeout = 1000000;
+  14:Core/Src/clock.c ****     while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSI48RDY) == RESET)
+  42              		.loc 1 14 11 view .LVU4
+  43 0004 8026     		movs	r6, #128
+ARM GAS  /tmp/cckU1njw.s 			page 2
+
+
+  11:Core/Src/clock.c **** 
+  44              		.loc 1 11 5 view .LVU5
+  45 0006 184C     		ldr	r4, .L10
+  46 0008 5B02     		lsls	r3, r3, #9
+  47 000a 626B     		ldr	r2, [r4, #52]
+  13:Core/Src/clock.c ****     while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSI48RDY) == RESET)
+  48              		.loc 1 13 13 view .LVU6
+  49 000c 174D     		ldr	r5, .L10+4
+  11:Core/Src/clock.c **** 
+  50              		.loc 1 11 5 view .LVU7
+  51 000e 1343     		orrs	r3, r2
+  52 0010 6363     		str	r3, [r4, #52]
+  13:Core/Src/clock.c ****     while(__HAL_RCC_GET_FLAG(RCC_FLAG_HSI48RDY) == RESET)
+  53              		.loc 1 13 5 is_stmt 1 view .LVU8
+  54              	.LVL0:
+  55              		.loc 1 14 5 view .LVU9
+  56              		.loc 1 14 11 is_stmt 0 view .LVU10
+  57 0012 B602     		lsls	r6, r6, #10
+  58              	.LVL1:
+  59              	.L3:
+  60              		.loc 1 14 49 is_stmt 1 view .LVU11
+  61              		.loc 1 14 11 is_stmt 0 view .LVU12
+  62 0014 636B     		ldr	r3, [r4, #52]
+  63              		.loc 1 14 49 view .LVU13
+  64 0016 3342     		tst	r3, r6
+  65 0018 19D0     		beq	.L4
+  15:Core/Src/clock.c ****         if(--timeout == 0) Error_Handler();
+  16:Core/Src/clock.c **** 
+  17:Core/Src/clock.c ****     /* Set Flash latency */
+  18:Core/Src/clock.c ****     __HAL_FLASH_SET_LATENCY(FLASH_LATENCY_1);
+  66              		.loc 1 18 5 is_stmt 1 view .LVU14
+  67 001a 0123     		movs	r3, #1
+  68 001c 144A     		ldr	r2, .L10+8
+  19:Core/Src/clock.c **** 
+  20:Core/Src/clock.c ****     /* Switch SYSCLK to HSI48 */
+  21:Core/Src/clock.c ****     __HAL_RCC_SYSCLK_CONFIG(RCC_SYSCLKSOURCE_HSI48);
+  22:Core/Src/clock.c **** 
+  23:Core/Src/clock.c ****     timeout = 1000000;
+  24:Core/Src/clock.c ****     while(__HAL_RCC_GET_SYSCLK_SOURCE() != (RCC_SYSCLKSOURCE_HSI48 << RCC_CFGR_SWS_Pos))
+  69              		.loc 1 24 11 is_stmt 0 view .LVU15
+  70 001e 0C26     		movs	r6, #12
+  18:Core/Src/clock.c **** 
+  71              		.loc 1 18 5 view .LVU16
+  72 0020 1168     		ldr	r1, [r2]
+  23:Core/Src/clock.c ****     while(__HAL_RCC_GET_SYSCLK_SOURCE() != (RCC_SYSCLKSOURCE_HSI48 << RCC_CFGR_SWS_Pos))
+  73              		.loc 1 23 13 view .LVU17
+  74 0022 124D     		ldr	r5, .L10+4
+  75              	.LVL2:
+  18:Core/Src/clock.c **** 
+  76              		.loc 1 18 5 view .LVU18
+  77 0024 0B43     		orrs	r3, r1
+  78 0026 1360     		str	r3, [r2]
+  21:Core/Src/clock.c **** 
+  79              		.loc 1 21 5 is_stmt 1 view .LVU19
+  80 0028 0323     		movs	r3, #3
+  81 002a 6268     		ldr	r2, [r4, #4]
+  82 002c 1343     		orrs	r3, r2
+ARM GAS  /tmp/cckU1njw.s 			page 3
+
+
+  83 002e 6360     		str	r3, [r4, #4]
+  23:Core/Src/clock.c ****     while(__HAL_RCC_GET_SYSCLK_SOURCE() != (RCC_SYSCLKSOURCE_HSI48 << RCC_CFGR_SWS_Pos))
+  84              		.loc 1 23 5 view .LVU20
+  85              	.LVL3:
+  86              		.loc 1 24 5 view .LVU21
+  87              	.L6:
+  88              		.loc 1 24 41 view .LVU22
+  89              		.loc 1 24 11 is_stmt 0 view .LVU23
+  90 0030 6368     		ldr	r3, [r4, #4]
+  91 0032 3340     		ands	r3, r6
+  92              		.loc 1 24 41 view .LVU24
+  93 0034 0C2B     		cmp	r3, #12
+  94 0036 10D1     		bne	.L7
+  25:Core/Src/clock.c ****         if(--timeout == 0) Error_Handler();
+  26:Core/Src/clock.c **** 
+  27:Core/Src/clock.c ****     SystemCoreClock = 48000000;
+  95              		.loc 1 27 5 is_stmt 1 view .LVU25
+  96              		.loc 1 27 21 is_stmt 0 view .LVU26
+  97 0038 0E4B     		ldr	r3, .L10+12
+  98 003a 0F4A     		ldr	r2, .L10+16
+  28:Core/Src/clock.c **** 
+  29:Core/Src/clock.c ****     HAL_InitTick(TICK_INT_PRIORITY);
+  99              		.loc 1 29 5 view .LVU27
+ 100 003c 0320     		movs	r0, #3
+  30:Core/Src/clock.c **** 
+  31:Core/Src/clock.c ****     /* Configure USB clock */
+  32:Core/Src/clock.c ****     __HAL_RCC_USB_CONFIG(RCC_USBCLKSOURCE_HSI48);
+  33:Core/Src/clock.c **** }
+ 101              		.loc 1 33 1 view .LVU28
+ 102              		@ sp needed
+  27:Core/Src/clock.c **** 
+ 103              		.loc 1 27 21 view .LVU29
+ 104 003e 1A60     		str	r2, [r3]
+  29:Core/Src/clock.c **** 
+ 105              		.loc 1 29 5 is_stmt 1 view .LVU30
+ 106 0040 FFF7FEFF 		bl	HAL_InitTick
+ 107              	.LVL4:
+  32:Core/Src/clock.c **** }
+ 108              		.loc 1 32 5 view .LVU31
+ 109 0044 8022     		movs	r2, #128
+ 110 0046 236B     		ldr	r3, [r4, #48]
+ 111 0048 9343     		bics	r3, r2
+ 112 004a 2363     		str	r3, [r4, #48]
+ 113              	.LVL5:
+ 114              		.loc 1 33 1 is_stmt 0 view .LVU32
+ 115 004c 70BD     		pop	{r4, r5, r6, pc}
+ 116              	.LVL6:
+ 117              	.L4:
+  15:Core/Src/clock.c **** 
+ 118              		.loc 1 15 9 is_stmt 1 view .LVU33
+  15:Core/Src/clock.c **** 
+ 119              		.loc 1 15 11 is_stmt 0 view .LVU34
+ 120 004e 013D     		subs	r5, r5, #1
+ 121              	.LVL7:
+  15:Core/Src/clock.c **** 
+ 122              		.loc 1 15 11 view .LVU35
+ 123 0050 002D     		cmp	r5, #0
+ARM GAS  /tmp/cckU1njw.s 			page 4
+
+
+ 124 0052 DFD1     		bne	.L3
+  15:Core/Src/clock.c **** 
+ 125              		.loc 1 15 28 is_stmt 1 discriminator 1 view .LVU36
+ 126 0054 FFF7FEFF 		bl	Error_Handler
+ 127              	.LVL8:
+ 128 0058 DCE7     		b	.L3
+ 129              	.L7:
+  25:Core/Src/clock.c **** 
+ 130              		.loc 1 25 9 view .LVU37
+  25:Core/Src/clock.c **** 
+ 131              		.loc 1 25 11 is_stmt 0 view .LVU38
+ 132 005a 013D     		subs	r5, r5, #1
+ 133              	.LVL9:
+  25:Core/Src/clock.c **** 
+ 134              		.loc 1 25 11 view .LVU39
+ 135 005c 002D     		cmp	r5, #0
+ 136 005e E7D1     		bne	.L6
+  25:Core/Src/clock.c **** 
+ 137              		.loc 1 25 28 is_stmt 1 discriminator 1 view .LVU40
+ 138 0060 FFF7FEFF 		bl	Error_Handler
+ 139              	.LVL10:
+ 140 0064 E4E7     		b	.L6
+ 141              	.L11:
+ 142 0066 C046     		.align	2
+ 143              	.L10:
+ 144 0068 00100240 		.word	1073876992
+ 145 006c 40420F00 		.word	1000000
+ 146 0070 00200240 		.word	1073881088
+ 147 0074 00000000 		.word	SystemCoreClock
+ 148 0078 006CDC02 		.word	48000000
+ 149              		.cfi_endproc
+ 150              	.LFE40:
+ 152              		.text
+ 153              	.Letext0:
+ 154              		.file 2 "/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdint.h"
+ 155              		.file 3 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f042x6.h"
+ 156              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f0xx.h"
+ 157              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
+ 158              		.file 6 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/system_stm32f0xx.h"
+ 159              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
+ 160              		.file 8 "Core/Inc/main.h"
+ARM GAS  /tmp/cckU1njw.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 clock.c
+     /tmp/cckU1njw.s:19     .text.SystemClock_Config:00000000 $t
+     /tmp/cckU1njw.s:25     .text.SystemClock_Config:00000000 SystemClock_Config
+     /tmp/cckU1njw.s:144    .text.SystemClock_Config:00000068 $d
+
+UNDEFINED SYMBOLS
+HAL_InitTick
+Error_Handler
+SystemCoreClock

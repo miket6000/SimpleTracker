@@ -1,0 +1,789 @@
+ARM GAS  /tmp/ccAsy2Lv.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"fsdev_common.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c"
+  18              		.section	.text.fsdev_core_reset,"ax",%progbits
+  19              		.align	1
+  20              		.global	fsdev_core_reset
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	fsdev_core_reset:
+  26              	.LFB141:
+   1:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** /*
+   2:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * The MIT License (MIT)
+   3:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  *
+   4:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * Copyright (c) 2024 Ha Thach (tinyusb.org)
+   5:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * Copyright (c) 2025, HiFiPhile (Zixun LI)
+   6:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  *
+   7:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   8:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * of this software and associated documentation files (the "Software"), to deal
+   9:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * in the Software without restriction, including without limitation the rights
+  10:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  11:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * copies of the Software, and to permit persons to whom the Software is
+  12:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * furnished to do so, subject to the following conditions:
+  13:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  *
+  14:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * The above copyright notice and this permission notice shall be included in
+  15:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * all copies or substantial portions of the Software.
+  16:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  *
+  17:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  18:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  19:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  20:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  21:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  22:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  23:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * THE SOFTWARE.
+  24:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  *
+  25:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  * This file is part of the TinyUSB stack.
+  26:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****  */
+  27:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  28:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** #include "tusb_option.h"
+  29:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  30:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** #if defined(TUP_USBIP_FSDEV) && (CFG_TUH_ENABLED || CFG_TUD_ENABLED)
+  31:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  32:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** #include "fsdev_common.h"
+ARM GAS  /tmp/ccAsy2Lv.s 			page 2
+
+
+  33:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  34:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** //--------------------------------------------------------------------+
+  35:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** // Global
+  36:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** //--------------------------------------------------------------------+
+  37:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  38:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** // Reset the USB Core
+  39:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** void fsdev_core_reset(void) {
+  27              		.loc 1 39 29 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 8
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+  40:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   // Perform USB peripheral reset
+  41:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   FSDEV_REG->CNTR = USB_CNTR_FRES | USB_CNTR_PDWN;
+  32              		.loc 1 41 3 view .LVU1
+  33              		.loc 1 41 19 is_stmt 0 view .LVU2
+  34 0000 0322     		movs	r2, #3
+  35 0002 0F4B     		ldr	r3, .L8
+  39:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   // Perform USB peripheral reset
+  36              		.loc 1 39 29 view .LVU3
+  37 0004 82B0     		sub	sp, sp, #8
+  38              	.LCFI0:
+  39              		.cfi_def_cfa_offset 8
+  40              		.loc 1 41 19 view .LVU4
+  41 0006 DA87     		strh	r2, [r3, #62]
+  42:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   for (volatile uint32_t i = 0; i < 200; i++) { // should be a few us
+  42              		.loc 1 42 3 is_stmt 1 view .LVU5
+  43              	.LBB6:
+  44              		.loc 1 42 8 view .LVU6
+  45              		.loc 1 42 26 is_stmt 0 view .LVU7
+  46 0008 0022     		movs	r2, #0
+  47              	.L6:
+  48              		.loc 1 42 43 discriminator 3 view .LVU8
+  49 000a 0092     		str	r2, [sp]
+  50              		.loc 1 42 35 is_stmt 1 discriminator 1 view .LVU9
+  51 000c 009A     		ldr	r2, [sp]
+  52 000e C72A     		cmp	r2, #199
+  53 0010 0DD9     		bls	.L3
+  54              	.LBE6:
+  43:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     asm("NOP");
+  44:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+  45:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  46:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   FSDEV_REG->CNTR &= ~USB_CNTR_PDWN;
+  55              		.loc 1 46 3 view .LVU10
+  56              		.loc 1 46 19 is_stmt 0 view .LVU11
+  57 0012 0221     		movs	r1, #2
+  58              		.loc 1 46 12 view .LVU12
+  59 0014 DA8F     		ldrh	r2, [r3, #62]
+  60              		.loc 1 46 19 view .LVU13
+  61 0016 8A43     		bics	r2, r1
+  62 0018 DA87     		strh	r2, [r3, #62]
+  47:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  48:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   // Wait startup time, for F042 and F070, this is <= 1 us.
+  49:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   for (volatile uint32_t i = 0; i < 200; i++) { // should be a few us
+  63              		.loc 1 49 3 is_stmt 1 view .LVU14
+  64              	.LBB7:
+  65              		.loc 1 49 8 view .LVU15
+ARM GAS  /tmp/ccAsy2Lv.s 			page 3
+
+
+  66              		.loc 1 49 26 is_stmt 0 view .LVU16
+  67 001a 0023     		movs	r3, #0
+  68              	.L7:
+  69              		.loc 1 49 43 discriminator 3 view .LVU17
+  70 001c 0193     		str	r3, [sp, #4]
+  71              		.loc 1 49 35 is_stmt 1 discriminator 1 view .LVU18
+  72 001e 019B     		ldr	r3, [sp, #4]
+  73 0020 C72B     		cmp	r3, #199
+  74 0022 08D9     		bls	.L5
+  75              	.LBE7:
+  50:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     asm("NOP");
+  51:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+  52:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  53:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   // Clear pending interrupts
+  54:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   FSDEV_REG->ISTR = 0;
+  76              		.loc 1 54 3 view .LVU19
+  77              		.loc 1 54 19 is_stmt 0 view .LVU20
+  78 0024 0022     		movs	r2, #0
+  79 0026 074B     		ldr	r3, .L8+4
+  80 0028 DA87     		strh	r2, [r3, #62]
+  55:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** }
+  81              		.loc 1 55 1 view .LVU21
+  82 002a 02B0     		add	sp, sp, #8
+  83              		@ sp needed
+  84 002c 7047     		bx	lr
+  85              	.L3:
+  86              	.LBB8:
+  43:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+  87              		.loc 1 43 5 is_stmt 1 view .LVU22
+  88              		.syntax divided
+  89              	@ 43 "tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c" 1
+  90 002e C046     		NOP
+  91              	@ 0 "" 2
+  42:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     asm("NOP");
+  92              		.loc 1 42 43 discriminator 3 view .LVU23
+  93              		.thumb
+  94              		.syntax unified
+  95 0030 009A     		ldr	r2, [sp]
+  96 0032 0132     		adds	r2, r2, #1
+  97 0034 E9E7     		b	.L6
+  98              	.L5:
+  99              	.LBE8:
+ 100              	.LBB9:
+  50:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+ 101              		.loc 1 50 5 view .LVU24
+ 102              		.syntax divided
+ 103              	@ 50 "tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c" 1
+ 104 0036 C046     		NOP
+ 105              	@ 0 "" 2
+  49:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     asm("NOP");
+ 106              		.loc 1 49 43 discriminator 3 view .LVU25
+ 107              		.thumb
+ 108              		.syntax unified
+ 109 0038 019B     		ldr	r3, [sp, #4]
+ 110 003a 0133     		adds	r3, r3, #1
+ 111 003c EEE7     		b	.L7
+ 112              	.L9:
+ARM GAS  /tmp/ccAsy2Lv.s 			page 4
+
+
+ 113 003e C046     		.align	2
+ 114              	.L8:
+ 115 0040 025C0040 		.word	1073765378
+ 116 0044 065C0040 		.word	1073765382
+ 117              	.LBE9:
+ 118              		.cfi_endproc
+ 119              	.LFE141:
+ 121              		.section	.text.fsdev_deinit,"ax",%progbits
+ 122              		.align	1
+ 123              		.global	fsdev_deinit
+ 124              		.syntax unified
+ 125              		.code	16
+ 126              		.thumb_func
+ 128              	fsdev_deinit:
+ 129              	.LFB142:
+  56:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  57:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** // De-initialize the USB Core
+  58:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** void fsdev_deinit(void) {
+ 130              		.loc 1 58 25 view -0
+ 131              		.cfi_startproc
+ 132              		@ args = 0, pretend = 0, frame = 8
+ 133              		@ frame_needed = 0, uses_anonymous_args = 0
+ 134              		@ link register save eliminated.
+  59:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   // Disable all interrupts and force USB reset
+  60:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   FSDEV_REG->CNTR = USB_CNTR_FRES;
+ 135              		.loc 1 60 3 view .LVU27
+ 136              		.loc 1 60 19 is_stmt 0 view .LVU28
+ 137 0000 0123     		movs	r3, #1
+ 138 0002 094A     		ldr	r2, .L14
+  58:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   // Disable all interrupts and force USB reset
+ 139              		.loc 1 58 25 view .LVU29
+ 140 0004 82B0     		sub	sp, sp, #8
+ 141              	.LCFI1:
+ 142              		.cfi_def_cfa_offset 8
+ 143              		.loc 1 60 19 view .LVU30
+ 144 0006 D387     		strh	r3, [r2, #62]
+  61:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  62:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   // Clear pending interrupts
+  63:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   FSDEV_REG->ISTR = 0;
+ 145              		.loc 1 63 3 is_stmt 1 view .LVU31
+ 146              		.loc 1 63 19 is_stmt 0 view .LVU32
+ 147 0008 0023     		movs	r3, #0
+ 148 000a 0849     		ldr	r1, .L14+4
+ 149 000c CB87     		strh	r3, [r1, #62]
+  64:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  65:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   // Put USB peripheral in power down mode
+  66:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   FSDEV_REG->CNTR = USB_CNTR_FRES | USB_CNTR_PDWN;
+ 150              		.loc 1 66 3 is_stmt 1 view .LVU33
+ 151              		.loc 1 66 19 is_stmt 0 view .LVU34
+ 152 000e 0321     		movs	r1, #3
+ 153 0010 D187     		strh	r1, [r2, #62]
+  67:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   for (volatile uint32_t i = 0; i < 200; i++) { // should be a few us
+ 154              		.loc 1 67 3 is_stmt 1 view .LVU35
+ 155              	.LBB10:
+ 156              		.loc 1 67 8 view .LVU36
+ 157              	.L13:
+ 158              		.loc 1 67 43 is_stmt 0 discriminator 3 view .LVU37
+ARM GAS  /tmp/ccAsy2Lv.s 			page 5
+
+
+ 159 0012 0193     		str	r3, [sp, #4]
+ 160              		.loc 1 67 35 is_stmt 1 discriminator 1 view .LVU38
+ 161 0014 019B     		ldr	r3, [sp, #4]
+ 162 0016 C72B     		cmp	r3, #199
+ 163 0018 01D9     		bls	.L12
+ 164              	.LBE10:
+  68:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     asm("NOP");
+  69:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+  70:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** }
+ 165              		.loc 1 70 1 is_stmt 0 view .LVU39
+ 166 001a 02B0     		add	sp, sp, #8
+ 167              		@ sp needed
+ 168 001c 7047     		bx	lr
+ 169              	.L12:
+ 170              	.LBB11:
+  68:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     asm("NOP");
+ 171              		.loc 1 68 5 is_stmt 1 view .LVU40
+ 172              		.syntax divided
+ 173              	@ 68 "tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c" 1
+ 174 001e C046     		NOP
+ 175              	@ 0 "" 2
+  67:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   for (volatile uint32_t i = 0; i < 200; i++) { // should be a few us
+ 176              		.loc 1 67 43 discriminator 3 view .LVU41
+ 177              		.thumb
+ 178              		.syntax unified
+ 179 0020 019B     		ldr	r3, [sp, #4]
+ 180 0022 0133     		adds	r3, r3, #1
+ 181 0024 F5E7     		b	.L13
+ 182              	.L15:
+ 183 0026 C046     		.align	2
+ 184              	.L14:
+ 185 0028 025C0040 		.word	1073765378
+ 186 002c 065C0040 		.word	1073765382
+ 187              	.LBE11:
+ 188              		.cfi_endproc
+ 189              	.LFE142:
+ 191              		.section	.text.pma_align_buffer_size,"ax",%progbits
+ 192              		.align	1
+ 193              		.global	pma_align_buffer_size
+ 194              		.syntax unified
+ 195              		.code	16
+ 196              		.thumb_func
+ 198              	pma_align_buffer_size:
+ 199              	.LVL0:
+ 200              	.LFB143:
+  71:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  72:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** //--------------------------------------------------------------------+
+  73:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** // BTable Helper
+  74:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** //--------------------------------------------------------------------+
+  75:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  76:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** // Aligned buffer size according to hardware
+  77:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** uint16_t pma_align_buffer_size(uint16_t size, uint8_t* blsize, uint8_t* num_block) {
+ 201              		.loc 1 77 84 view -0
+ 202              		.cfi_startproc
+ 203              		@ args = 0, pretend = 0, frame = 0
+ 204              		@ frame_needed = 0, uses_anonymous_args = 0
+  78:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   /* The STM32 full speed USB peripheral supports only a limited set of
+ARM GAS  /tmp/ccAsy2Lv.s 			page 6
+
+
+  79:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****    * buffer sizes given by the RX buffer entry format in the USB_BTABLE. */
+  80:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   uint16_t block_in_bytes;
+ 205              		.loc 1 80 3 view .LVU43
+  81:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   if (size > 62) {
+ 206              		.loc 1 81 3 view .LVU44
+  77:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   /* The STM32 full speed USB peripheral supports only a limited set of
+ 207              		.loc 1 77 84 is_stmt 0 view .LVU45
+ 208 0000 10B5     		push	{r4, lr}
+ 209              	.LCFI2:
+ 210              		.cfi_def_cfa_offset 8
+ 211              		.cfi_offset 4, -8
+ 212              		.cfi_offset 14, -4
+ 213              		.loc 1 81 6 view .LVU46
+ 214 0002 3E28     		cmp	r0, #62
+ 215 0004 08D9     		bls	.L17
+  82:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     block_in_bytes = 32;
+ 216              		.loc 1 82 5 is_stmt 1 view .LVU47
+ 217              	.LVL1:
+  83:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *blsize = 1;
+ 218              		.loc 1 83 5 view .LVU48
+  84:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *num_block = tu_div_ceil(size, 32);
+ 219              		.loc 1 84 5 view .LVU49
+ 220              	.LBB12:
+ 221              	.LBI12:
+ 222              		.file 2 "tinyusb/src/common/tusb_common.h"
+   1:tinyusb/src/common/tusb_common.h **** /*
+   2:tinyusb/src/common/tusb_common.h ****  * The MIT License (MIT)
+   3:tinyusb/src/common/tusb_common.h ****  *
+   4:tinyusb/src/common/tusb_common.h ****  * Copyright (c) 2019 Ha Thach (tinyusb.org)
+   5:tinyusb/src/common/tusb_common.h ****  *
+   6:tinyusb/src/common/tusb_common.h ****  * Permission is hereby granted, free of charge, to any person obtaining a copy
+   7:tinyusb/src/common/tusb_common.h ****  * of this software and associated documentation files (the "Software"), to deal
+   8:tinyusb/src/common/tusb_common.h ****  * in the Software without restriction, including without limitation the rights
+   9:tinyusb/src/common/tusb_common.h ****  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  10:tinyusb/src/common/tusb_common.h ****  * copies of the Software, and to permit persons to whom the Software is
+  11:tinyusb/src/common/tusb_common.h ****  * furnished to do so, subject to the following conditions:
+  12:tinyusb/src/common/tusb_common.h ****  *
+  13:tinyusb/src/common/tusb_common.h ****  * The above copyright notice and this permission notice shall be included in
+  14:tinyusb/src/common/tusb_common.h ****  * all copies or substantial portions of the Software.
+  15:tinyusb/src/common/tusb_common.h ****  *
+  16:tinyusb/src/common/tusb_common.h ****  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  17:tinyusb/src/common/tusb_common.h ****  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  18:tinyusb/src/common/tusb_common.h ****  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  19:tinyusb/src/common/tusb_common.h ****  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  20:tinyusb/src/common/tusb_common.h ****  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  21:tinyusb/src/common/tusb_common.h ****  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  22:tinyusb/src/common/tusb_common.h ****  * THE SOFTWARE.
+  23:tinyusb/src/common/tusb_common.h ****  *
+  24:tinyusb/src/common/tusb_common.h ****  * This file is part of the TinyUSB stack.
+  25:tinyusb/src/common/tusb_common.h ****  */
+  26:tinyusb/src/common/tusb_common.h **** 
+  27:tinyusb/src/common/tusb_common.h **** #ifndef TUSB_COMMON_H_
+  28:tinyusb/src/common/tusb_common.h **** #define TUSB_COMMON_H_
+  29:tinyusb/src/common/tusb_common.h **** 
+  30:tinyusb/src/common/tusb_common.h **** #ifdef __cplusplus
+  31:tinyusb/src/common/tusb_common.h ****  extern "C" {
+  32:tinyusb/src/common/tusb_common.h **** #endif
+ARM GAS  /tmp/ccAsy2Lv.s 			page 7
+
+
+  33:tinyusb/src/common/tusb_common.h **** 
+  34:tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  35:tinyusb/src/common/tusb_common.h **** // Macros Helper
+  36:tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  37:tinyusb/src/common/tusb_common.h **** #define TU_ARRAY_SIZE(_arr)           ( sizeof(_arr) / sizeof(_arr[0]) )
+  38:tinyusb/src/common/tusb_common.h **** #define TU_FIELD_SIZE(_type, _field)  (sizeof(((_type *)0)->_field))
+  39:tinyusb/src/common/tusb_common.h **** #define TU_MIN(_x, _y)                ( ( (_x) < (_y) ) ? (_x) : (_y) )
+  40:tinyusb/src/common/tusb_common.h **** #define TU_MAX(_x, _y)                ( ( (_x) > (_y) ) ? (_x) : (_y) )
+  41:tinyusb/src/common/tusb_common.h **** #define TU_DIV_CEIL(n, d)             (((n) + (d) - 1) / (d))
+  42:tinyusb/src/common/tusb_common.h **** #define TU_DIV_ROUND_NEAREST(v, d)    (((v) + (d)/2) / (d) ) // round to nearest integer
+  43:tinyusb/src/common/tusb_common.h **** 
+  44:tinyusb/src/common/tusb_common.h **** #define TU_U16(_high, _low)           ((uint16_t) ((((uint16_t) (_high)) << 8) | ((uint16_t) (_low)
+  45:tinyusb/src/common/tusb_common.h **** #define TU_U16_HIGH(_u16)             ((uint8_t) (((uint16_t) (_u16) >> 8) & 0x00ffu))
+  46:tinyusb/src/common/tusb_common.h **** #define TU_U16_LOW(_u16)              ((uint8_t) ((uint16_t) (_u16) & 0x00ffu))
+  47:tinyusb/src/common/tusb_common.h **** #define U16_TO_U8S_BE(_u16)           TU_U16_HIGH(_u16), TU_U16_LOW(_u16)
+  48:tinyusb/src/common/tusb_common.h **** #define U16_TO_U8S_LE(_u16)           TU_U16_LOW(_u16), TU_U16_HIGH(_u16)
+  49:tinyusb/src/common/tusb_common.h **** 
+  50:tinyusb/src/common/tusb_common.h **** #define TU_U24(_high, _mid, _low)     ((uint32_t) ((((uint32_t) (_high)) << 16) | (((uint32_t) (_mi
+  51:tinyusb/src/common/tusb_common.h **** #define TU_U24_HIGH(_u24)             ((uint8_t) (((uint32_t) (_u24) >> 16) & 0x0000ffu))
+  52:tinyusb/src/common/tusb_common.h **** #define TU_U24_MID(_u24)              ((uint8_t) (((uint32_t) (_u24) >>  8) & 0x0000ffu))
+  53:tinyusb/src/common/tusb_common.h **** #define TU_U24_LOW(_u24)              ((uint8_t) ((uint32_t) (_u24) & 0x0000ffu))
+  54:tinyusb/src/common/tusb_common.h **** #define U24_TO_U8S_BE(_u24)           TU_U24_HIGH(_u24), TU_U24_MID(_u24), TU_U24_LOW(_u24)
+  55:tinyusb/src/common/tusb_common.h **** #define U24_TO_U8S_LE(_u24)           TU_U24_LOW(_u24), TU_U24_MID(_u24), TU_U24_HIGH(_u24)
+  56:tinyusb/src/common/tusb_common.h **** 
+  57:tinyusb/src/common/tusb_common.h **** #define TU_U32_BYTE3(_u32)            ((uint8_t) ((((uint32_t) _u32) >> 24) & 0x000000ff)) // MSB
+  58:tinyusb/src/common/tusb_common.h **** #define TU_U32_BYTE2(_u32)            ((uint8_t) ((((uint32_t) _u32) >> 16) & 0x000000ff))
+  59:tinyusb/src/common/tusb_common.h **** #define TU_U32_BYTE1(_u32)            ((uint8_t) ((((uint32_t) _u32) >>  8) & 0x000000ff))
+  60:tinyusb/src/common/tusb_common.h **** #define TU_U32_BYTE0(_u32)            ((uint8_t) (((uint32_t)  _u32)        & 0x000000ff)) // LSB
+  61:tinyusb/src/common/tusb_common.h **** 
+  62:tinyusb/src/common/tusb_common.h **** #define U32_TO_U8S_BE(_u32)           TU_U32_BYTE3(_u32), TU_U32_BYTE2(_u32), TU_U32_BYTE1(_u32), T
+  63:tinyusb/src/common/tusb_common.h **** #define U32_TO_U8S_LE(_u32)           TU_U32_BYTE0(_u32), TU_U32_BYTE1(_u32), TU_U32_BYTE2(_u32), T
+  64:tinyusb/src/common/tusb_common.h **** 
+  65:tinyusb/src/common/tusb_common.h **** #define TU_BIT(n)                     (1UL << (n))
+  66:tinyusb/src/common/tusb_common.h **** 
+  67:tinyusb/src/common/tusb_common.h **** // Generate a mask with bit from high (31) to low (0) set, e.g TU_GENMASK(3, 0) = 0b1111
+  68:tinyusb/src/common/tusb_common.h **** #define TU_GENMASK(h, l)              ( (UINT32_MAX << (l)) & (UINT32_MAX >> (31 - (h))) )
+  69:tinyusb/src/common/tusb_common.h **** 
+  70:tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  71:tinyusb/src/common/tusb_common.h **** // Includes
+  72:tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  73:tinyusb/src/common/tusb_common.h **** 
+  74:tinyusb/src/common/tusb_common.h **** // Standard Headers
+  75:tinyusb/src/common/tusb_common.h **** #include <stdbool.h>
+  76:tinyusb/src/common/tusb_common.h **** #include <stdint.h>
+  77:tinyusb/src/common/tusb_common.h **** #include <inttypes.h>
+  78:tinyusb/src/common/tusb_common.h **** #include <stddef.h>
+  79:tinyusb/src/common/tusb_common.h **** #include <string.h>
+  80:tinyusb/src/common/tusb_common.h **** 
+  81:tinyusb/src/common/tusb_common.h **** // Tinyusb Common Headers
+  82:tinyusb/src/common/tusb_common.h **** #include "tusb_option.h"
+  83:tinyusb/src/common/tusb_common.h **** #include "tusb_compiler.h"
+  84:tinyusb/src/common/tusb_common.h **** #include "tusb_verify.h"
+  85:tinyusb/src/common/tusb_common.h **** #include "tusb_types.h"
+  86:tinyusb/src/common/tusb_common.h **** #include "tusb_debug.h"
+  87:tinyusb/src/common/tusb_common.h **** 
+  88:tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  89:tinyusb/src/common/tusb_common.h **** // API implemented by application if needed
+ARM GAS  /tmp/ccAsy2Lv.s 			page 8
+
+
+  90:tinyusb/src/common/tusb_common.h **** // TODO move to a more obvious place/file
+  91:tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+  92:tinyusb/src/common/tusb_common.h **** 
+  93:tinyusb/src/common/tusb_common.h **** // Get current milliseconds, required by some port/configuration without RTOS
+  94:tinyusb/src/common/tusb_common.h **** extern uint32_t tusb_time_millis_api(void);
+  95:tinyusb/src/common/tusb_common.h **** 
+  96:tinyusb/src/common/tusb_common.h **** // Delay in milliseconds, use tusb_time_millis_api() by default. required by some port/configuratio
+  97:tinyusb/src/common/tusb_common.h **** extern void tusb_time_delay_ms_api(uint32_t ms);
+  98:tinyusb/src/common/tusb_common.h **** 
+  99:tinyusb/src/common/tusb_common.h **** // flush data cache
+ 100:tinyusb/src/common/tusb_common.h **** extern void tusb_app_dcache_flush(uintptr_t addr, uint32_t data_size);
+ 101:tinyusb/src/common/tusb_common.h **** 
+ 102:tinyusb/src/common/tusb_common.h **** // invalidate data cache
+ 103:tinyusb/src/common/tusb_common.h **** extern void tusb_app_dcache_invalidate(uintptr_t addr, uint32_t data_size);
+ 104:tinyusb/src/common/tusb_common.h **** 
+ 105:tinyusb/src/common/tusb_common.h **** // Optional physical <-> virtual address translation
+ 106:tinyusb/src/common/tusb_common.h **** extern void* tusb_app_virt_to_phys(void *virt_addr);
+ 107:tinyusb/src/common/tusb_common.h **** extern void* tusb_app_phys_to_virt(void *phys_addr);
+ 108:tinyusb/src/common/tusb_common.h **** 
+ 109:tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+ 110:tinyusb/src/common/tusb_common.h **** // Internal Inline Functions
+ 111:tinyusb/src/common/tusb_common.h **** //--------------------------------------------------------------------+
+ 112:tinyusb/src/common/tusb_common.h **** 
+ 113:tinyusb/src/common/tusb_common.h **** //------------- Mem -------------//
+ 114:tinyusb/src/common/tusb_common.h **** #define tu_memclr(buffer, size)  (void) memset((buffer), 0, (size))
+ 115:tinyusb/src/common/tusb_common.h **** #define tu_varclr(_var)          tu_memclr(_var, sizeof(*(_var)))
+ 116:tinyusb/src/common/tusb_common.h **** 
+ 117:tinyusb/src/common/tusb_common.h **** // This is a backport of memset_s from c11
+ 118:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline int tu_memset_s(void *dest, size_t destsz, int ch, size_t count
+ 119:tinyusb/src/common/tusb_common.h ****   // Validate parameters
+ 120:tinyusb/src/common/tusb_common.h ****   if (dest == NULL) {
+ 121:tinyusb/src/common/tusb_common.h ****     return -1;
+ 122:tinyusb/src/common/tusb_common.h ****   }
+ 123:tinyusb/src/common/tusb_common.h **** 
+ 124:tinyusb/src/common/tusb_common.h ****   if (count == 0u) {
+ 125:tinyusb/src/common/tusb_common.h ****     return 0;
+ 126:tinyusb/src/common/tusb_common.h ****   }
+ 127:tinyusb/src/common/tusb_common.h **** 
+ 128:tinyusb/src/common/tusb_common.h ****   if (count > destsz) {
+ 129:tinyusb/src/common/tusb_common.h ****     return -1;
+ 130:tinyusb/src/common/tusb_common.h ****   }
+ 131:tinyusb/src/common/tusb_common.h **** 
+ 132:tinyusb/src/common/tusb_common.h ****   (void) memset(dest, ch, count);
+ 133:tinyusb/src/common/tusb_common.h ****   return 0;
+ 134:tinyusb/src/common/tusb_common.h **** }
+ 135:tinyusb/src/common/tusb_common.h **** 
+ 136:tinyusb/src/common/tusb_common.h **** // This is a backport of memcpy_s from c11
+ 137:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline int tu_memcpy_s(void *dest, size_t destsz, const void *src, siz
+ 138:tinyusb/src/common/tusb_common.h ****   if (dest == NULL) {
+ 139:tinyusb/src/common/tusb_common.h ****     return -1;
+ 140:tinyusb/src/common/tusb_common.h ****   }
+ 141:tinyusb/src/common/tusb_common.h **** 
+ 142:tinyusb/src/common/tusb_common.h ****   if (count == 0u) {
+ 143:tinyusb/src/common/tusb_common.h ****     return 0;
+ 144:tinyusb/src/common/tusb_common.h ****   }
+ 145:tinyusb/src/common/tusb_common.h **** 
+ 146:tinyusb/src/common/tusb_common.h ****   if (src == NULL) {
+ARM GAS  /tmp/ccAsy2Lv.s 			page 9
+
+
+ 147:tinyusb/src/common/tusb_common.h ****     return -1;
+ 148:tinyusb/src/common/tusb_common.h ****   }
+ 149:tinyusb/src/common/tusb_common.h **** 
+ 150:tinyusb/src/common/tusb_common.h ****   if (count > destsz) {
+ 151:tinyusb/src/common/tusb_common.h ****     return -1;
+ 152:tinyusb/src/common/tusb_common.h ****   }
+ 153:tinyusb/src/common/tusb_common.h **** 
+ 154:tinyusb/src/common/tusb_common.h ****   (void) memcpy(dest, src, count);
+ 155:tinyusb/src/common/tusb_common.h ****   return 0;
+ 156:tinyusb/src/common/tusb_common.h **** }
+ 157:tinyusb/src/common/tusb_common.h **** 
+ 158:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline bool tu_mem_is_zero(const void *buffer, size_t size) {
+ 159:tinyusb/src/common/tusb_common.h ****   const uint8_t* buf8 = (const uint8_t*) buffer;
+ 160:tinyusb/src/common/tusb_common.h ****   for (size_t i = 0; i < size; i++) {
+ 161:tinyusb/src/common/tusb_common.h ****     if (buf8[i] != 0) { return false; }
+ 162:tinyusb/src/common/tusb_common.h ****   }
+ 163:tinyusb/src/common/tusb_common.h ****   return true;
+ 164:tinyusb/src/common/tusb_common.h **** }
+ 165:tinyusb/src/common/tusb_common.h **** 
+ 166:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline bool tu_mem_is_ff(const void *buffer, size_t size) {
+ 167:tinyusb/src/common/tusb_common.h ****   const uint8_t* buf8 = (const uint8_t*) buffer;
+ 168:tinyusb/src/common/tusb_common.h ****   for (size_t i = 0; i < size; i++) {
+ 169:tinyusb/src/common/tusb_common.h ****     if (buf8[i] != 0xff) { return false; }
+ 170:tinyusb/src/common/tusb_common.h ****   }
+ 171:tinyusb/src/common/tusb_common.h ****   return true;
+ 172:tinyusb/src/common/tusb_common.h **** }
+ 173:tinyusb/src/common/tusb_common.h **** 
+ 174:tinyusb/src/common/tusb_common.h **** 
+ 175:tinyusb/src/common/tusb_common.h **** //------------- Bytes -------------//
+ 176:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_u32(uint8_t b3, uint8_t b2, uint8_t b1, uint8_t b0)
+ 177:tinyusb/src/common/tusb_common.h ****   return (((uint32_t)b3) << 24) | (((uint32_t)b2) << 16) | (((uint32_t)b1) << 8) | b0;
+ 178:tinyusb/src/common/tusb_common.h **** }
+ 179:tinyusb/src/common/tusb_common.h **** 
+ 180:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_u32_from_u16(uint16_t high, uint16_t low) {
+ 181:tinyusb/src/common/tusb_common.h ****   return (((uint32_t)high) << 16) | low;
+ 182:tinyusb/src/common/tusb_common.h **** }
+ 183:tinyusb/src/common/tusb_common.h **** 
+ 184:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_u16(uint8_t high, uint8_t low) {
+ 185:tinyusb/src/common/tusb_common.h ****   return (uint16_t)((((uint16_t)high) << 8) | low);
+ 186:tinyusb/src/common/tusb_common.h **** }
+ 187:tinyusb/src/common/tusb_common.h **** 
+ 188:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u32_byte3(uint32_t ui32) { return TU_U32_BYTE3(ui32)
+ 189:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u32_byte2(uint32_t ui32) { return TU_U32_BYTE2(ui32)
+ 190:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u32_byte1(uint32_t ui32) { return TU_U32_BYTE1(ui32)
+ 191:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u32_byte0(uint32_t ui32) { return TU_U32_BYTE0(ui32)
+ 192:tinyusb/src/common/tusb_common.h **** 
+ 193:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_u32_high16(uint32_t ui32) { return (uint16_t) (ui32
+ 194:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_u32_low16 (uint32_t ui32) { return (uint16_t) (ui32
+ 195:tinyusb/src/common/tusb_common.h **** 
+ 196:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u16_high(uint16_t ui16) { return TU_U16_HIGH(ui16); 
+ 197:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t tu_u16_low (uint16_t ui16) { return TU_U16_LOW(ui16); }
+ 198:tinyusb/src/common/tusb_common.h **** 
+ 199:tinyusb/src/common/tusb_common.h **** //------------- Bits -------------//
+ 200:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_bit_set  (uint32_t value, uint8_t pos) { return val
+ 201:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_bit_clear(uint32_t value, uint8_t pos) { return val
+ 202:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline bool     tu_bit_test (uint32_t value, uint8_t pos) { return (va
+ 203:tinyusb/src/common/tusb_common.h **** 
+ARM GAS  /tmp/ccAsy2Lv.s 			page 10
+
+
+ 204:tinyusb/src/common/tusb_common.h **** //------------- Min -------------//
+ 205:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t  tu_min8  (uint8_t  x, uint8_t y ) { return (x < y) ? x
+ 206:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_min16 (uint16_t x, uint16_t y) { return (x < y) ? x
+ 207:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_min32 (uint32_t x, uint32_t y) { return (x < y) ? x
+ 208:tinyusb/src/common/tusb_common.h **** 
+ 209:tinyusb/src/common/tusb_common.h **** //------------- Max -------------//
+ 210:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint8_t  tu_max8  (uint8_t  x, uint8_t y ) { return (x > y) ? x
+ 211:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint16_t tu_max16 (uint16_t x, uint16_t y) { return (x > y) ? x
+ 212:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_max32 (uint32_t x, uint32_t y) { return (x > y) ? x
+ 213:tinyusb/src/common/tusb_common.h **** 
+ 214:tinyusb/src/common/tusb_common.h **** //------------- Align -------------//
+ 215:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_align(uint32_t value, uint32_t alignment) {
+ 216:tinyusb/src/common/tusb_common.h ****   return value & ((uint32_t) ~(alignment-1));
+ 217:tinyusb/src/common/tusb_common.h **** }
+ 218:tinyusb/src/common/tusb_common.h **** 
+ 219:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_align4  (uint32_t value) { return (value & 0xFFFFFF
+ 220:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_align8  (uint32_t value) { return (value & 0xFFFFFF
+ 221:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_align16 (uint32_t value) { return (value & 0xFFFFFF
+ 222:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_align32 (uint32_t value) { return (value & 0xFFFFFF
+ 223:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_align4k (uint32_t value) { return (value & 0xFFFFF0
+ 224:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_offset4k(uint32_t value) { return (value & 0xFFFUL)
+ 225:tinyusb/src/common/tusb_common.h **** 
+ 226:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline bool tu_is_aligned32(uint32_t value) { return (value & 0x1FUL) 
+ 227:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline bool tu_is_aligned64(uint64_t value) { return (value & 0x3FUL) 
+ 228:tinyusb/src/common/tusb_common.h **** 
+ 229:tinyusb/src/common/tusb_common.h **** //------------- Mathematics -------------//
+ 230:tinyusb/src/common/tusb_common.h **** TU_ATTR_ALWAYS_INLINE static inline uint32_t tu_div_ceil(uint32_t v, uint32_t d) { return TU_DIV_CE
+ 223              		.loc 2 230 46 view .LVU50
+ 224              	.LBB13:
+ 225              		.loc 2 230 84 view .LVU51
+ 226              		.loc 2 230 91 is_stmt 0 view .LVU52
+ 227 0006 1F30     		adds	r0, r0, #31
+ 228              	.LVL2:
+ 229              		.loc 2 230 91 view .LVU53
+ 230 0008 4309     		lsrs	r3, r0, #5
+ 231              	.LBE13:
+ 232              	.LBE12:
+ 233 000a 0124     		movs	r4, #1
+  82:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *blsize = 1;
+ 234              		.loc 1 82 20 view .LVU54
+ 235 000c 2020     		movs	r0, #32
+ 236              		.loc 1 84 16 discriminator 1 view .LVU55
+ 237 000e DBB2     		uxtb	r3, r3
+ 238              	.LVL3:
+ 239              	.L18:
+  85:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   } else {
+  86:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     block_in_bytes = 2;
+  87:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *blsize = 0;
+  88:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *num_block = tu_div_ceil(size, 2);
+  89:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+  90:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  91:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   return (*num_block) * block_in_bytes;
+ 240              		.loc 1 91 23 discriminator 1 view .LVU56
+ 241 0010 5843     		muls	r0, r3
+  92:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** }
+ 242              		.loc 1 92 1 view .LVU57
+ 243              		@ sp needed
+ARM GAS  /tmp/ccAsy2Lv.s 			page 11
+
+
+  83:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *num_block = tu_div_ceil(size, 32);
+ 244              		.loc 1 83 13 view .LVU58
+ 245 0012 0C70     		strb	r4, [r1]
+  84:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   } else {
+ 246              		.loc 1 84 16 discriminator 1 view .LVU59
+ 247 0014 1370     		strb	r3, [r2]
+  91:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** }
+ 248              		.loc 1 91 3 is_stmt 1 view .LVU60
+ 249              		.loc 1 92 1 is_stmt 0 view .LVU61
+ 250 0016 10BD     		pop	{r4, pc}
+ 251              	.LVL4:
+ 252              	.L17:
+  86:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *blsize = 0;
+ 253              		.loc 1 86 5 is_stmt 1 view .LVU62
+  87:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *num_block = tu_div_ceil(size, 2);
+ 254              		.loc 1 87 5 view .LVU63
+  88:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+ 255              		.loc 1 88 5 view .LVU64
+ 256              	.LBB14:
+ 257              	.LBI14:
+ 258              		.loc 2 230 46 view .LVU65
+ 259              	.LBB15:
+ 260              		.loc 2 230 84 view .LVU66
+ 261              		.loc 2 230 91 is_stmt 0 view .LVU67
+ 262 0018 0130     		adds	r0, r0, #1
+ 263              	.LVL5:
+ 264              		.loc 2 230 91 view .LVU68
+ 265 001a 4308     		lsrs	r3, r0, #1
+ 266              	.LBE15:
+ 267              	.LBE14:
+  88:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+ 268              		.loc 1 88 16 discriminator 1 view .LVU69
+ 269 001c 0024     		movs	r4, #0
+  86:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     *blsize = 0;
+ 270              		.loc 1 86 20 view .LVU70
+ 271 001e 0220     		movs	r0, #2
+  88:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+ 272              		.loc 1 88 16 discriminator 1 view .LVU71
+ 273 0020 DBB2     		uxtb	r3, r3
+ 274 0022 F5E7     		b	.L18
+ 275              		.cfi_endproc
+ 276              	.LFE143:
+ 278              		.section	.text.btable_set_rx_bufsize,"ax",%progbits
+ 279              		.align	1
+ 280              		.global	btable_set_rx_bufsize
+ 281              		.syntax unified
+ 282              		.code	16
+ 283              		.thumb_func
+ 285              	btable_set_rx_bufsize:
+ 286              	.LVL6:
+ 287              	.LFB144:
+  93:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  94:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** // Set RX buffer size
+  95:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** void btable_set_rx_bufsize(uint32_t ep_id, uint8_t buf_id, uint16_t wCount) {
+ 288              		.loc 1 95 77 is_stmt 1 view -0
+ 289              		.cfi_startproc
+ 290              		@ args = 0, pretend = 0, frame = 8
+ARM GAS  /tmp/ccAsy2Lv.s 			page 12
+
+
+ 291              		@ frame_needed = 0, uses_anonymous_args = 0
+  96:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   uint8_t blsize, num_block;
+ 292              		.loc 1 96 3 view .LVU73
+  97:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   (void) pma_align_buffer_size(wCount, &blsize, &num_block);
+ 293              		.loc 1 97 3 view .LVU74
+  95:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   uint8_t blsize, num_block;
+ 294              		.loc 1 95 77 is_stmt 0 view .LVU75
+ 295 0000 F7B5     		push	{r0, r1, r2, r4, r5, r6, r7, lr}
+ 296              	.LCFI3:
+ 297              		.cfi_def_cfa_offset 32
+ 298              		.cfi_offset 0, -32
+ 299              		.cfi_offset 1, -28
+ 300              		.cfi_offset 2, -24
+ 301              		.cfi_offset 4, -20
+ 302              		.cfi_offset 5, -16
+ 303              		.cfi_offset 6, -12
+ 304              		.cfi_offset 7, -8
+ 305              		.cfi_offset 14, -4
+ 306              		.loc 1 97 10 view .LVU76
+ 307 0002 6B46     		mov	r3, sp
+ 308 0004 9F1D     		adds	r7, r3, #6
+ 309 0006 DE1D     		adds	r6, r3, #7
+  95:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   uint8_t blsize, num_block;
+ 310              		.loc 1 95 77 view .LVU77
+ 311 0008 0400     		movs	r4, r0
+ 312 000a 0D00     		movs	r5, r1
+ 313 000c 1000     		movs	r0, r2
+ 314              	.LVL7:
+ 315              		.loc 1 97 10 view .LVU78
+ 316 000e 3900     		movs	r1, r7
+ 317              	.LVL8:
+ 318              		.loc 1 97 10 view .LVU79
+ 319 0010 3200     		movs	r2, r6
+ 320              	.LVL9:
+ 321              		.loc 1 97 10 view .LVU80
+ 322 0012 FFF7FEFF 		bl	pma_align_buffer_size
+ 323              	.LVL10:
+  98:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+  99:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   /* Encode into register. When BLSIZE==1, we need to subtract 1 block count */
+ 100:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   uint16_t bl_nb = (blsize << 15) | ((num_block - blsize) << 10);
+ 324              		.loc 1 100 3 is_stmt 1 view .LVU81
+ 325              		.loc 1 100 35 is_stmt 0 view .LVU82
+ 326 0016 3A78     		ldrb	r2, [r7]
+ 327              		.loc 1 100 49 view .LVU83
+ 328 0018 3378     		ldrb	r3, [r6]
+ 329 001a 9B1A     		subs	r3, r3, r2
+ 330              		.loc 1 100 35 view .LVU84
+ 331 001c 9B02     		lsls	r3, r3, #10
+ 332 001e D203     		lsls	r2, r2, #15
+ 333 0020 1343     		orrs	r3, r2
+ 334              		.loc 1 100 12 view .LVU85
+ 335 0022 9BB2     		uxth	r3, r3
+ 336              	.LVL11:
+ 101:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   if (bl_nb == 0) {
+ 337              		.loc 1 101 3 is_stmt 1 view .LVU86
+ 338              		.loc 1 101 6 is_stmt 0 view .LVU87
+ 339 0024 002B     		cmp	r3, #0
+ARM GAS  /tmp/ccAsy2Lv.s 			page 13
+
+
+ 340 0026 01D1     		bne	.L20
+ 102:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     // zlp but 0 is invalid value, set blsize to 1 (32 bytes)
+ 103:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     // Note: lower value can cause PMAOVR on setup with ch32v203
+ 104:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****     bl_nb = 1 << 15;
+ 341              		.loc 1 104 11 view .LVU88
+ 342 0028 8023     		movs	r3, #128
+ 343              	.LVL12:
+ 344              		.loc 1 104 11 view .LVU89
+ 345 002a 1B02     		lsls	r3, r3, #8
+ 346              	.L20:
+ 347              	.LVL13:
+ 105:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   }
+ 106:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** 
+ 107:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** #ifdef FSDEV_BUS_32BIT
+ 108:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   uint32_t count_addr = FSDEV_BTABLE->ep32[ep_id][buf_id].count_addr;
+ 109:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   count_addr = (bl_nb << 16) | (count_addr & 0x0000FFFFu);
+ 110:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   FSDEV_BTABLE->ep32[ep_id][buf_id].count_addr = count_addr;
+ 111:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** #else
+ 112:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c ****   FSDEV_BTABLE->ep16[ep_id][buf_id].count = bl_nb;
+ 348              		.loc 1 112 3 is_stmt 1 view .LVU90
+ 349              		.loc 1 112 43 is_stmt 0 view .LVU91
+ 350 002c 6400     		lsls	r4, r4, #1
+ 351              	.LVL14:
+ 352              		.loc 1 112 43 view .LVU92
+ 353 002e 6419     		adds	r4, r4, r5
+ 354 0030 024A     		ldr	r2, .L22
+ 355 0032 A400     		lsls	r4, r4, #2
+ 356 0034 A418     		adds	r4, r4, r2
+ 357 0036 6380     		strh	r3, [r4, #2]
+ 113:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** #endif
+ 114:tinyusb/src/portable/st/stm32_fsdev/fsdev_common.c **** }
+ 358              		.loc 1 114 1 view .LVU93
+ 359              		@ sp needed
+ 360              	.LVL15:
+ 361              		.loc 1 114 1 view .LVU94
+ 362 0038 F7BD     		pop	{r0, r1, r2, r4, r5, r6, r7, pc}
+ 363              	.L23:
+ 364 003a C046     		.align	2
+ 365              	.L22:
+ 366 003c 00600040 		.word	1073766400
+ 367              		.cfi_endproc
+ 368              	.LFE144:
+ 370              		.text
+ 371              	.Letext0:
+ 372              		.file 3 "/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdint.h"
+ 373              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f042x6.h"
+ 374              		.file 5 "tinyusb/src/portable/st/stm32_fsdev/fsdev_common.h"
+ 375              		.file 6 "tinyusb/src/portable/st/stm32_fsdev/fsdev_stm32.h"
+ARM GAS  /tmp/ccAsy2Lv.s 			page 14
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 fsdev_common.c
+     /tmp/ccAsy2Lv.s:19     .text.fsdev_core_reset:00000000 $t
+     /tmp/ccAsy2Lv.s:25     .text.fsdev_core_reset:00000000 fsdev_core_reset
+     /tmp/ccAsy2Lv.s:115    .text.fsdev_core_reset:00000040 $d
+     /tmp/ccAsy2Lv.s:122    .text.fsdev_deinit:00000000 $t
+     /tmp/ccAsy2Lv.s:128    .text.fsdev_deinit:00000000 fsdev_deinit
+     /tmp/ccAsy2Lv.s:185    .text.fsdev_deinit:00000028 $d
+     /tmp/ccAsy2Lv.s:192    .text.pma_align_buffer_size:00000000 $t
+     /tmp/ccAsy2Lv.s:198    .text.pma_align_buffer_size:00000000 pma_align_buffer_size
+     /tmp/ccAsy2Lv.s:279    .text.btable_set_rx_bufsize:00000000 $t
+     /tmp/ccAsy2Lv.s:285    .text.btable_set_rx_bufsize:00000000 btable_set_rx_bufsize
+     /tmp/ccAsy2Lv.s:366    .text.btable_set_rx_bufsize:0000003c $d
+
+NO UNDEFINED SYMBOLS

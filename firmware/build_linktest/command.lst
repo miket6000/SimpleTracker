@@ -1,0 +1,1033 @@
+ARM GAS  /tmp/ccpVucR5.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"command.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/command.c"
+  18              		.section	.text.cmd_get_list,"ax",%progbits
+  19              		.align	1
+  20              		.global	cmd_get_list
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	cmd_get_list:
+  26              	.LFB4:
+   1:Core/Src/command.c **** #include "command.h"
+   2:Core/Src/command.c **** #include <stdbool.h>
+   3:Core/Src/command.c **** #include <string.h>
+   4:Core/Src/command.c **** #include <stdio.h>
+   5:Core/Src/command.c **** #include <ctype.h>
+   6:Core/Src/command.c **** 
+   7:Core/Src/command.c **** #define RX_BUFFER_LEN 32U
+   8:Core/Src/command.c **** #define TERM_CHAR '\n'
+   9:Core/Src/command.c **** #define DELIM " "
+  10:Core/Src/command.c **** #define MAX_NUM_COMMANDS 16
+  11:Core/Src/command.c **** 
+  12:Core/Src/command.c **** static char rx_buffer[RX_BUFFER_LEN] = {0};
+  13:Core/Src/command.c **** static uint8_t buffer_index = 0;
+  14:Core/Src/command.c **** static char *last;
+  15:Core/Src/command.c **** static char *token;
+  16:Core/Src/command.c **** static uint8_t num_commands = 0;
+  17:Core/Src/command.c **** static Command commands[MAX_NUM_COMMANDS];
+  18:Core/Src/command.c **** static char prompt[] = "\n> ";
+  19:Core/Src/command.c **** static char no_match[] = "Command not recognised.";
+  20:Core/Src/command.c **** static char eol[] = "\n";
+  21:Core/Src/command.c **** bool interactive = false;
+  22:Core/Src/command.c **** 
+  23:Core/Src/command.c **** void (*print_function)(char *str);
+  24:Core/Src/command.c **** 
+  25:Core/Src/command.c **** Command *cmd_get_list(void) {
+  27              		.loc 1 25 29 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+  26:Core/Src/command.c ****   return commands;
+  32              		.loc 1 26 3 view .LVU1
+ARM GAS  /tmp/ccpVucR5.s 			page 2
+
+
+  33              		.loc 1 26 10 is_stmt 0 discriminator 1 view .LVU2
+  34 0000 0048     		ldr	r0, .L2
+  27:Core/Src/command.c **** }
+  35              		.loc 1 27 1 view .LVU3
+  36              		@ sp needed
+  37 0002 7047     		bx	lr
+  38              	.L3:
+  39              		.align	2
+  40              	.L2:
+  41 0004 00000000 		.word	commands
+  42              		.cfi_endproc
+  43              	.LFE4:
+  45              		.section	.text.cmd_get_num_commands,"ax",%progbits
+  46              		.align	1
+  47              		.global	cmd_get_num_commands
+  48              		.syntax unified
+  49              		.code	16
+  50              		.thumb_func
+  52              	cmd_get_num_commands:
+  53              	.LFB5:
+  28:Core/Src/command.c **** 
+  29:Core/Src/command.c **** int cmd_get_num_commands(void) {
+  54              		.loc 1 29 32 is_stmt 1 view -0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58              		@ link register save eliminated.
+  30:Core/Src/command.c ****   return num_commands;
+  59              		.loc 1 30 3 view .LVU5
+  60              		.loc 1 30 10 is_stmt 0 view .LVU6
+  61 0000 014B     		ldr	r3, .L5
+  31:Core/Src/command.c **** }
+  62              		.loc 1 31 1 view .LVU7
+  63              		@ sp needed
+  30:Core/Src/command.c ****   return num_commands;
+  64              		.loc 1 30 10 view .LVU8
+  65 0002 1878     		ldrb	r0, [r3]
+  66              		.loc 1 31 1 view .LVU9
+  67 0004 7047     		bx	lr
+  68              	.L6:
+  69 0006 C046     		.align	2
+  70              	.L5:
+  71 0008 00000000 		.word	num_commands
+  72              		.cfi_endproc
+  73              	.LFE5:
+  75              		.section	.text.cmd_set_interactive,"ax",%progbits
+  76              		.align	1
+  77              		.global	cmd_set_interactive
+  78              		.syntax unified
+  79              		.code	16
+  80              		.thumb_func
+  82              	cmd_set_interactive:
+  83              	.LVL0:
+  84              	.LFB6:
+  32:Core/Src/command.c **** 
+  33:Core/Src/command.c **** void cmd_set_interactive(void *parameter) {
+  85              		.loc 1 33 43 is_stmt 1 view -0
+ARM GAS  /tmp/ccpVucR5.s 			page 3
+
+
+  86              		.cfi_startproc
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  89              		@ link register save eliminated.
+  34:Core/Src/command.c ****   interactive = true;
+  90              		.loc 1 34 3 view .LVU11
+  91              		.loc 1 34 15 is_stmt 0 view .LVU12
+  92 0000 0122     		movs	r2, #1
+  35:Core/Src/command.c **** }
+  93              		.loc 1 35 1 view .LVU13
+  94              		@ sp needed
+  34:Core/Src/command.c ****   interactive = true;
+  95              		.loc 1 34 15 view .LVU14
+  96 0002 014B     		ldr	r3, .L8
+  97 0004 1A70     		strb	r2, [r3]
+  98              		.loc 1 35 1 view .LVU15
+  99 0006 7047     		bx	lr
+ 100              	.L9:
+ 101              		.align	2
+ 102              	.L8:
+ 103 0008 00000000 		.word	interactive
+ 104              		.cfi_endproc
+ 105              	.LFE6:
+ 107              		.section	.text.cmd_unset_interactive,"ax",%progbits
+ 108              		.align	1
+ 109              		.global	cmd_unset_interactive
+ 110              		.syntax unified
+ 111              		.code	16
+ 112              		.thumb_func
+ 114              	cmd_unset_interactive:
+ 115              	.LVL1:
+ 116              	.LFB7:
+  36:Core/Src/command.c **** 
+  37:Core/Src/command.c **** void cmd_unset_interactive(void *parameter) {
+ 117              		.loc 1 37 45 is_stmt 1 view -0
+ 118              		.cfi_startproc
+ 119              		@ args = 0, pretend = 0, frame = 0
+ 120              		@ frame_needed = 0, uses_anonymous_args = 0
+ 121              		@ link register save eliminated.
+  38:Core/Src/command.c ****   interactive = false;
+ 122              		.loc 1 38 3 view .LVU17
+ 123              		.loc 1 38 15 is_stmt 0 view .LVU18
+ 124 0000 0022     		movs	r2, #0
+  39:Core/Src/command.c **** }
+ 125              		.loc 1 39 1 view .LVU19
+ 126              		@ sp needed
+  38:Core/Src/command.c ****   interactive = false;
+ 127              		.loc 1 38 15 view .LVU20
+ 128 0002 014B     		ldr	r3, .L11
+ 129 0004 1A70     		strb	r2, [r3]
+ 130              		.loc 1 39 1 view .LVU21
+ 131 0006 7047     		bx	lr
+ 132              	.L12:
+ 133              		.align	2
+ 134              	.L11:
+ 135 0008 00000000 		.word	interactive
+ 136              		.cfi_endproc
+ARM GAS  /tmp/ccpVucR5.s 			page 4
+
+
+ 137              	.LFE7:
+ 139              		.section	.text.cmd_print,"ax",%progbits
+ 140              		.align	1
+ 141              		.global	cmd_print
+ 142              		.syntax unified
+ 143              		.code	16
+ 144              		.thumb_func
+ 146              	cmd_print:
+ 147              	.LVL2:
+ 148              	.LFB8:
+  40:Core/Src/command.c **** 
+  41:Core/Src/command.c **** void cmd_print(char *buffer) {
+ 149              		.loc 1 41 30 is_stmt 1 view -0
+ 150              		.cfi_startproc
+ 151              		@ args = 0, pretend = 0, frame = 0
+ 152              		@ frame_needed = 0, uses_anonymous_args = 0
+  42:Core/Src/command.c ****   if (interactive) {
+ 153              		.loc 1 42 3 view .LVU23
+ 154              		.loc 1 42 7 is_stmt 0 view .LVU24
+ 155 0000 044B     		ldr	r3, .L18
+  41:Core/Src/command.c ****   if (interactive) {
+ 156              		.loc 1 41 30 view .LVU25
+ 157 0002 10B5     		push	{r4, lr}
+ 158              	.LCFI0:
+ 159              		.cfi_def_cfa_offset 8
+ 160              		.cfi_offset 4, -8
+ 161              		.cfi_offset 14, -4
+ 162              		.loc 1 42 6 view .LVU26
+ 163 0004 1B78     		ldrb	r3, [r3]
+ 164 0006 002B     		cmp	r3, #0
+ 165 0008 02D0     		beq	.L13
+ 166              	.LVL3:
+ 167              	.LBB4:
+ 168              	.LBI4:
+  41:Core/Src/command.c ****   if (interactive) {
+ 169              		.loc 1 41 6 is_stmt 1 view .LVU27
+ 170              	.LBB5:
+  43:Core/Src/command.c ****     print_function(buffer);
+ 171              		.loc 1 43 5 view .LVU28
+ 172 000a 034B     		ldr	r3, .L18+4
+ 173 000c 1B68     		ldr	r3, [r3]
+ 174 000e 9847     		blx	r3
+ 175              	.LVL4:
+ 176              	.L13:
+ 177              		.loc 1 43 5 is_stmt 0 view .LVU29
+ 178              	.LBE5:
+ 179              	.LBE4:
+  44:Core/Src/command.c ****   }
+  45:Core/Src/command.c **** }
+ 180              		.loc 1 45 1 view .LVU30
+ 181              		@ sp needed
+ 182 0010 10BD     		pop	{r4, pc}
+ 183              	.L19:
+ 184 0012 C046     		.align	2
+ 185              	.L18:
+ 186 0014 00000000 		.word	interactive
+ 187 0018 00000000 		.word	print_function
+ARM GAS  /tmp/ccpVucR5.s 			page 5
+
+
+ 188              		.cfi_endproc
+ 189              	.LFE8:
+ 191              		.section	.text.cmd_set_print_function,"ax",%progbits
+ 192              		.align	1
+ 193              		.global	cmd_set_print_function
+ 194              		.syntax unified
+ 195              		.code	16
+ 196              		.thumb_func
+ 198              	cmd_set_print_function:
+ 199              	.LVL5:
+ 200              	.LFB9:
+  46:Core/Src/command.c **** 
+  47:Core/Src/command.c **** void cmd_set_print_function(void (*function)(char*)) {
+ 201              		.loc 1 47 54 is_stmt 1 view -0
+ 202              		.cfi_startproc
+ 203              		@ args = 0, pretend = 0, frame = 0
+ 204              		@ frame_needed = 0, uses_anonymous_args = 0
+  48:Core/Src/command.c ****   print_function = function;
+ 205              		.loc 1 48 3 view .LVU32
+  47:Core/Src/command.c ****   print_function = function;
+ 206              		.loc 1 47 54 is_stmt 0 view .LVU33
+ 207 0000 10B5     		push	{r4, lr}
+ 208              	.LCFI1:
+ 209              		.cfi_def_cfa_offset 8
+ 210              		.cfi_offset 4, -8
+ 211              		.cfi_offset 14, -4
+ 212              		.loc 1 48 18 view .LVU34
+ 213 0002 034B     		ldr	r3, .L21
+  49:Core/Src/command.c ****   cmd_print(prompt);
+  50:Core/Src/command.c **** }
+ 214              		.loc 1 50 1 view .LVU35
+ 215              		@ sp needed
+  48:Core/Src/command.c ****   cmd_print(prompt);
+ 216              		.loc 1 48 18 view .LVU36
+ 217 0004 1860     		str	r0, [r3]
+  49:Core/Src/command.c ****   cmd_print(prompt);
+ 218              		.loc 1 49 3 is_stmt 1 view .LVU37
+ 219 0006 0348     		ldr	r0, .L21+4
+ 220              	.LVL6:
+  49:Core/Src/command.c ****   cmd_print(prompt);
+ 221              		.loc 1 49 3 is_stmt 0 view .LVU38
+ 222 0008 FFF7FEFF 		bl	cmd_print
+ 223              	.LVL7:
+ 224              		.loc 1 50 1 view .LVU39
+ 225 000c 10BD     		pop	{r4, pc}
+ 226              	.L22:
+ 227 000e C046     		.align	2
+ 228              	.L21:
+ 229 0010 00000000 		.word	print_function
+ 230 0014 00000000 		.word	prompt
+ 231              		.cfi_endproc
+ 232              	.LFE9:
+ 234              		.section	.rodata.cmd_get_param.str1.1,"aMS",%progbits,1
+ 235              	.LC9:
+ 236 0000 2000     		.ascii	" \000"
+ 237              		.section	.text.cmd_get_param,"ax",%progbits
+ 238              		.align	1
+ARM GAS  /tmp/ccpVucR5.s 			page 6
+
+
+ 239              		.global	cmd_get_param
+ 240              		.syntax unified
+ 241              		.code	16
+ 242              		.thumb_func
+ 244              	cmd_get_param:
+ 245              	.LFB10:
+  51:Core/Src/command.c **** 
+  52:Core/Src/command.c **** char *cmd_get_param() {
+ 246              		.loc 1 52 23 is_stmt 1 view -0
+ 247              		.cfi_startproc
+ 248              		@ args = 0, pretend = 0, frame = 0
+ 249              		@ frame_needed = 0, uses_anonymous_args = 0
+  53:Core/Src/command.c ****   return strtok_r(NULL, DELIM, &last); 
+ 250              		.loc 1 53 3 view .LVU41
+  52:Core/Src/command.c ****   return strtok_r(NULL, DELIM, &last); 
+ 251              		.loc 1 52 23 is_stmt 0 view .LVU42
+ 252 0000 10B5     		push	{r4, lr}
+ 253              	.LCFI2:
+ 254              		.cfi_def_cfa_offset 8
+ 255              		.cfi_offset 4, -8
+ 256              		.cfi_offset 14, -4
+ 257              		.loc 1 53 10 view .LVU43
+ 258 0002 0020     		movs	r0, #0
+  54:Core/Src/command.c **** }
+ 259              		.loc 1 54 1 view .LVU44
+ 260              		@ sp needed
+  53:Core/Src/command.c ****   return strtok_r(NULL, DELIM, &last); 
+ 261              		.loc 1 53 10 view .LVU45
+ 262 0004 024A     		ldr	r2, .L24
+ 263 0006 0349     		ldr	r1, .L24+4
+ 264 0008 FFF7FEFF 		bl	strtok_r
+ 265              	.LVL8:
+ 266              		.loc 1 54 1 view .LVU46
+ 267 000c 10BD     		pop	{r4, pc}
+ 268              	.L25:
+ 269 000e C046     		.align	2
+ 270              	.L24:
+ 271 0010 00000000 		.word	last
+ 272 0014 00000000 		.word	.LC9
+ 273              		.cfi_endproc
+ 274              	.LFE10:
+ 276              		.section	.text.cmd_clear_buffer,"ax",%progbits
+ 277              		.align	1
+ 278              		.global	cmd_clear_buffer
+ 279              		.syntax unified
+ 280              		.code	16
+ 281              		.thumb_func
+ 283              	cmd_clear_buffer:
+ 284              	.LFB11:
+  55:Core/Src/command.c **** 
+  56:Core/Src/command.c **** void cmd_clear_buffer() {
+ 285              		.loc 1 56 25 is_stmt 1 view -0
+ 286              		.cfi_startproc
+ 287              		@ args = 0, pretend = 0, frame = 0
+ 288              		@ frame_needed = 0, uses_anonymous_args = 0
+  57:Core/Src/command.c ****   for (int i = 0; i < RX_BUFFER_LEN; i++) {
+ 289              		.loc 1 57 3 view .LVU48
+ARM GAS  /tmp/ccpVucR5.s 			page 7
+
+
+ 290              	.LBB6:
+ 291              		.loc 1 57 8 view .LVU49
+ 292              	.LVL9:
+ 293              		.loc 1 57 21 discriminator 1 view .LVU50
+ 294              	.LBE6:
+  56:Core/Src/command.c ****   for (int i = 0; i < RX_BUFFER_LEN; i++) {
+ 295              		.loc 1 56 25 is_stmt 0 view .LVU51
+ 296 0000 10B5     		push	{r4, lr}
+ 297              	.LCFI3:
+ 298              		.cfi_def_cfa_offset 8
+ 299              		.cfi_offset 4, -8
+ 300              		.cfi_offset 14, -4
+ 301              	.LBB7:
+  58:Core/Src/command.c ****     rx_buffer[i] = '\0';
+ 302              		.loc 1 58 18 view .LVU52
+ 303 0002 2022     		movs	r2, #32
+ 304              	.LBE7:
+  59:Core/Src/command.c ****   }
+  60:Core/Src/command.c ****   buffer_index = 0;
+  61:Core/Src/command.c ****   cmd_print(prompt);
+  62:Core/Src/command.c **** }
+ 305              		.loc 1 62 1 view .LVU53
+ 306              		@ sp needed
+ 307              	.LBB8:
+  58:Core/Src/command.c ****     rx_buffer[i] = '\0';
+ 308              		.loc 1 58 18 view .LVU54
+ 309 0004 0021     		movs	r1, #0
+ 310 0006 0548     		ldr	r0, .L27
+ 311 0008 FFF7FEFF 		bl	memset
+ 312              	.LVL10:
+  58:Core/Src/command.c ****     rx_buffer[i] = '\0';
+ 313              		.loc 1 58 18 view .LVU55
+ 314              	.LBE8:
+  60:Core/Src/command.c ****   cmd_print(prompt);
+ 315              		.loc 1 60 3 is_stmt 1 view .LVU56
+  60:Core/Src/command.c ****   cmd_print(prompt);
+ 316              		.loc 1 60 16 is_stmt 0 view .LVU57
+ 317 000c 0022     		movs	r2, #0
+ 318 000e 044B     		ldr	r3, .L27+4
+  61:Core/Src/command.c **** }
+ 319              		.loc 1 61 3 view .LVU58
+ 320 0010 0448     		ldr	r0, .L27+8
+  60:Core/Src/command.c ****   cmd_print(prompt);
+ 321              		.loc 1 60 16 view .LVU59
+ 322 0012 1A70     		strb	r2, [r3]
+  61:Core/Src/command.c **** }
+ 323              		.loc 1 61 3 is_stmt 1 view .LVU60
+ 324 0014 FFF7FEFF 		bl	cmd_print
+ 325              	.LVL11:
+ 326              		.loc 1 62 1 is_stmt 0 view .LVU61
+ 327 0018 10BD     		pop	{r4, pc}
+ 328              	.L28:
+ 329 001a C046     		.align	2
+ 330              	.L27:
+ 331 001c 00000000 		.word	rx_buffer
+ 332 0020 00000000 		.word	buffer_index
+ 333 0024 00000000 		.word	prompt
+ARM GAS  /tmp/ccpVucR5.s 			page 8
+
+
+ 334              		.cfi_endproc
+ 335              	.LFE11:
+ 337              		.section	.text.cmd_add,"ax",%progbits
+ 338              		.align	1
+ 339              		.global	cmd_add
+ 340              		.syntax unified
+ 341              		.code	16
+ 342              		.thumb_func
+ 344              	cmd_add:
+ 345              	.LVL12:
+ 346              	.LFB12:
+  63:Core/Src/command.c **** 
+  64:Core/Src/command.c **** void cmd_add(const char *command, void (*callback)(void *), void *parameter) {
+ 347              		.loc 1 64 78 is_stmt 1 view -0
+ 348              		.cfi_startproc
+ 349              		@ args = 0, pretend = 0, frame = 8
+ 350              		@ frame_needed = 0, uses_anonymous_args = 0
+  65:Core/Src/command.c ****   if (num_commands < MAX_NUM_COMMANDS) {
+ 351              		.loc 1 65 3 view .LVU63
+  64:Core/Src/command.c ****   if (num_commands < MAX_NUM_COMMANDS) {
+ 352              		.loc 1 64 78 is_stmt 0 view .LVU64
+ 353 0000 F7B5     		push	{r0, r1, r2, r4, r5, r6, r7, lr}
+ 354              	.LCFI4:
+ 355              		.cfi_def_cfa_offset 32
+ 356              		.cfi_offset 0, -32
+ 357              		.cfi_offset 1, -28
+ 358              		.cfi_offset 2, -24
+ 359              		.cfi_offset 4, -20
+ 360              		.cfi_offset 5, -16
+ 361              		.cfi_offset 6, -12
+ 362              		.cfi_offset 7, -8
+ 363              		.cfi_offset 14, -4
+ 364              		.loc 1 65 20 view .LVU65
+ 365 0002 0A4F     		ldr	r7, .L31
+  64:Core/Src/command.c ****   if (num_commands < MAX_NUM_COMMANDS) {
+ 366              		.loc 1 64 78 view .LVU66
+ 367 0004 0E00     		movs	r6, r1
+ 368              		.loc 1 65 20 view .LVU67
+ 369 0006 3D78     		ldrb	r5, [r7]
+  64:Core/Src/command.c ****   if (num_commands < MAX_NUM_COMMANDS) {
+ 370              		.loc 1 64 78 view .LVU68
+ 371 0008 0192     		str	r2, [sp, #4]
+ 372              		.loc 1 65 6 view .LVU69
+ 373 000a 0F2D     		cmp	r5, #15
+ 374 000c 0DD8     		bhi	.L29
+  66:Core/Src/command.c ****     strncpy(commands[num_commands].command, command, COMMAND_LEN);
+ 375              		.loc 1 66 5 is_stmt 1 view .LVU70
+ 376              		.loc 1 66 35 is_stmt 0 view .LVU71
+ 377 000e 1424     		movs	r4, #20
+ 378 0010 6C43     		muls	r4, r5
+ 379 0012 074B     		ldr	r3, .L31+4
+ 380              		.loc 1 66 5 view .LVU72
+ 381 0014 0100     		movs	r1, r0
+ 382              	.LVL13:
+ 383              		.loc 1 66 35 view .LVU73
+ 384 0016 E418     		adds	r4, r4, r3
+ 385              		.loc 1 66 5 view .LVU74
+ARM GAS  /tmp/ccpVucR5.s 			page 9
+
+
+ 386 0018 0822     		movs	r2, #8
+ 387              	.LVL14:
+ 388              		.loc 1 66 5 view .LVU75
+ 389 001a 2000     		movs	r0, r4
+ 390              	.LVL15:
+ 391              		.loc 1 66 5 view .LVU76
+ 392 001c FFF7FEFF 		bl	strncpy
+ 393              	.LVL16:
+  67:Core/Src/command.c ****     commands[num_commands].callback = callback;
+ 394              		.loc 1 67 5 is_stmt 1 view .LVU77
+  68:Core/Src/command.c ****     commands[num_commands].parameter = parameter;
+ 395              		.loc 1 68 38 is_stmt 0 view .LVU78
+ 396 0020 019B     		ldr	r3, [sp, #4]
+  69:Core/Src/command.c ****     num_commands++;
+ 397              		.loc 1 69 17 view .LVU79
+ 398 0022 0135     		adds	r5, r5, #1
+  67:Core/Src/command.c ****     commands[num_commands].callback = callback;
+ 399              		.loc 1 67 37 view .LVU80
+ 400 0024 A660     		str	r6, [r4, #8]
+  68:Core/Src/command.c ****     commands[num_commands].parameter = parameter;
+ 401              		.loc 1 68 5 is_stmt 1 view .LVU81
+  68:Core/Src/command.c ****     commands[num_commands].parameter = parameter;
+ 402              		.loc 1 68 38 is_stmt 0 view .LVU82
+ 403 0026 E360     		str	r3, [r4, #12]
+ 404              		.loc 1 69 5 is_stmt 1 view .LVU83
+ 405              		.loc 1 69 17 is_stmt 0 view .LVU84
+ 406 0028 3D70     		strb	r5, [r7]
+  70:Core/Src/command.c ****   } else {
+  71:Core/Src/command.c ****     // silently fail to add the command...
+  72:Core/Src/command.c ****   }
+ 407              		.loc 1 72 3 is_stmt 1 view .LVU85
+ 408              	.L29:
+  73:Core/Src/command.c **** }
+ 409              		.loc 1 73 1 is_stmt 0 view .LVU86
+ 410              		@ sp needed
+ 411              	.LVL17:
+ 412              		.loc 1 73 1 view .LVU87
+ 413 002a F7BD     		pop	{r0, r1, r2, r4, r5, r6, r7, pc}
+ 414              	.L32:
+ 415              		.align	2
+ 416              	.L31:
+ 417 002c 00000000 		.word	num_commands
+ 418 0030 00000000 		.word	commands
+ 419              		.cfi_endproc
+ 420              	.LFE12:
+ 422              		.section	.rodata.cmd_read_input.str1.1,"aMS",%progbits,1
+ 423              	.LC25:
+ 424 0000 08200800 		.ascii	"\010 \010\000"
+ 425              		.section	.text.cmd_read_input,"ax",%progbits
+ 426              		.align	1
+ 427              		.global	cmd_read_input
+ 428              		.syntax unified
+ 429              		.code	16
+ 430              		.thumb_func
+ 432              	cmd_read_input:
+ 433              	.LVL18:
+ 434              	.LFB13:
+ARM GAS  /tmp/ccpVucR5.s 			page 10
+
+
+  74:Core/Src/command.c **** 
+  75:Core/Src/command.c **** void cmd_read_input(char *buffer, uint8_t len) {
+ 435              		.loc 1 75 48 is_stmt 1 view -0
+ 436              		.cfi_startproc
+ 437              		@ args = 0, pretend = 0, frame = 32
+ 438              		@ frame_needed = 0, uses_anonymous_args = 0
+  76:Core/Src/command.c ****   char inchar;
+ 439              		.loc 1 76 3 view .LVU89
+  77:Core/Src/command.c ****   bool matched = false;
+ 440              		.loc 1 77 3 view .LVU90
+  78:Core/Src/command.c ****   for (int i = 0; i < len; i++) {
+ 441              		.loc 1 78 3 view .LVU91
+ 442              	.LBB9:
+ 443              		.loc 1 78 8 view .LVU92
+ 444              		.loc 1 78 8 is_stmt 0 view .LVU93
+ 445              	.LBE9:
+  75:Core/Src/command.c ****   char inchar;
+ 446              		.loc 1 75 48 view .LVU94
+ 447 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 448              	.LCFI5:
+ 449              		.cfi_def_cfa_offset 20
+ 450              		.cfi_offset 4, -20
+ 451              		.cfi_offset 5, -16
+ 452              		.cfi_offset 6, -12
+ 453              		.cfi_offset 7, -8
+ 454              		.cfi_offset 14, -4
+ 455              	.LBB14:
+ 456              		.loc 1 78 12 view .LVU95
+ 457 0002 0026     		movs	r6, #0
+ 458              	.LBE14:
+  75:Core/Src/command.c ****   char inchar;
+ 459              		.loc 1 75 48 view .LVU96
+ 460 0004 89B0     		sub	sp, sp, #36
+ 461              	.LCFI6:
+ 462              		.cfi_def_cfa_offset 56
+  75:Core/Src/command.c ****   char inchar;
+ 463              		.loc 1 75 48 view .LVU97
+ 464 0006 0390     		str	r0, [sp, #12]
+ 465 0008 0491     		str	r1, [sp, #16]
+ 466              	.LVL19:
+ 467              	.L34:
+ 468              	.LBB15:
+ 469              		.loc 1 78 21 is_stmt 1 discriminator 1 view .LVU98
+ 470 000a 049B     		ldr	r3, [sp, #16]
+ 471 000c B342     		cmp	r3, r6
+ 472 000e 01DC     		bgt	.L43
+ 473              	.L33:
+ 474              	.LBE15:
+  79:Core/Src/command.c ****     inchar = buffer[i];
+  80:Core/Src/command.c ****     if (inchar == TERM_CHAR || buffer_index >= RX_BUFFER_LEN - 1) {
+  81:Core/Src/command.c ****       cmd_print(eol);
+  82:Core/Src/command.c ****       buffer_index = 0;
+  83:Core/Src/command.c ****       token = strtok_r(rx_buffer, DELIM, &last);
+  84:Core/Src/command.c ****       if (token == NULL) return;
+  85:Core/Src/command.c ****       matched = false;
+  86:Core/Src/command.c ****       for (int cmd = 0; cmd < num_commands; cmd++) {
+  87:Core/Src/command.c ****         if (strncmp(token, commands[cmd].command, RX_BUFFER_LEN) == 0) {
+ARM GAS  /tmp/ccpVucR5.s 			page 11
+
+
+  88:Core/Src/command.c ****           (*commands[cmd].callback)(commands[cmd].parameter);
+  89:Core/Src/command.c ****           cmd_clear_buffer();
+  90:Core/Src/command.c ****           buffer_index = 0;
+  91:Core/Src/command.c ****           matched = true;
+  92:Core/Src/command.c ****           break;
+  93:Core/Src/command.c ****         }
+  94:Core/Src/command.c ****       }
+  95:Core/Src/command.c ****       if (matched == false) {
+  96:Core/Src/command.c ****         //invalid command error handler
+  97:Core/Src/command.c ****         cmd_print(no_match);
+  98:Core/Src/command.c ****         cmd_clear_buffer();
+  99:Core/Src/command.c ****       }
+ 100:Core/Src/command.c ****     } else if (isprint(inchar)) {
+ 101:Core/Src/command.c ****       cmd_print((char []){inchar, '\0'}); //echo printable characters
+ 102:Core/Src/command.c ****       rx_buffer[buffer_index] = inchar;
+ 103:Core/Src/command.c ****       buffer_index++;  
+ 104:Core/Src/command.c ****       rx_buffer[buffer_index] = '\0';
+ 105:Core/Src/command.c **** 
+ 106:Core/Src/command.c ****     } else if (inchar == '\b') {
+ 107:Core/Src/command.c ****       if (buffer_index > 0) {
+ 108:Core/Src/command.c ****         cmd_print("\b \b");
+ 109:Core/Src/command.c ****         rx_buffer[buffer_index] = '\0';
+ 110:Core/Src/command.c ****         buffer_index--;
+ 111:Core/Src/command.c ****       }
+ 112:Core/Src/command.c ****     }
+ 113:Core/Src/command.c ****   }
+ 114:Core/Src/command.c **** }
+ 475              		.loc 1 114 1 is_stmt 0 view .LVU99
+ 476 0010 09B0     		add	sp, sp, #36
+ 477              		@ sp needed
+ 478              	.LVL20:
+ 479              		.loc 1 114 1 view .LVU100
+ 480 0012 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 481              	.LVL21:
+ 482              	.L43:
+ 483              	.LBB16:
+  79:Core/Src/command.c ****     inchar = buffer[i];
+ 484              		.loc 1 79 5 is_stmt 1 view .LVU101
+  79:Core/Src/command.c ****     inchar = buffer[i];
+ 485              		.loc 1 79 12 is_stmt 0 view .LVU102
+ 486 0014 039B     		ldr	r3, [sp, #12]
+ 487 0016 2C4D     		ldr	r5, .L51
+ 488 0018 9C5D     		ldrb	r4, [r3, r6]
+ 489              	.LVL22:
+  80:Core/Src/command.c ****       cmd_print(eol);
+ 490              		.loc 1 80 5 is_stmt 1 view .LVU103
+  80:Core/Src/command.c ****       cmd_print(eol);
+ 491              		.loc 1 80 8 is_stmt 0 view .LVU104
+ 492 001a 0A2C     		cmp	r4, #10
+ 493 001c 02D0     		beq	.L35
+  80:Core/Src/command.c ****       cmd_print(eol);
+ 494              		.loc 1 80 45 discriminator 1 view .LVU105
+ 495 001e 2B78     		ldrb	r3, [r5]
+  80:Core/Src/command.c ****       cmd_print(eol);
+ 496              		.loc 1 80 29 discriminator 1 view .LVU106
+ 497 0020 1E2B     		cmp	r3, #30
+ 498 0022 30D9     		bls	.L36
+ARM GAS  /tmp/ccpVucR5.s 			page 12
+
+
+ 499              	.L35:
+  81:Core/Src/command.c ****       buffer_index = 0;
+ 500              		.loc 1 81 7 is_stmt 1 view .LVU107
+  82:Core/Src/command.c ****       token = strtok_r(rx_buffer, DELIM, &last);
+ 501              		.loc 1 82 20 is_stmt 0 view .LVU108
+ 502 0024 0024     		movs	r4, #0
+ 503              	.LVL23:
+  81:Core/Src/command.c ****       buffer_index = 0;
+ 504              		.loc 1 81 7 view .LVU109
+ 505 0026 2948     		ldr	r0, .L51+4
+ 506 0028 FFF7FEFF 		bl	cmd_print
+ 507              	.LVL24:
+  82:Core/Src/command.c ****       token = strtok_r(rx_buffer, DELIM, &last);
+ 508              		.loc 1 82 7 is_stmt 1 view .LVU110
+  83:Core/Src/command.c ****       if (token == NULL) return;
+ 509              		.loc 1 83 15 is_stmt 0 view .LVU111
+ 510 002c 284A     		ldr	r2, .L51+8
+ 511 002e 2949     		ldr	r1, .L51+12
+ 512 0030 2948     		ldr	r0, .L51+16
+  82:Core/Src/command.c ****       token = strtok_r(rx_buffer, DELIM, &last);
+ 513              		.loc 1 82 20 view .LVU112
+ 514 0032 2C70     		strb	r4, [r5]
+  83:Core/Src/command.c ****       if (token == NULL) return;
+ 515              		.loc 1 83 7 is_stmt 1 view .LVU113
+  83:Core/Src/command.c ****       if (token == NULL) return;
+ 516              		.loc 1 83 15 is_stmt 0 view .LVU114
+ 517 0034 FFF7FEFF 		bl	strtok_r
+ 518              	.LVL25:
+ 519 0038 0190     		str	r0, [sp, #4]
+  84:Core/Src/command.c ****       matched = false;
+ 520              		.loc 1 84 7 is_stmt 1 view .LVU115
+  84:Core/Src/command.c ****       matched = false;
+ 521              		.loc 1 84 10 is_stmt 0 view .LVU116
+ 522 003a A042     		cmp	r0, r4
+ 523 003c E8D0     		beq	.L33
+ 524              	.LBB10:
+  86:Core/Src/command.c ****         if (strncmp(token, commands[cmd].command, RX_BUFFER_LEN) == 0) {
+ 525              		.loc 1 86 29 discriminator 1 view .LVU117
+ 526 003e 274B     		ldr	r3, .L51+20
+ 527 0040 1B78     		ldrb	r3, [r3]
+ 528 0042 0293     		str	r3, [sp, #8]
+  87:Core/Src/command.c ****           (*commands[cmd].callback)(commands[cmd].parameter);
+ 529              		.loc 1 87 41 view .LVU118
+ 530 0044 264B     		ldr	r3, .L51+24
+ 531 0046 0593     		str	r3, [sp, #20]
+ 532              	.L38:
+ 533              	.LVL26:
+  86:Core/Src/command.c ****         if (strncmp(token, commands[cmd].command, RX_BUFFER_LEN) == 0) {
+ 534              		.loc 1 86 29 is_stmt 1 discriminator 1 view .LVU119
+ 535 0048 029B     		ldr	r3, [sp, #8]
+ 536 004a A342     		cmp	r3, r4
+ 537 004c 05DC     		bgt	.L41
+ 538              	.LVL27:
+  86:Core/Src/command.c ****         if (strncmp(token, commands[cmd].command, RX_BUFFER_LEN) == 0) {
+ 539              		.loc 1 86 29 is_stmt 0 discriminator 1 view .LVU120
+ 540              	.LBE10:
+  95:Core/Src/command.c ****         //invalid command error handler
+ARM GAS  /tmp/ccpVucR5.s 			page 13
+
+
+ 541              		.loc 1 95 7 is_stmt 1 view .LVU121
+  97:Core/Src/command.c ****         cmd_clear_buffer();
+ 542              		.loc 1 97 9 view .LVU122
+ 543 004e 2548     		ldr	r0, .L51+28
+ 544 0050 FFF7FEFF 		bl	cmd_print
+ 545              	.LVL28:
+  98:Core/Src/command.c ****       }
+ 546              		.loc 1 98 9 view .LVU123
+ 547 0054 FFF7FEFF 		bl	cmd_clear_buffer
+ 548              	.LVL29:
+ 549 0058 11E0     		b	.L40
+ 550              	.LVL30:
+ 551              	.L41:
+ 552              	.LBB11:
+  87:Core/Src/command.c ****           (*commands[cmd].callback)(commands[cmd].parameter);
+ 553              		.loc 1 87 9 view .LVU124
+  87:Core/Src/command.c ****           (*commands[cmd].callback)(commands[cmd].parameter);
+ 554              		.loc 1 87 41 is_stmt 0 view .LVU125
+ 555 005a 1425     		movs	r5, #20
+ 556 005c 6543     		muls	r5, r4
+ 557 005e 059B     		ldr	r3, [sp, #20]
+  87:Core/Src/command.c ****           (*commands[cmd].callback)(commands[cmd].parameter);
+ 558              		.loc 1 87 13 view .LVU126
+ 559 0060 2022     		movs	r2, #32
+  87:Core/Src/command.c ****           (*commands[cmd].callback)(commands[cmd].parameter);
+ 560              		.loc 1 87 41 view .LVU127
+ 561 0062 ED18     		adds	r5, r5, r3
+  87:Core/Src/command.c ****           (*commands[cmd].callback)(commands[cmd].parameter);
+ 562              		.loc 1 87 13 view .LVU128
+ 563 0064 2900     		movs	r1, r5
+ 564 0066 0198     		ldr	r0, [sp, #4]
+ 565 0068 FFF7FEFF 		bl	strncmp
+ 566              	.LVL31:
+ 567 006c 071E     		subs	r7, r0, #0
+  87:Core/Src/command.c ****           (*commands[cmd].callback)(commands[cmd].parameter);
+ 568              		.loc 1 87 12 discriminator 1 view .LVU129
+ 569 006e 08D1     		bne	.L39
+  88:Core/Src/command.c ****           cmd_clear_buffer();
+ 570              		.loc 1 88 11 is_stmt 1 view .LVU130
+  88:Core/Src/command.c ****           cmd_clear_buffer();
+ 571              		.loc 1 88 12 is_stmt 0 view .LVU131
+ 572 0070 AB68     		ldr	r3, [r5, #8]
+ 573 0072 E868     		ldr	r0, [r5, #12]
+ 574 0074 9847     		blx	r3
+ 575              	.LVL32:
+  89:Core/Src/command.c ****           buffer_index = 0;
+ 576              		.loc 1 89 11 is_stmt 1 view .LVU132
+ 577 0076 FFF7FEFF 		bl	cmd_clear_buffer
+ 578              	.LVL33:
+  90:Core/Src/command.c ****           matched = true;
+ 579              		.loc 1 90 11 view .LVU133
+  90:Core/Src/command.c ****           matched = true;
+ 580              		.loc 1 90 24 is_stmt 0 view .LVU134
+ 581 007a 134B     		ldr	r3, .L51
+ 582 007c 1F70     		strb	r7, [r3]
+  91:Core/Src/command.c ****           break;
+ 583              		.loc 1 91 11 is_stmt 1 view .LVU135
+ARM GAS  /tmp/ccpVucR5.s 			page 14
+
+
+ 584              	.LVL34:
+  92:Core/Src/command.c ****         }
+ 585              		.loc 1 92 11 view .LVU136
+  92:Core/Src/command.c ****         }
+ 586              		.loc 1 92 11 is_stmt 0 view .LVU137
+ 587              	.LBE11:
+  95:Core/Src/command.c ****         //invalid command error handler
+ 588              		.loc 1 95 7 is_stmt 1 view .LVU138
+ 589              	.L40:
+  78:Core/Src/command.c ****     inchar = buffer[i];
+ 590              		.loc 1 78 29 discriminator 2 view .LVU139
+ 591 007e 0136     		adds	r6, r6, #1
+ 592              	.LVL35:
+  78:Core/Src/command.c ****     inchar = buffer[i];
+ 593              		.loc 1 78 29 is_stmt 0 discriminator 2 view .LVU140
+ 594 0080 C3E7     		b	.L34
+ 595              	.LVL36:
+ 596              	.L39:
+ 597              	.LBB12:
+  86:Core/Src/command.c ****         if (strncmp(token, commands[cmd].command, RX_BUFFER_LEN) == 0) {
+ 598              		.loc 1 86 48 is_stmt 1 discriminator 2 view .LVU141
+ 599 0082 0134     		adds	r4, r4, #1
+ 600              	.LVL37:
+  86:Core/Src/command.c ****         if (strncmp(token, commands[cmd].command, RX_BUFFER_LEN) == 0) {
+ 601              		.loc 1 86 48 is_stmt 0 discriminator 2 view .LVU142
+ 602 0084 E0E7     		b	.L38
+ 603              	.LVL38:
+ 604              	.L36:
+  86:Core/Src/command.c ****         if (strncmp(token, commands[cmd].command, RX_BUFFER_LEN) == 0) {
+ 605              		.loc 1 86 48 discriminator 2 view .LVU143
+ 606              	.LBE12:
+ 100:Core/Src/command.c ****       cmd_print((char []){inchar, '\0'}); //echo printable characters
+ 607              		.loc 1 100 12 is_stmt 1 view .LVU144
+ 100:Core/Src/command.c ****       cmd_print((char []){inchar, '\0'}); //echo printable characters
+ 608              		.loc 1 100 16 is_stmt 0 view .LVU145
+ 609 0086 184A     		ldr	r2, .L51+32
+ 100:Core/Src/command.c ****       cmd_print((char []){inchar, '\0'}); //echo printable characters
+ 610              		.loc 1 100 15 view .LVU146
+ 611 0088 175D     		ldrb	r7, [r2, r4]
+ 612 008a 6822     		movs	r2, #104
+ 613 008c 9743     		bics	r7, r2
+ 614 008e 0DD0     		beq	.L42
+ 615              	.LBB13:
+ 101:Core/Src/command.c ****       rx_buffer[buffer_index] = inchar;
+ 616              		.loc 1 101 7 is_stmt 1 view .LVU147
+ 101:Core/Src/command.c ****       rx_buffer[buffer_index] = inchar;
+ 617              		.loc 1 101 26 is_stmt 0 view .LVU148
+ 618 0090 0027     		movs	r7, #0
+ 619 0092 07A8     		add	r0, sp, #28
+ 620 0094 0470     		strb	r4, [r0]
+ 621 0096 4770     		strb	r7, [r0, #1]
+ 101:Core/Src/command.c ****       rx_buffer[buffer_index] = inchar;
+ 622              		.loc 1 101 7 view .LVU149
+ 623 0098 FFF7FEFF 		bl	cmd_print
+ 624              	.LVL39:
+ 102:Core/Src/command.c ****       buffer_index++;  
+ 625              		.loc 1 102 7 is_stmt 1 view .LVU150
+ARM GAS  /tmp/ccpVucR5.s 			page 15
+
+
+ 102:Core/Src/command.c ****       buffer_index++;  
+ 626              		.loc 1 102 16 is_stmt 0 view .LVU151
+ 627 009c 2B78     		ldrb	r3, [r5]
+ 102:Core/Src/command.c ****       buffer_index++;  
+ 628              		.loc 1 102 31 view .LVU152
+ 629 009e 0E4A     		ldr	r2, .L51+16
+ 630 00a0 D454     		strb	r4, [r2, r3]
+ 103:Core/Src/command.c ****       rx_buffer[buffer_index] = '\0';
+ 631              		.loc 1 103 7 is_stmt 1 view .LVU153
+ 103:Core/Src/command.c ****       rx_buffer[buffer_index] = '\0';
+ 632              		.loc 1 103 19 is_stmt 0 view .LVU154
+ 633 00a2 0133     		adds	r3, r3, #1
+ 634 00a4 DBB2     		uxtb	r3, r3
+ 635 00a6 2B70     		strb	r3, [r5]
+ 104:Core/Src/command.c **** 
+ 636              		.loc 1 104 7 is_stmt 1 view .LVU155
+ 104:Core/Src/command.c **** 
+ 637              		.loc 1 104 31 is_stmt 0 view .LVU156
+ 638 00a8 D754     		strb	r7, [r2, r3]
+ 639              	.LBE13:
+ 640 00aa E8E7     		b	.L40
+ 641              	.L42:
+ 106:Core/Src/command.c ****       if (buffer_index > 0) {
+ 642              		.loc 1 106 12 is_stmt 1 view .LVU157
+ 106:Core/Src/command.c ****       if (buffer_index > 0) {
+ 643              		.loc 1 106 15 is_stmt 0 view .LVU158
+ 644 00ac 082C     		cmp	r4, #8
+ 645 00ae E6D1     		bne	.L40
+ 107:Core/Src/command.c ****         cmd_print("\b \b");
+ 646              		.loc 1 107 7 is_stmt 1 view .LVU159
+ 107:Core/Src/command.c ****         cmd_print("\b \b");
+ 647              		.loc 1 107 10 is_stmt 0 view .LVU160
+ 648 00b0 002B     		cmp	r3, #0
+ 649 00b2 E4D0     		beq	.L40
+ 108:Core/Src/command.c ****         rx_buffer[buffer_index] = '\0';
+ 650              		.loc 1 108 9 is_stmt 1 view .LVU161
+ 651 00b4 0D48     		ldr	r0, .L51+36
+ 652 00b6 FFF7FEFF 		bl	cmd_print
+ 653              	.LVL40:
+ 109:Core/Src/command.c ****         buffer_index--;
+ 654              		.loc 1 109 9 view .LVU162
+ 109:Core/Src/command.c ****         buffer_index--;
+ 655              		.loc 1 109 18 is_stmt 0 view .LVU163
+ 656 00ba 2B78     		ldrb	r3, [r5]
+ 109:Core/Src/command.c ****         buffer_index--;
+ 657              		.loc 1 109 33 view .LVU164
+ 658 00bc 064A     		ldr	r2, .L51+16
+ 659 00be D754     		strb	r7, [r2, r3]
+ 110:Core/Src/command.c ****       }
+ 660              		.loc 1 110 9 is_stmt 1 view .LVU165
+ 110:Core/Src/command.c ****       }
+ 661              		.loc 1 110 21 is_stmt 0 view .LVU166
+ 662 00c0 013B     		subs	r3, r3, #1
+ 663 00c2 2B70     		strb	r3, [r5]
+ 664 00c4 DBE7     		b	.L40
+ 665              	.L52:
+ 666 00c6 C046     		.align	2
+ARM GAS  /tmp/ccpVucR5.s 			page 16
+
+
+ 667              	.L51:
+ 668 00c8 00000000 		.word	buffer_index
+ 669 00cc 00000000 		.word	eol
+ 670 00d0 00000000 		.word	last
+ 671 00d4 00000000 		.word	.LC9
+ 672 00d8 00000000 		.word	rx_buffer
+ 673 00dc 00000000 		.word	num_commands
+ 674 00e0 00000000 		.word	commands
+ 675 00e4 00000000 		.word	no_match
+ 676 00e8 01000000 		.word	_ctype_+1
+ 677 00ec 00000000 		.word	.LC25
+ 678              	.LBE16:
+ 679              		.cfi_endproc
+ 680              	.LFE13:
+ 682              		.global	print_function
+ 683              		.section	.bss.print_function,"aw",%nobits
+ 684              		.align	2
+ 687              	print_function:
+ 688 0000 00000000 		.space	4
+ 689              		.global	interactive
+ 690              		.section	.bss.interactive,"aw",%nobits
+ 693              	interactive:
+ 694 0000 00       		.space	1
+ 695              		.section	.data.eol,"aw"
+ 698              	eol:
+ 699 0000 0A00     		.ascii	"\012\000"
+ 700              		.section	.data.no_match,"aw"
+ 703              	no_match:
+ 704 0000 436F6D6D 		.ascii	"Command not recognised.\000"
+ 704      616E6420 
+ 704      6E6F7420 
+ 704      7265636F 
+ 704      676E6973 
+ 705              		.section	.data.prompt,"aw"
+ 708              	prompt:
+ 709 0000 0A3E2000 		.ascii	"\012> \000"
+ 710              		.section	.bss.commands,"aw",%nobits
+ 711              		.align	2
+ 714              	commands:
+ 715 0000 00000000 		.space	320
+ 715      00000000 
+ 715      00000000 
+ 715      00000000 
+ 715      00000000 
+ 716              		.section	.bss.num_commands,"aw",%nobits
+ 719              	num_commands:
+ 720 0000 00       		.space	1
+ 721              		.section	.bss.last,"aw",%nobits
+ 722              		.align	2
+ 725              	last:
+ 726 0000 00000000 		.space	4
+ 727              		.section	.bss.buffer_index,"aw",%nobits
+ 730              	buffer_index:
+ 731 0000 00       		.space	1
+ 732              		.section	.bss.rx_buffer,"aw",%nobits
+ 735              	rx_buffer:
+ 736 0000 00000000 		.space	32
+ARM GAS  /tmp/ccpVucR5.s 			page 17
+
+
+ 736      00000000 
+ 736      00000000 
+ 736      00000000 
+ 736      00000000 
+ 737              		.text
+ 738              	.Letext0:
+ 739              		.file 2 "Core/Inc/command.h"
+ 740              		.file 3 "/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdint.h"
+ 741              		.file 4 "/usr/include/newlib/ctype.h"
+ 742              		.file 5 "/usr/include/newlib/string.h"
+ 743              		.file 6 "<built-in>"
+ARM GAS  /tmp/ccpVucR5.s 			page 18
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 command.c
+     /tmp/ccpVucR5.s:19     .text.cmd_get_list:00000000 $t
+     /tmp/ccpVucR5.s:25     .text.cmd_get_list:00000000 cmd_get_list
+     /tmp/ccpVucR5.s:41     .text.cmd_get_list:00000004 $d
+     /tmp/ccpVucR5.s:714    .bss.commands:00000000 commands
+     /tmp/ccpVucR5.s:46     .text.cmd_get_num_commands:00000000 $t
+     /tmp/ccpVucR5.s:52     .text.cmd_get_num_commands:00000000 cmd_get_num_commands
+     /tmp/ccpVucR5.s:71     .text.cmd_get_num_commands:00000008 $d
+     /tmp/ccpVucR5.s:719    .bss.num_commands:00000000 num_commands
+     /tmp/ccpVucR5.s:76     .text.cmd_set_interactive:00000000 $t
+     /tmp/ccpVucR5.s:82     .text.cmd_set_interactive:00000000 cmd_set_interactive
+     /tmp/ccpVucR5.s:103    .text.cmd_set_interactive:00000008 $d
+     /tmp/ccpVucR5.s:693    .bss.interactive:00000000 interactive
+     /tmp/ccpVucR5.s:108    .text.cmd_unset_interactive:00000000 $t
+     /tmp/ccpVucR5.s:114    .text.cmd_unset_interactive:00000000 cmd_unset_interactive
+     /tmp/ccpVucR5.s:135    .text.cmd_unset_interactive:00000008 $d
+     /tmp/ccpVucR5.s:140    .text.cmd_print:00000000 $t
+     /tmp/ccpVucR5.s:146    .text.cmd_print:00000000 cmd_print
+     /tmp/ccpVucR5.s:186    .text.cmd_print:00000014 $d
+     /tmp/ccpVucR5.s:687    .bss.print_function:00000000 print_function
+     /tmp/ccpVucR5.s:192    .text.cmd_set_print_function:00000000 $t
+     /tmp/ccpVucR5.s:198    .text.cmd_set_print_function:00000000 cmd_set_print_function
+     /tmp/ccpVucR5.s:229    .text.cmd_set_print_function:00000010 $d
+     /tmp/ccpVucR5.s:708    .data.prompt:00000000 prompt
+     /tmp/ccpVucR5.s:238    .text.cmd_get_param:00000000 $t
+     /tmp/ccpVucR5.s:244    .text.cmd_get_param:00000000 cmd_get_param
+     /tmp/ccpVucR5.s:271    .text.cmd_get_param:00000010 $d
+     /tmp/ccpVucR5.s:725    .bss.last:00000000 last
+     /tmp/ccpVucR5.s:277    .text.cmd_clear_buffer:00000000 $t
+     /tmp/ccpVucR5.s:283    .text.cmd_clear_buffer:00000000 cmd_clear_buffer
+     /tmp/ccpVucR5.s:331    .text.cmd_clear_buffer:0000001c $d
+     /tmp/ccpVucR5.s:735    .bss.rx_buffer:00000000 rx_buffer
+     /tmp/ccpVucR5.s:730    .bss.buffer_index:00000000 buffer_index
+     /tmp/ccpVucR5.s:338    .text.cmd_add:00000000 $t
+     /tmp/ccpVucR5.s:344    .text.cmd_add:00000000 cmd_add
+     /tmp/ccpVucR5.s:417    .text.cmd_add:0000002c $d
+     /tmp/ccpVucR5.s:426    .text.cmd_read_input:00000000 $t
+     /tmp/ccpVucR5.s:432    .text.cmd_read_input:00000000 cmd_read_input
+     /tmp/ccpVucR5.s:668    .text.cmd_read_input:000000c8 $d
+     /tmp/ccpVucR5.s:698    .data.eol:00000000 eol
+     /tmp/ccpVucR5.s:703    .data.no_match:00000000 no_match
+     /tmp/ccpVucR5.s:684    .bss.print_function:00000000 $d
+     /tmp/ccpVucR5.s:694    .bss.interactive:00000000 $d
+     /tmp/ccpVucR5.s:711    .bss.commands:00000000 $d
+     /tmp/ccpVucR5.s:720    .bss.num_commands:00000000 $d
+     /tmp/ccpVucR5.s:722    .bss.last:00000000 $d
+     /tmp/ccpVucR5.s:731    .bss.buffer_index:00000000 $d
+     /tmp/ccpVucR5.s:736    .bss.rx_buffer:00000000 $d
+
+UNDEFINED SYMBOLS
+strtok_r
+memset
+strncpy
+strncmp
+_ctype_

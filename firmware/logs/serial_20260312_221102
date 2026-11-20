@@ -1,0 +1,20 @@
+
+> UID
+85a3f70c
+> T &ffffffffU
+OK
+> D
+2 6f036372,-34 c1b425cd,-29
+> T &c1b425cdT 434100000 9 4
+OK
+> R
+
+> R
+
+> R
+
+> R
+
+> SET f 434100000
+OK
+> REBOOT

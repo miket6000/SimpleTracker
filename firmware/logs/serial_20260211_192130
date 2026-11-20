@@ -1,0 +1,58 @@
+CMDW	80 00 
+RX	a2 a2 
+CMDW	86 1b 20 00 00 
+RX	a2 a2 a2 a2 a2 
+CMDW	8a 01 
+RX	a2 a2 
+CMDW	8b 09 03 01 00 
+RX	a2 a2 a2 a2 a2 
+CMDW	8c 00 08 00 00 00 00 
+RX	a2 a2 a2 a2 a2 a2 a2 
+CMDW	8f 00 00 
+RX	a2 a2 a2 
+CMDW	08 02 03 02 03 00 00 00 00 
+RX	a2 a2 a2 a2 a2 a2 a2 a2 a2 
+CMDW	02 ff ff 
+RX	a2 a2 a2 
+CMDW	82 04 e2 00 
+RX	a2 a2 a2 a2 
+CMDW	12 00 00 00 
+RX	a4 a4 00 02 
+IRQ(RX)
+CMDW	02 00 02 
+RX	a4 a4 a4 
+CMDW	13 00 00 00 
+RX	a4 a4 00 00 
+CMDR	1e 00 00 
+RX	
+Read Packet
+Read Info
+CMDW	14 00 00 00 
+RX	a4 a4 56 23 
+RSSI	d5
+SNR	08
+LEN	00
+CMDW	02 ff ff 
+RX	a4 a4 a4 
+CMDW	82 04 e2 00 
+RX	a4 a4 a4 a4 
+CMDW	12 00 00 00 
+RX	a4 a4 00 02 
+IRQ(RX)
+CMDW	02 00 02 
+RX	a4 a4 a4 
+CMDW	13 00 00 00 
+RX	a4 a4 00 00 
+CMDR	1e 00 00 
+RX	
+Read Packet
+Read Info
+CMDW	14 00 00 00 
+RX	a4 a4 58 23 
+RSSI	d4
+SNR	08
+LEN	00
+CMDW	02 ff ff 
+RX	a4 a4 a4 
+CMDW	82 04 e2 00 
+RX	a4 a4 a4 a4 

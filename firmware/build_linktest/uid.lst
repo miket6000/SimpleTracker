@@ -1,0 +1,463 @@
+ARM GAS  /tmp/cc4q2sjZ.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"uid.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/uid.c"
+  18              		.section	.text.mix32,"ax",%progbits
+  19              		.align	1
+  20              		.syntax unified
+  21              		.code	16
+  22              		.thumb_func
+  24              	mix32:
+  25              	.LVL0:
+  26              	.LFB40:
+   1:Core/Src/uid.c **** #include <stdint.h>
+   2:Core/Src/uid.c **** #include "main.h"
+   3:Core/Src/uid.c **** 
+   4:Core/Src/uid.c **** static const char hex_chars[] = "0123456789abcdef";
+   5:Core/Src/uid.c **** 
+   6:Core/Src/uid.c **** static uint32_t mix32(uint32_t x)
+   7:Core/Src/uid.c **** {
+  27              		.loc 1 7 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31              		@ link register save eliminated.
+   8:Core/Src/uid.c ****     x ^= x >> 16;
+  32              		.loc 1 8 5 view .LVU1
+  33              		.loc 1 8 12 is_stmt 0 view .LVU2
+  34 0000 030C     		lsrs	r3, r0, #16
+  35              		.loc 1 8 7 view .LVU3
+  36 0002 4340     		eors	r3, r0
+  37              	.LVL1:
+   9:Core/Src/uid.c ****     x *= 0x7feb352d;
+  38              		.loc 1 9 5 is_stmt 1 view .LVU4
+  39              		.loc 1 9 7 is_stmt 0 view .LVU5
+  40 0004 0448     		ldr	r0, .L2
+  10:Core/Src/uid.c ****     x ^= x >> 15;
+  11:Core/Src/uid.c ****     x *= 0x846ca68b;
+  12:Core/Src/uid.c ****     x ^= x >> 16;
+  13:Core/Src/uid.c ****     return x;
+  14:Core/Src/uid.c **** }
+  41              		.loc 1 14 1 view .LVU6
+  42              		@ sp needed
+   9:Core/Src/uid.c ****     x *= 0x7feb352d;
+  43              		.loc 1 9 7 view .LVU7
+ARM GAS  /tmp/cc4q2sjZ.s 			page 2
+
+
+  44 0006 5843     		muls	r0, r3
+  45              	.LVL2:
+  10:Core/Src/uid.c ****     x ^= x >> 15;
+  46              		.loc 1 10 5 is_stmt 1 view .LVU8
+  11:Core/Src/uid.c ****     x ^= x >> 16;
+  47              		.loc 1 11 7 is_stmt 0 view .LVU9
+  48 0008 044B     		ldr	r3, .L2+4
+  10:Core/Src/uid.c ****     x ^= x >> 15;
+  49              		.loc 1 10 12 view .LVU10
+  50 000a C20B     		lsrs	r2, r0, #15
+  10:Core/Src/uid.c ****     x ^= x >> 15;
+  51              		.loc 1 10 7 view .LVU11
+  52 000c 4240     		eors	r2, r0
+  53              	.LVL3:
+  11:Core/Src/uid.c ****     x ^= x >> 16;
+  54              		.loc 1 11 5 is_stmt 1 view .LVU12
+  11:Core/Src/uid.c ****     x ^= x >> 16;
+  55              		.loc 1 11 7 is_stmt 0 view .LVU13
+  56 000e 5343     		muls	r3, r2
+  57              	.LVL4:
+  12:Core/Src/uid.c ****     return x;
+  58              		.loc 1 12 5 is_stmt 1 view .LVU14
+  12:Core/Src/uid.c ****     return x;
+  59              		.loc 1 12 12 is_stmt 0 view .LVU15
+  60 0010 180C     		lsrs	r0, r3, #16
+  61              	.LVL5:
+  13:Core/Src/uid.c **** }
+  62              		.loc 1 13 5 is_stmt 1 view .LVU16
+  12:Core/Src/uid.c ****     return x;
+  63              		.loc 1 12 7 is_stmt 0 view .LVU17
+  64 0012 5840     		eors	r0, r3
+  65              	.LVL6:
+  66              		.loc 1 14 1 view .LVU18
+  67 0014 7047     		bx	lr
+  68              	.L3:
+  69 0016 C046     		.align	2
+  70              	.L2:
+  71 0018 2D35EB7F 		.word	2146121005
+  72 001c 8BA66C84 		.word	-2073254261
+  73              		.cfi_endproc
+  74              	.LFE40:
+  76              		.section	.text.uint32_to_hex,"ax",%progbits
+  77              		.align	1
+  78              		.syntax unified
+  79              		.code	16
+  80              		.thumb_func
+  82              	uint32_to_hex:
+  83              	.LVL7:
+  84              	.LFB42:
+  15:Core/Src/uid.c **** 
+  16:Core/Src/uid.c **** static uint32_t uid96_to_32(uint32_t uid0, uint32_t uid1, uint32_t uid2)
+  17:Core/Src/uid.c **** {
+  18:Core/Src/uid.c ****     uint32_t h = 0x811C9DC5;   // arbitrary seed (optional)
+  19:Core/Src/uid.c **** 
+  20:Core/Src/uid.c ****     h ^= uid0;
+  21:Core/Src/uid.c ****     h = mix32(h);
+  22:Core/Src/uid.c **** 
+ARM GAS  /tmp/cc4q2sjZ.s 			page 3
+
+
+  23:Core/Src/uid.c ****     h ^= uid1;
+  24:Core/Src/uid.c ****     h = mix32(h);
+  25:Core/Src/uid.c **** 
+  26:Core/Src/uid.c ****     h ^= uid2;
+  27:Core/Src/uid.c ****     h = mix32(h);
+  28:Core/Src/uid.c **** 
+  29:Core/Src/uid.c ****     return h;
+  30:Core/Src/uid.c **** }
+  31:Core/Src/uid.c **** 
+  32:Core/Src/uid.c **** static void uint32_to_hex(uint32_t val, char *buf)
+  33:Core/Src/uid.c **** {
+  85              		.loc 1 33 1 is_stmt 1 view -0
+  86              		.cfi_startproc
+  87              		@ args = 0, pretend = 0, frame = 0
+  88              		@ frame_needed = 0, uses_anonymous_args = 0
+  34:Core/Src/uid.c ****     for (int i = 7; i >= 0; i--) {
+  89              		.loc 1 34 5 view .LVU20
+  90              	.LBB2:
+  91              		.loc 1 34 10 view .LVU21
+  92              		.loc 1 34 23 discriminator 1 view .LVU22
+  93              	.LBE2:
+  33:Core/Src/uid.c ****     for (int i = 7; i >= 0; i--) {
+  94              		.loc 1 33 1 is_stmt 0 view .LVU23
+  95 0000 30B5     		push	{r4, r5, lr}
+  96              	.LCFI0:
+  97              		.cfi_def_cfa_offset 12
+  98              		.cfi_offset 4, -12
+  99              		.cfi_offset 5, -8
+ 100              		.cfi_offset 14, -4
+ 101              	.LBB3:
+  35:Core/Src/uid.c ****         buf[i] = hex_chars[val & 0x0F];
+ 102              		.loc 1 35 32 view .LVU24
+ 103 0002 0F25     		movs	r5, #15
+ 104              		.loc 1 35 27 view .LVU25
+ 105 0004 064C     		ldr	r4, .L7
+ 106 0006 CB1D     		adds	r3, r1, #7
+ 107              	.LVL8:
+ 108              	.L5:
+ 109              		.loc 1 35 9 is_stmt 1 view .LVU26
+ 110              		.loc 1 35 32 is_stmt 0 view .LVU27
+ 111 0008 0200     		movs	r2, r0
+ 112 000a 2A40     		ands	r2, r5
+ 113              		.loc 1 35 16 view .LVU28
+ 114 000c A25C     		ldrb	r2, [r4, r2]
+  36:Core/Src/uid.c ****         val >>= 4;
+ 115              		.loc 1 36 13 view .LVU29
+ 116 000e 0009     		lsrs	r0, r0, #4
+ 117              	.LVL9:
+  35:Core/Src/uid.c ****         buf[i] = hex_chars[val & 0x0F];
+ 118              		.loc 1 35 16 view .LVU30
+ 119 0010 1A70     		strb	r2, [r3]
+ 120              		.loc 1 36 9 is_stmt 1 view .LVU31
+ 121              	.LVL10:
+  34:Core/Src/uid.c ****         buf[i] = hex_chars[val & 0x0F];
+ 122              		.loc 1 34 30 discriminator 3 view .LVU32
+  34:Core/Src/uid.c ****         buf[i] = hex_chars[val & 0x0F];
+ 123              		.loc 1 34 23 discriminator 1 view .LVU33
+ARM GAS  /tmp/cc4q2sjZ.s 			page 4
+
+
+ 124 0012 1A00     		movs	r2, r3
+ 125 0014 013B     		subs	r3, r3, #1
+ 126              	.LVL11:
+  34:Core/Src/uid.c ****         buf[i] = hex_chars[val & 0x0F];
+ 127              		.loc 1 34 23 is_stmt 0 discriminator 1 view .LVU34
+ 128 0016 9142     		cmp	r1, r2
+ 129 0018 F6D1     		bne	.L5
+ 130              	.LBE3:
+  37:Core/Src/uid.c ****     }
+  38:Core/Src/uid.c ****     buf[8] = '\0';
+ 131              		.loc 1 38 5 is_stmt 1 view .LVU35
+  39:Core/Src/uid.c **** }
+ 132              		.loc 1 39 1 is_stmt 0 view .LVU36
+ 133              		@ sp needed
+  38:Core/Src/uid.c **** }
+ 134              		.loc 1 38 12 view .LVU37
+ 135 001a 0023     		movs	r3, #0
+ 136 001c 0B72     		strb	r3, [r1, #8]
+ 137              		.loc 1 39 1 view .LVU38
+ 138 001e 30BD     		pop	{r4, r5, pc}
+ 139              	.L8:
+ 140              		.align	2
+ 141              	.L7:
+ 142 0020 00000000 		.word	hex_chars
+ 143              		.cfi_endproc
+ 144              	.LFE42:
+ 146              		.section	.text.UID_Get,"ax",%progbits
+ 147              		.align	1
+ 148              		.global	UID_Get
+ 149              		.syntax unified
+ 150              		.code	16
+ 151              		.thumb_func
+ 153              	UID_Get:
+ 154              	.LFB43:
+  40:Core/Src/uid.c **** 
+  41:Core/Src/uid.c **** uint32_t UID_Get(void) {
+ 155              		.loc 1 41 24 is_stmt 1 view -0
+ 156              		.cfi_startproc
+ 157              		@ args = 0, pretend = 0, frame = 0
+ 158              		@ frame_needed = 0, uses_anonymous_args = 0
+  42:Core/Src/uid.c ****   return uid96_to_32(HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
+ 159              		.loc 1 42 3 view .LVU40
+  41:Core/Src/uid.c ****   return uid96_to_32(HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
+ 160              		.loc 1 41 24 is_stmt 0 view .LVU41
+ 161 0000 70B5     		push	{r4, r5, r6, lr}
+ 162              	.LCFI1:
+ 163              		.cfi_def_cfa_offset 16
+ 164              		.cfi_offset 4, -16
+ 165              		.cfi_offset 5, -12
+ 166              		.cfi_offset 6, -8
+ 167              		.cfi_offset 14, -4
+ 168              		.loc 1 42 10 view .LVU42
+ 169 0002 FFF7FEFF 		bl	HAL_GetUIDw0
+ 170              	.LVL12:
+  43:Core/Src/uid.c **** }
+ 171              		.loc 1 43 1 view .LVU43
+ 172              		@ sp needed
+ARM GAS  /tmp/cc4q2sjZ.s 			page 5
+
+
+  42:Core/Src/uid.c ****   return uid96_to_32(HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
+ 173              		.loc 1 42 10 view .LVU44
+ 174 0006 0600     		movs	r6, r0
+  42:Core/Src/uid.c ****   return uid96_to_32(HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
+ 175              		.loc 1 42 10 discriminator 1 view .LVU45
+ 176 0008 FFF7FEFF 		bl	HAL_GetUIDw1
+ 177              	.LVL13:
+ 178 000c 0500     		movs	r5, r0
+  42:Core/Src/uid.c ****   return uid96_to_32(HAL_GetUIDw0(), HAL_GetUIDw1(), HAL_GetUIDw2());
+ 179              		.loc 1 42 10 discriminator 2 view .LVU46
+ 180 000e FFF7FEFF 		bl	HAL_GetUIDw2
+ 181              	.LVL14:
+ 182 0012 0400     		movs	r4, r0
+ 183              	.LVL15:
+ 184              	.LBB6:
+ 185              	.LBI6:
+  16:Core/Src/uid.c **** {
+ 186              		.loc 1 16 17 is_stmt 1 view .LVU47
+ 187              	.LBB7:
+  18:Core/Src/uid.c **** 
+ 188              		.loc 1 18 5 view .LVU48
+  20:Core/Src/uid.c ****     h = mix32(h);
+ 189              		.loc 1 20 5 view .LVU49
+  20:Core/Src/uid.c ****     h = mix32(h);
+ 190              		.loc 1 20 7 is_stmt 0 view .LVU50
+ 191 0014 0548     		ldr	r0, .L10
+ 192              	.LVL16:
+  20:Core/Src/uid.c ****     h = mix32(h);
+ 193              		.loc 1 20 7 view .LVU51
+ 194 0016 7040     		eors	r0, r6
+ 195              	.LVL17:
+  21:Core/Src/uid.c **** 
+ 196              		.loc 1 21 5 is_stmt 1 view .LVU52
+  21:Core/Src/uid.c **** 
+ 197              		.loc 1 21 9 is_stmt 0 view .LVU53
+ 198 0018 FFF7FEFF 		bl	mix32
+ 199              	.LVL18:
+  23:Core/Src/uid.c ****     h = mix32(h);
+ 200              		.loc 1 23 5 is_stmt 1 view .LVU54
+  23:Core/Src/uid.c ****     h = mix32(h);
+ 201              		.loc 1 23 7 is_stmt 0 view .LVU55
+ 202 001c 6840     		eors	r0, r5
+ 203              	.LVL19:
+  24:Core/Src/uid.c **** 
+ 204              		.loc 1 24 5 is_stmt 1 view .LVU56
+  24:Core/Src/uid.c **** 
+ 205              		.loc 1 24 9 is_stmt 0 view .LVU57
+ 206 001e FFF7FEFF 		bl	mix32
+ 207              	.LVL20:
+  26:Core/Src/uid.c ****     h = mix32(h);
+ 208              		.loc 1 26 5 is_stmt 1 view .LVU58
+  26:Core/Src/uid.c ****     h = mix32(h);
+ 209              		.loc 1 26 7 is_stmt 0 view .LVU59
+ 210 0022 6040     		eors	r0, r4
+ 211              	.LVL21:
+  27:Core/Src/uid.c **** 
+ 212              		.loc 1 27 5 is_stmt 1 view .LVU60
+ARM GAS  /tmp/cc4q2sjZ.s 			page 6
+
+
+  27:Core/Src/uid.c **** 
+ 213              		.loc 1 27 9 is_stmt 0 view .LVU61
+ 214 0024 FFF7FEFF 		bl	mix32
+ 215              	.LVL22:
+  29:Core/Src/uid.c **** }
+ 216              		.loc 1 29 5 is_stmt 1 view .LVU62
+  29:Core/Src/uid.c **** }
+ 217              		.loc 1 29 5 is_stmt 0 view .LVU63
+ 218              	.LBE7:
+ 219              	.LBE6:
+ 220              		.loc 1 43 1 view .LVU64
+ 221 0028 70BD     		pop	{r4, r5, r6, pc}
+ 222              	.L11:
+ 223 002a C046     		.align	2
+ 224              	.L10:
+ 225 002c C59D1C81 		.word	-2128831035
+ 226              		.cfi_endproc
+ 227              	.LFE43:
+ 229              		.section	.text.UID_GetString,"ax",%progbits
+ 230              		.align	1
+ 231              		.global	UID_GetString
+ 232              		.syntax unified
+ 233              		.code	16
+ 234              		.thumb_func
+ 236              	UID_GetString:
+ 237              	.LFB44:
+  44:Core/Src/uid.c **** 
+  45:Core/Src/uid.c **** char *UID_GetString(void) {
+ 238              		.loc 1 45 27 is_stmt 1 view -0
+ 239              		.cfi_startproc
+ 240              		@ args = 0, pretend = 0, frame = 0
+ 241              		@ frame_needed = 0, uses_anonymous_args = 0
+  46:Core/Src/uid.c ****   static char buf[9];
+ 242              		.loc 1 46 3 view .LVU66
+  47:Core/Src/uid.c ****   uint32_to_hex(UID_Get(), buf);
+ 243              		.loc 1 47 3 view .LVU67
+  45:Core/Src/uid.c ****   static char buf[9];
+ 244              		.loc 1 45 27 is_stmt 0 view .LVU68
+ 245 0000 10B5     		push	{r4, lr}
+ 246              	.LCFI2:
+ 247              		.cfi_def_cfa_offset 8
+ 248              		.cfi_offset 4, -8
+ 249              		.cfi_offset 14, -4
+ 250              		.loc 1 47 3 view .LVU69
+ 251 0002 FFF7FEFF 		bl	UID_Get
+ 252              	.LVL23:
+  48:Core/Src/uid.c ****   return buf;
+  49:Core/Src/uid.c **** }
+ 253              		.loc 1 49 1 view .LVU70
+ 254              		@ sp needed
+  47:Core/Src/uid.c ****   return buf;
+ 255              		.loc 1 47 3 discriminator 1 view .LVU71
+ 256 0006 034C     		ldr	r4, .L13
+ 257 0008 2100     		movs	r1, r4
+ 258 000a FFF7FEFF 		bl	uint32_to_hex
+ 259              	.LVL24:
+  48:Core/Src/uid.c ****   return buf;
+ARM GAS  /tmp/cc4q2sjZ.s 			page 7
+
+
+ 260              		.loc 1 48 3 is_stmt 1 view .LVU72
+ 261              		.loc 1 49 1 is_stmt 0 view .LVU73
+ 262 000e 2000     		movs	r0, r4
+ 263 0010 10BD     		pop	{r4, pc}
+ 264              	.L14:
+ 265 0012 C046     		.align	2
+ 266              	.L13:
+ 267 0014 00000000 		.word	buf.0
+ 268              		.cfi_endproc
+ 269              	.LFE44:
+ 271              		.section	.text.UID_GetStrTo,"ax",%progbits
+ 272              		.align	1
+ 273              		.global	UID_GetStrTo
+ 274              		.syntax unified
+ 275              		.code	16
+ 276              		.thumb_func
+ 278              	UID_GetStrTo:
+ 279              	.LVL25:
+ 280              	.LFB45:
+  50:Core/Src/uid.c **** 
+  51:Core/Src/uid.c **** void UID_GetStrTo(char *buf) {
+ 281              		.loc 1 51 30 is_stmt 1 view -0
+ 282              		.cfi_startproc
+ 283              		@ args = 0, pretend = 0, frame = 0
+ 284              		@ frame_needed = 0, uses_anonymous_args = 0
+  52:Core/Src/uid.c ****   uint32_to_hex(UID_Get(), buf);
+ 285              		.loc 1 52 3 view .LVU75
+  51:Core/Src/uid.c ****   uint32_to_hex(UID_Get(), buf);
+ 286              		.loc 1 51 30 is_stmt 0 view .LVU76
+ 287 0000 10B5     		push	{r4, lr}
+ 288              	.LCFI3:
+ 289              		.cfi_def_cfa_offset 8
+ 290              		.cfi_offset 4, -8
+ 291              		.cfi_offset 14, -4
+  51:Core/Src/uid.c ****   uint32_to_hex(UID_Get(), buf);
+ 292              		.loc 1 51 30 view .LVU77
+ 293 0002 0400     		movs	r4, r0
+  53:Core/Src/uid.c **** }
+ 294              		.loc 1 53 1 view .LVU78
+ 295              		@ sp needed
+  52:Core/Src/uid.c ****   uint32_to_hex(UID_Get(), buf);
+ 296              		.loc 1 52 3 view .LVU79
+ 297 0004 FFF7FEFF 		bl	UID_Get
+ 298              	.LVL26:
+  52:Core/Src/uid.c ****   uint32_to_hex(UID_Get(), buf);
+ 299              		.loc 1 52 3 discriminator 1 view .LVU80
+ 300 0008 2100     		movs	r1, r4
+ 301 000a FFF7FEFF 		bl	uint32_to_hex
+ 302              	.LVL27:
+ 303              	.LVL28:
+ 304              		.loc 1 53 1 view .LVU81
+ 305 000e 10BD     		pop	{r4, pc}
+ 306              		.cfi_endproc
+ 307              	.LFE45:
+ 309              		.section	.bss.buf.0,"aw",%nobits
+ 312              	buf.0:
+ 313 0000 00000000 		.space	9
+ARM GAS  /tmp/cc4q2sjZ.s 			page 8
+
+
+ 313      00000000 
+ 313      00
+ 314              		.section	.rodata.hex_chars,"a"
+ 317              	hex_chars:
+ 318 0000 30313233 		.ascii	"0123456789abcdef\000"
+ 318      34353637 
+ 318      38396162 
+ 318      63646566 
+ 318      00
+ 319              		.text
+ 320              	.Letext0:
+ 321              		.file 2 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
+ 322              		.file 3 "/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdint.h"
+ARM GAS  /tmp/cc4q2sjZ.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 uid.c
+     /tmp/cc4q2sjZ.s:19     .text.mix32:00000000 $t
+     /tmp/cc4q2sjZ.s:24     .text.mix32:00000000 mix32
+     /tmp/cc4q2sjZ.s:71     .text.mix32:00000018 $d
+     /tmp/cc4q2sjZ.s:77     .text.uint32_to_hex:00000000 $t
+     /tmp/cc4q2sjZ.s:82     .text.uint32_to_hex:00000000 uint32_to_hex
+     /tmp/cc4q2sjZ.s:142    .text.uint32_to_hex:00000020 $d
+     /tmp/cc4q2sjZ.s:317    .rodata.hex_chars:00000000 hex_chars
+     /tmp/cc4q2sjZ.s:147    .text.UID_Get:00000000 $t
+     /tmp/cc4q2sjZ.s:153    .text.UID_Get:00000000 UID_Get
+     /tmp/cc4q2sjZ.s:225    .text.UID_Get:0000002c $d
+     /tmp/cc4q2sjZ.s:230    .text.UID_GetString:00000000 $t
+     /tmp/cc4q2sjZ.s:236    .text.UID_GetString:00000000 UID_GetString
+     /tmp/cc4q2sjZ.s:267    .text.UID_GetString:00000014 $d
+     /tmp/cc4q2sjZ.s:312    .bss.buf.0:00000000 buf.0
+     /tmp/cc4q2sjZ.s:272    .text.UID_GetStrTo:00000000 $t
+     /tmp/cc4q2sjZ.s:278    .text.UID_GetStrTo:00000000 UID_GetStrTo
+     /tmp/cc4q2sjZ.s:313    .bss.buf.0:00000000 $d
+
+UNDEFINED SYMBOLS
+HAL_GetUIDw0
+HAL_GetUIDw1
+HAL_GetUIDw2

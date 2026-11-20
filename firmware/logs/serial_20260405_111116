@@ -1,0 +1,13 @@
+SCAN
+OK
+> D
+WAIT 0
+> D
+0
+> D
+NONE
+> D
+NONE
+> I SCAN
+OK
+> 

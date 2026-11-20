@@ -1,0 +1,10 @@
+
+> GET s
+9
+> GET f
+434000000
+> GET l
+ERR
+> GET m
+1
+> 

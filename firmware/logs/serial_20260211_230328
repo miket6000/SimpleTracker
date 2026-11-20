@@ -1,0 +1,9 @@
+I
+
+> UID
+7569762d
+> SET   GET m
+1
+> SET m 2
+OK
+> REBOOT

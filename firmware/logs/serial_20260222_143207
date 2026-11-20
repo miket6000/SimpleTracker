@@ -1,0 +1,4 @@
+
+> SET s 3
+OK
+> reboot      REBOOT

@@ -1,0 +1,90 @@
+
+> T &ffffffffU
+OK
+> D
+0
+> D
+NONE
+> D
+NONE
+> D
+NONE
+> T &ffffffffU
+OK
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+WAIT 1
+> D
+1 c1b425cd,-56
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> T &ffffffffU
+OK
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+1 c1b425cd,-55
+> R
+
+> T &c1b425cdT
+OK
+> R
+&6f0363d $GNG -53
+> R
+&6f0363d $GNG -53
+> R
+c1b425cd $GNGGA,075000.000,4µ44>220058lS,17°34.k¸86#r¦E,2Oq2,1l>1,¢0¹*¹9fÍ,!^ü3<&("% -53
+> R
+c1b425cd $GNGGA,075002.000,t¿44.289758lS,17°34.[}?6 r¦E,"Oy2,1|~1,¢`ª0)U M,!Mü14<&("%[ -53
+> R
+c1b425cd $GNGGA,075004.000,tµ44.289758lS,17°34.94=6#pfE,2%Q2,1l<1,2S0®)67üM,!õ35,,,"%C -53
+> R
+c1b425cd $GNGGA,075006.000,tµ44>219746 S,17°34.:½74({&E¼"Oy2,1|~9,¢a™*)(SöM,!^ü3<&("% -53
+> R
+c1b425cd $GNGGA,075008.000,4µ44>219818lS,17°34.i¸78!q¦E,"Oy2,1|~9,¢Q<®)&[fÅ,!^ü3<&("% -53
+> R
+c1b425cd $GNGGA,075012.000,tµ44>2800340S,17°34.Z´90!p¦E,"Oq2,1|~1,¢`™*°!W M,!Mü14<&("% -53
+> R
+c1b425cd $GNGGA,075014.000,4µ44.220208lS,17°34.:837(4æE,2%Q2,1l<1,219*88g¬M,!õ35,,,"5 -53
+> R
+c1b425cd $GNGGA,075018.050,4µ44>R20496 S,17°34.iµ29#4fE,"Oq2,1M:%,¢a¯%(WöE,!^ü3<&("%W -53
+> GET s
+10
+> 

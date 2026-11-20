@@ -1,0 +1,962 @@
+ARM GAS  /tmp/ccyQTeps.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"main.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/main.c"
+  18              		.section	.text.load_settings,"ax",%progbits
+  19              		.align	1
+  20              		.global	load_settings
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	load_settings:
+  26              	.LFB143:
+   1:Core/Src/main.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/main.c **** /**
+   3:Core/Src/main.c ****  ******************************************************************************
+   4:Core/Src/main.c ****  * @file           : main.c
+   5:Core/Src/main.c ****  * @brief          : Main program body
+   6:Core/Src/main.c ****  ******************************************************************************
+   7:Core/Src/main.c ****  * @attention
+   8:Core/Src/main.c ****  *
+   9:Core/Src/main.c ****  * Copyright (c) 2024 STMicroelectronics.
+  10:Core/Src/main.c ****  * All rights reserved.
+  11:Core/Src/main.c ****  *
+  12:Core/Src/main.c ****  * This software is licensed under terms that can be found in the LICENSE file
+  13:Core/Src/main.c ****  * in the root directory of this software component.
+  14:Core/Src/main.c ****  * If no LICENSE file comes with this software, it is provided AS-IS.
+  15:Core/Src/main.c ****  *
+  16:Core/Src/main.c ****  ******************************************************************************
+  17:Core/Src/main.c ****  */
+  18:Core/Src/main.c **** /* USER CODE END Header */
+  19:Core/Src/main.c **** /* Includes ------------------------------------------------------------------*/
+  20:Core/Src/main.c **** #include "main.h"
+  21:Core/Src/main.c **** #include "spi.h"
+  22:Core/Src/main.c **** #include "tim.h"
+  23:Core/Src/main.c **** #include "usart.h"
+  24:Core/Src/main.c **** #include "gpio.h"
+  25:Core/Src/main.c **** #include "adc.h"
+  26:Core/Src/main.c **** 
+  27:Core/Src/main.c **** /* Private includes ----------------------------------------------------------*/
+  28:Core/Src/main.c **** /* USER CODE BEGIN Includes */
+  29:Core/Src/main.c **** #include "clock.h"
+  30:Core/Src/main.c **** #include "board.h"
+  31:Core/Src/main.c **** #include "usb.h"
+  32:Core/Src/main.c **** #include "usbd_conf.h"
+ARM GAS  /tmp/ccyQTeps.s 			page 2
+
+
+  33:Core/Src/main.c **** #include "usbd_core.h"
+  34:Core/Src/main.c **** #include "led.h"
+  35:Core/Src/main.c **** #include "led_sequences.h"
+  36:Core/Src/main.c **** #include "app_context.h"
+  37:Core/Src/main.c **** #include "task.h"
+  38:Core/Src/main.c **** #include "tasks.h"
+  39:Core/Src/main.c **** #include "linktest.h"
+  40:Core/Src/main.c **** #include "setting.h"
+  41:Core/Src/main.c **** #include "filesystem.h"
+  42:Core/Src/main.c **** #include "command.h"
+  43:Core/Src/main.c **** #include "commands.h"
+  44:Core/Src/main.c **** #include "gps.h"
+  45:Core/Src/main.c **** #include "lora.h"
+  46:Core/Src/main.c **** #include "lora_arbitration.h"
+  47:Core/Src/main.c **** #include "lora_discovery.h"
+  48:Core/Src/main.c **** #include "event.h"
+  49:Core/Src/main.c **** #include "config.h"
+  50:Core/Src/main.c **** #include <stdbool.h>
+  51:Core/Src/main.c **** #include <stdlib.h>
+  52:Core/Src/main.c **** #include "tusb.h"
+  53:Core/Src/main.c **** #include "uid.h"
+  54:Core/Src/main.c **** 
+  55:Core/Src/main.c **** /* USER CODE END Includes */
+  56:Core/Src/main.c **** 
+  57:Core/Src/main.c **** /* Private typedef -----------------------------------------------------------*/
+  58:Core/Src/main.c **** /* USER CODE BEGIN PTD */
+  59:Core/Src/main.c **** 
+  60:Core/Src/main.c **** /* USER CODE END PTD */
+  61:Core/Src/main.c **** 
+  62:Core/Src/main.c **** /* Private define ------------------------------------------------------------*/
+  63:Core/Src/main.c **** /* USER CODE BEGIN PD */
+  64:Core/Src/main.c **** 
+  65:Core/Src/main.c **** /* USER CODE END PD */
+  66:Core/Src/main.c **** 
+  67:Core/Src/main.c **** /* Private macro -------------------------------------------------------------*/
+  68:Core/Src/main.c **** /* USER CODE BEGIN PM */
+  69:Core/Src/main.c **** 
+  70:Core/Src/main.c **** /* USER CODE END PM */
+  71:Core/Src/main.c **** 
+  72:Core/Src/main.c **** /* Private variables ---------------------------------------------------------*/
+  73:Core/Src/main.c **** 
+  74:Core/Src/main.c **** /* USER CODE BEGIN PV */
+  75:Core/Src/main.c **** LedHandle status_led;
+  76:Core/Src/main.c **** LoRa_t hlora;
+  77:Core/Src/main.c **** 
+  78:Core/Src/main.c **** AppContext_t appContext = {
+  79:Core/Src/main.c ****   .gpsFix = false, 
+  80:Core/Src/main.c ****   .led = &status_led, 
+  81:Core/Src/main.c ****   .lora = &hlora,
+  82:Core/Src/main.c ****   .mode = MODE_GROUND_STATION,
+  83:Core/Src/main.c **** };
+  84:Core/Src/main.c **** 
+  85:Core/Src/main.c **** /* USER CODE END PV */
+  86:Core/Src/main.c **** 
+  87:Core/Src/main.c **** /* Private function prototypes -----------------------------------------------*/
+  88:Core/Src/main.c **** /* USER CODE BEGIN PFP */
+  89:Core/Src/main.c **** /* USER CODE END PFP */
+ARM GAS  /tmp/ccyQTeps.s 			page 3
+
+
+  90:Core/Src/main.c **** 
+  91:Core/Src/main.c **** /* Private user code ---------------------------------------------------------*/
+  92:Core/Src/main.c **** /* USER CODE BEGIN 0 */
+  93:Core/Src/main.c **** 
+  94:Core/Src/main.c **** void load_settings() {
+  27              		.loc 1 94 22 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 0
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  95:Core/Src/main.c ****   uint8_t i = 0;
+  31              		.loc 1 95 3 view .LVU1
+  32              	.LVL0:
+  96:Core/Src/main.c ****   Setting **settingList = get_settings();
+  33              		.loc 1 96 3 view .LVU2
+  94:Core/Src/main.c ****   uint8_t i = 0;
+  34              		.loc 1 94 22 is_stmt 0 view .LVU3
+  35 0000 70B5     		push	{r4, r5, r6, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 4, -16
+  39              		.cfi_offset 5, -12
+  40              		.cfi_offset 6, -8
+  41              		.cfi_offset 14, -4
+  42              		.loc 1 96 27 view .LVU4
+  43 0002 FFF7FEFF 		bl	get_settings
+  44              	.LVL1:
+  95:Core/Src/main.c ****   uint8_t i = 0;
+  45              		.loc 1 95 11 view .LVU5
+  46 0006 0024     		movs	r4, #0
+  47              		.loc 1 96 27 view .LVU6
+  48 0008 0500     		movs	r5, r0
+  49              	.LVL2:
+  97:Core/Src/main.c ****   while (settingList[i] != NULL) {
+  50              		.loc 1 97 3 is_stmt 1 view .LVU7
+  51              	.L2:
+  52              		.loc 1 97 25 view .LVU8
+  53              		.loc 1 97 21 is_stmt 0 view .LVU9
+  54 000a A300     		lsls	r3, r4, #2
+  55 000c 5B59     		ldr	r3, [r3, r5]
+  56              		.loc 1 97 25 view .LVU10
+  57 000e 002B     		cmp	r3, #0
+  58 0010 00D1     		bne	.L3
+  98:Core/Src/main.c ****     fs_read_config(settingList[i]->label, &settingList[i]->value);
+  99:Core/Src/main.c ****     i++;
+ 100:Core/Src/main.c ****   }
+ 101:Core/Src/main.c **** }
+  59              		.loc 1 101 1 view .LVU11
+  60              		@ sp needed
+  61              	.LVL3:
+  62              	.LVL4:
+  63              		.loc 1 101 1 view .LVU12
+  64 0012 70BD     		pop	{r4, r5, r6, pc}
+  65              	.LVL5:
+  66              	.L3:
+  98:Core/Src/main.c ****     fs_read_config(settingList[i]->label, &settingList[i]->value);
+  67              		.loc 1 98 5 is_stmt 1 view .LVU13
+  68 0014 1878     		ldrb	r0, [r3]
+ARM GAS  /tmp/ccyQTeps.s 			page 4
+
+
+  69 0016 191D     		adds	r1, r3, #4
+  99:Core/Src/main.c ****   }
+  70              		.loc 1 99 6 is_stmt 0 view .LVU14
+  71 0018 0134     		adds	r4, r4, #1
+  72              	.LVL6:
+  98:Core/Src/main.c ****     fs_read_config(settingList[i]->label, &settingList[i]->value);
+  73              		.loc 1 98 5 view .LVU15
+  74 001a FFF7FEFF 		bl	fs_read_config
+  75              	.LVL7:
+  99:Core/Src/main.c ****   }
+  76              		.loc 1 99 5 is_stmt 1 view .LVU16
+  99:Core/Src/main.c ****   }
+  77              		.loc 1 99 6 is_stmt 0 view .LVU17
+  78 001e E4B2     		uxtb	r4, r4
+  79              	.LVL8:
+  99:Core/Src/main.c ****   }
+  80              		.loc 1 99 6 view .LVU18
+  81 0020 F3E7     		b	.L2
+  82              		.cfi_endproc
+  83              	.LFE143:
+  85              		.section	.text.lora_init,"ax",%progbits
+  86              		.align	1
+  87              		.global	lora_init
+  88              		.syntax unified
+  89              		.code	16
+  90              		.thumb_func
+  92              	lora_init:
+  93              	.LVL9:
+  94              	.LFB144:
+ 102:Core/Src/main.c **** 
+ 103:Core/Src/main.c **** void lora_init(LoRa_t *hlora) {
+  95              		.loc 1 103 31 is_stmt 1 view -0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104:Core/Src/main.c **** #ifdef APP_LINKTEST
+ 105:Core/Src/main.c ****   // no settings/filesystem in the linktest build: fixed bench defaults.
+ 106:Core/Src/main.c ****   // Runtime overrides happen through the CFG command in linktest.c.
+ 107:Core/Src/main.c ****   hlora->frequency        = 434000000UL;
+  99              		.loc 1 107 3 view .LVU20
+ 108:Core/Src/main.c ****   hlora->spreadingFactor  = LORA_SF9;
+ 100              		.loc 1 108 3 view .LVU21
+ 109:Core/Src/main.c ****   hlora->bandwidth        = LORA_BW_62;
+ 101              		.loc 1 109 3 view .LVU22
+ 110:Core/Src/main.c ****   hlora->codingRate       = LORA_CR_4_5;
+ 102              		.loc 1 110 3 view .LVU23
+ 107:Core/Src/main.c ****   hlora->spreadingFactor  = LORA_SF9;
+ 103              		.loc 1 107 27 is_stmt 0 view .LVU24
+ 104 0000 114B     		ldr	r3, .L5
+ 103:Core/Src/main.c **** #ifdef APP_LINKTEST
+ 105              		.loc 1 103 31 view .LVU25
+ 106 0002 10B5     		push	{r4, lr}
+ 107              	.LCFI1:
+ 108              		.cfi_def_cfa_offset 8
+ 109              		.cfi_offset 4, -8
+ 110              		.cfi_offset 14, -4
+ 107:Core/Src/main.c ****   hlora->spreadingFactor  = LORA_SF9;
+ARM GAS  /tmp/ccyQTeps.s 			page 5
+
+
+ 111              		.loc 1 107 27 view .LVU26
+ 112 0004 4362     		str	r3, [r0, #36]
+ 108:Core/Src/main.c ****   hlora->bandwidth        = LORA_BW_62;
+ 113              		.loc 1 108 27 view .LVU27
+ 114 0006 114B     		ldr	r3, .L5+4
+ 115              		.loc 1 110 27 view .LVU28
+ 116 0008 0200     		movs	r2, r0
+ 111:Core/Src/main.c ****   hlora->txPower          = LORA_TX_POWER_22_DBM;
+ 112:Core/Src/main.c ****   hlora->preambleLength   = 8;
+ 113:Core/Src/main.c ****   hlora->crcEnabled       = 0;
+ 114:Core/Src/main.c **** #else
+ 115:Core/Src/main.c ****   hlora->frequency = setting('f')->value;
+ 116:Core/Src/main.c ****   hlora->spreadingFactor = setting('s')->value;
+ 117:Core/Src/main.c ****   hlora->bandwidth = setting('b')->value;
+ 118:Core/Src/main.c ****   hlora->codingRate = setting('c')->value;
+ 119:Core/Src/main.c ****   hlora->txPower = setting('d')->value;
+ 120:Core/Src/main.c ****   hlora->preambleLength = setting('p')->value;
+ 121:Core/Src/main.c ****   hlora->crcEnabled = 0;
+ 122:Core/Src/main.c **** #endif
+ 123:Core/Src/main.c **** 
+ 124:Core/Src/main.c ****   hlora->nss_port = LORA_CS_GPIO_Port;
+ 125:Core/Src/main.c ****   hlora->nss_pin = LORA_CS_Pin;
+ 126:Core/Src/main.c ****   hlora->busy_port = LORA_BUSY_GPIO_Port;
+ 127:Core/Src/main.c ****   hlora->busy_pin = LORA_BUSY_Pin;
+ 128:Core/Src/main.c ****   hlora->reset_port = LORA_RST_GPIO_Port;
+ 129:Core/Src/main.c ****   hlora->reset_pin = LORA_RST_Pin;
+ 130:Core/Src/main.c ****   hlora->dio1_port = LORA_DIO1_GPIO_Port;
+ 131:Core/Src/main.c ****   hlora->dio1_pin = LORA_DIO1_Pin;
+ 132:Core/Src/main.c ****   hlora->hspi = &hspi1;
+ 133:Core/Src/main.c **** 
+ 134:Core/Src/main.c ****   LoRa_Init(hlora);
+ 135:Core/Src/main.c **** }
+ 117              		.loc 1 135 1 view .LVU29
+ 118              		@ sp needed
+ 108:Core/Src/main.c ****   hlora->bandwidth        = LORA_BW_62;
+ 119              		.loc 1 108 27 view .LVU30
+ 120 000a 0385     		strh	r3, [r0, #40]
+ 111:Core/Src/main.c ****   hlora->txPower          = LORA_TX_POWER_22_DBM;
+ 121              		.loc 1 111 27 view .LVU31
+ 122 000c 1621     		movs	r1, #22
+ 110:Core/Src/main.c ****   hlora->txPower          = LORA_TX_POWER_22_DBM;
+ 123              		.loc 1 110 27 view .LVU32
+ 124 000e 0123     		movs	r3, #1
+ 125 0010 2A32     		adds	r2, r2, #42
+ 126 0012 1370     		strb	r3, [r2]
+ 111:Core/Src/main.c ****   hlora->txPower          = LORA_TX_POWER_22_DBM;
+ 127              		.loc 1 111 3 is_stmt 1 view .LVU33
+ 111:Core/Src/main.c ****   hlora->txPower          = LORA_TX_POWER_22_DBM;
+ 128              		.loc 1 111 27 is_stmt 0 view .LVU34
+ 129 0014 D171     		strb	r1, [r2, #7]
+ 112:Core/Src/main.c ****   hlora->crcEnabled       = 0;
+ 130              		.loc 1 112 3 is_stmt 1 view .LVU35
+ 112:Core/Src/main.c ****   hlora->crcEnabled       = 0;
+ 131              		.loc 1 112 27 is_stmt 0 view .LVU36
+ 132 0016 0822     		movs	r2, #8
+ 133 0018 8285     		strh	r2, [r0, #44]
+ 113:Core/Src/main.c **** #else
+ARM GAS  /tmp/ccyQTeps.s 			page 6
+
+
+ 134              		.loc 1 113 3 is_stmt 1 view .LVU37
+ 113:Core/Src/main.c **** #else
+ 135              		.loc 1 113 27 is_stmt 0 view .LVU38
+ 136 001a 0200     		movs	r2, r0
+ 137 001c 0021     		movs	r1, #0
+ 138 001e 2F32     		adds	r2, r2, #47
+ 139 0020 1170     		strb	r1, [r2]
+ 124:Core/Src/main.c ****   hlora->nss_pin = LORA_CS_Pin;
+ 140              		.loc 1 124 3 is_stmt 1 view .LVU39
+ 124:Core/Src/main.c ****   hlora->nss_pin = LORA_CS_Pin;
+ 141              		.loc 1 124 19 is_stmt 0 view .LVU40
+ 142 0022 0B4A     		ldr	r2, .L5+8
+ 125:Core/Src/main.c ****   hlora->busy_port = LORA_BUSY_GPIO_Port;
+ 143              		.loc 1 125 18 view .LVU41
+ 144 0024 0381     		strh	r3, [r0, #8]
+ 124:Core/Src/main.c ****   hlora->nss_pin = LORA_CS_Pin;
+ 145              		.loc 1 124 19 view .LVU42
+ 146 0026 4260     		str	r2, [r0, #4]
+ 125:Core/Src/main.c ****   hlora->busy_port = LORA_BUSY_GPIO_Port;
+ 147              		.loc 1 125 3 is_stmt 1 view .LVU43
+ 126:Core/Src/main.c ****   hlora->busy_pin = LORA_BUSY_Pin;
+ 148              		.loc 1 126 3 view .LVU44
+ 126:Core/Src/main.c ****   hlora->busy_pin = LORA_BUSY_Pin;
+ 149              		.loc 1 126 20 is_stmt 0 view .LVU45
+ 150 0028 C260     		str	r2, [r0, #12]
+ 127:Core/Src/main.c ****   hlora->reset_port = LORA_RST_GPIO_Port;
+ 151              		.loc 1 127 3 is_stmt 1 view .LVU46
+ 127:Core/Src/main.c ****   hlora->reset_port = LORA_RST_GPIO_Port;
+ 152              		.loc 1 127 19 is_stmt 0 view .LVU47
+ 153 002a 2022     		movs	r2, #32
+ 154 002c 0282     		strh	r2, [r0, #16]
+ 128:Core/Src/main.c ****   hlora->reset_pin = LORA_RST_Pin;
+ 155              		.loc 1 128 3 is_stmt 1 view .LVU48
+ 128:Core/Src/main.c ****   hlora->reset_pin = LORA_RST_Pin;
+ 156              		.loc 1 128 21 is_stmt 0 view .LVU49
+ 157 002e 9022     		movs	r2, #144
+ 129:Core/Src/main.c ****   hlora->dio1_port = LORA_DIO1_GPIO_Port;
+ 158              		.loc 1 129 20 view .LVU50
+ 159 0030 0383     		strh	r3, [r0, #24]
+ 131:Core/Src/main.c ****   hlora->hspi = &hspi1;
+ 160              		.loc 1 131 19 view .LVU51
+ 161 0032 DB18     		adds	r3, r3, r3
+ 162 0034 0384     		strh	r3, [r0, #32]
+ 132:Core/Src/main.c **** 
+ 163              		.loc 1 132 15 view .LVU52
+ 164 0036 074B     		ldr	r3, .L5+12
+ 128:Core/Src/main.c ****   hlora->reset_pin = LORA_RST_Pin;
+ 165              		.loc 1 128 21 view .LVU53
+ 166 0038 D205     		lsls	r2, r2, #23
+ 167 003a 4261     		str	r2, [r0, #20]
+ 129:Core/Src/main.c ****   hlora->dio1_port = LORA_DIO1_GPIO_Port;
+ 168              		.loc 1 129 3 is_stmt 1 view .LVU54
+ 130:Core/Src/main.c ****   hlora->dio1_pin = LORA_DIO1_Pin;
+ 169              		.loc 1 130 3 view .LVU55
+ 130:Core/Src/main.c ****   hlora->dio1_pin = LORA_DIO1_Pin;
+ 170              		.loc 1 130 20 is_stmt 0 view .LVU56
+ 171 003c C261     		str	r2, [r0, #28]
+ARM GAS  /tmp/ccyQTeps.s 			page 7
+
+
+ 131:Core/Src/main.c ****   hlora->hspi = &hspi1;
+ 172              		.loc 1 131 3 is_stmt 1 view .LVU57
+ 132:Core/Src/main.c **** 
+ 173              		.loc 1 132 3 view .LVU58
+ 132:Core/Src/main.c **** 
+ 174              		.loc 1 132 15 is_stmt 0 view .LVU59
+ 175 003e 0360     		str	r3, [r0]
+ 134:Core/Src/main.c **** }
+ 176              		.loc 1 134 3 is_stmt 1 view .LVU60
+ 177 0040 FFF7FEFF 		bl	LoRa_Init
+ 178              	.LVL10:
+ 179              		.loc 1 135 1 is_stmt 0 view .LVU61
+ 180 0044 10BD     		pop	{r4, pc}
+ 181              	.L6:
+ 182 0046 C046     		.align	2
+ 183              	.L5:
+ 184 0048 8050DE19 		.word	434000000
+ 185 004c 09030000 		.word	777
+ 186 0050 00040048 		.word	1207960576
+ 187 0054 00000000 		.word	hspi1
+ 188              		.cfi_endproc
+ 189              	.LFE144:
+ 191              		.section	.text.HAL_GPIO_EXTI_Callback,"ax",%progbits
+ 192              		.align	1
+ 193              		.global	HAL_GPIO_EXTI_Callback
+ 194              		.syntax unified
+ 195              		.code	16
+ 196              		.thumb_func
+ 198              	HAL_GPIO_EXTI_Callback:
+ 199              	.LVL11:
+ 200              	.LFB145:
+ 136:Core/Src/main.c **** 
+ 137:Core/Src/main.c **** void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+ 138:Core/Src/main.c **** {
+ 201              		.loc 1 138 1 is_stmt 1 view -0
+ 202              		.cfi_startproc
+ 203              		@ args = 0, pretend = 0, frame = 0
+ 204              		@ frame_needed = 0, uses_anonymous_args = 0
+ 139:Core/Src/main.c ****     if (GPIO_Pin == LORA_DIO1_Pin)
+ 205              		.loc 1 139 5 view .LVU63
+ 138:Core/Src/main.c ****     if (GPIO_Pin == LORA_DIO1_Pin)
+ 206              		.loc 1 138 1 is_stmt 0 view .LVU64
+ 207 0000 10B5     		push	{r4, lr}
+ 208              	.LCFI2:
+ 209              		.cfi_def_cfa_offset 8
+ 210              		.cfi_offset 4, -8
+ 211              		.cfi_offset 14, -4
+ 212              		.loc 1 139 8 view .LVU65
+ 213 0002 0228     		cmp	r0, #2
+ 214 0004 03D1     		bne	.L7
+ 140:Core/Src/main.c ****     {
+ 141:Core/Src/main.c ****         LoRa_IrqHandler(appContext.lora);
+ 215              		.loc 1 141 9 is_stmt 1 view .LVU66
+ 216 0006 024B     		ldr	r3, .L9
+ 217 0008 586A     		ldr	r0, [r3, #36]
+ 218              	.LVL12:
+ 219              		.loc 1 141 9 is_stmt 0 view .LVU67
+ARM GAS  /tmp/ccyQTeps.s 			page 8
+
+
+ 220 000a FFF7FEFF 		bl	LoRa_IrqHandler
+ 221              	.LVL13:
+ 222              	.L7:
+ 142:Core/Src/main.c ****     }
+ 143:Core/Src/main.c **** }
+ 223              		.loc 1 143 1 view .LVU68
+ 224              		@ sp needed
+ 225 000e 10BD     		pop	{r4, pc}
+ 226              	.L10:
+ 227              		.align	2
+ 228              	.L9:
+ 229 0010 00000000 		.word	appContext
+ 230              		.cfi_endproc
+ 231              	.LFE145:
+ 233              		.section	.text.startup.main,"ax",%progbits
+ 234              		.align	1
+ 235              		.global	main
+ 236              		.syntax unified
+ 237              		.code	16
+ 238              		.thumb_func
+ 240              	main:
+ 241              	.LFB146:
+ 144:Core/Src/main.c **** 
+ 145:Core/Src/main.c **** /* USER CODE END 0 */
+ 146:Core/Src/main.c **** 
+ 147:Core/Src/main.c **** /**
+ 148:Core/Src/main.c ****  * @brief  The application entry point.
+ 149:Core/Src/main.c ****  * @retval int
+ 150:Core/Src/main.c ****  */
+ 151:Core/Src/main.c **** int main(void) {
+ 242              		.loc 1 151 16 is_stmt 1 view -0
+ 243              		.cfi_startproc
+ 244              		@ Volatile: function does not return.
+ 245              		@ args = 0, pretend = 0, frame = 0
+ 246              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152:Core/Src/main.c **** 
+ 153:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+ 154:Core/Src/main.c **** 
+ 155:Core/Src/main.c ****   /* USER CODE END 1 */
+ 156:Core/Src/main.c **** 
+ 157:Core/Src/main.c ****   /* MCU Configuration--------------------------------------------------------*/
+ 158:Core/Src/main.c **** 
+ 159:Core/Src/main.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+ 160:Core/Src/main.c ****   HAL_Init();
+ 247              		.loc 1 160 3 view .LVU70
+ 151:Core/Src/main.c **** 
+ 248              		.loc 1 151 16 is_stmt 0 view .LVU71
+ 249 0000 10B5     		push	{r4, lr}
+ 250              	.LCFI3:
+ 251              		.cfi_def_cfa_offset 8
+ 252              		.cfi_offset 4, -8
+ 253              		.cfi_offset 14, -4
+ 254              		.loc 1 160 3 view .LVU72
+ 255 0002 FFF7FEFF 		bl	HAL_Init
+ 256              	.LVL14:
+ 161:Core/Src/main.c **** 
+ 162:Core/Src/main.c ****   /* USER CODE BEGIN Init */
+ARM GAS  /tmp/ccyQTeps.s 			page 9
+
+
+ 163:Core/Src/main.c **** 
+ 164:Core/Src/main.c ****   /* USER CODE END Init */
+ 165:Core/Src/main.c **** 
+ 166:Core/Src/main.c ****   /* Configure the system clock */
+ 167:Core/Src/main.c ****   SystemClock_Config();
+ 257              		.loc 1 167 3 is_stmt 1 view .LVU73
+ 258 0006 FFF7FEFF 		bl	SystemClock_Config
+ 259              	.LVL15:
+ 168:Core/Src/main.c **** 
+ 169:Core/Src/main.c ****   /* USER CODE BEGIN SysInit */
+ 170:Core/Src/main.c **** 
+ 171:Core/Src/main.c ****   /* USER CODE END SysInit */
+ 172:Core/Src/main.c **** 
+ 173:Core/Src/main.c ****   /* Initialize all configured peripherals */
+ 174:Core/Src/main.c ****   MX_GPIO_Init();
+ 260              		.loc 1 174 3 view .LVU74
+ 261 000a FFF7FEFF 		bl	MX_GPIO_Init
+ 262              	.LVL16:
+ 175:Core/Src/main.c ****   MX_SPI1_Init();
+ 263              		.loc 1 175 3 view .LVU75
+ 264 000e FFF7FEFF 		bl	MX_SPI1_Init
+ 265              	.LVL17:
+ 176:Core/Src/main.c ****   MX_USB_PCD_Init();   // sets up USB clock/pin mux; TinyUSB assumes it
+ 266              		.loc 1 176 3 view .LVU76
+ 267 0012 FFF7FEFF 		bl	MX_USB_PCD_Init
+ 268              	.LVL18:
+ 177:Core/Src/main.c **** #ifndef APP_LINKTEST
+ 178:Core/Src/main.c ****   MX_USART2_UART_Init();
+ 179:Core/Src/main.c ****   MX_TIM16_Init();
+ 180:Core/Src/main.c ****   MX_ADC_Init();
+ 181:Core/Src/main.c **** #endif
+ 182:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 183:Core/Src/main.c **** 
+ 184:Core/Src/main.c **** #ifndef APP_LINKTEST
+ 185:Core/Src/main.c ****   //led(&status_led, LED_ON);
+ 186:Core/Src/main.c ****   /* Initialize flash filesystem and load settings */
+ 187:Core/Src/main.c ****   fs_init();
+ 188:Core/Src/main.c ****   load_settings();
+ 189:Core/Src/main.c ****   led_init(&status_led, LED_GPIO_Port, LED_Pin);
+ 190:Core/Src/main.c ****   led_add_sequence(&status_led, idle_sequence);
+ 191:Core/Src/main.c **** #endif
+ 192:Core/Src/main.c ****   tusb_init();
+ 269              		.loc 1 192 3 view .LVU77
+ 270 0016 0021     		movs	r1, #0
+ 271 0018 0800     		movs	r0, r1
+ 272 001a FFF7FEFF 		bl	tusb_rhport_init
+ 273              	.LVL19:
+ 193:Core/Src/main.c **** 
+ 194:Core/Src/main.c **** #ifdef APP_LINKTEST
+ 195:Core/Src/main.c ****   /* linktest build: no GPS/LED/ADC/tasks/settings/arbitration.
+ 196:Core/Src/main.c ****      Same LoRa driver core + dedicated debug console (linktest.c). */
+ 197:Core/Src/main.c ****   lora_init(&hlora);
+ 274              		.loc 1 197 3 view .LVU78
+ 275 001e 0448     		ldr	r0, .L13
+ 276 0020 FFF7FEFF 		bl	lora_init
+ 277              	.LVL20:
+ 198:Core/Src/main.c ****   linktest_boot(&appContext);
+ARM GAS  /tmp/ccyQTeps.s 			page 10
+
+
+ 278              		.loc 1 198 3 view .LVU79
+ 279 0024 0348     		ldr	r0, .L13+4
+ 280 0026 FFF7FEFF 		bl	linktest_boot
+ 281              	.LVL21:
+ 282              	.L12:
+ 199:Core/Src/main.c **** 
+ 200:Core/Src/main.c ****   while (1)
+ 283              		.loc 1 200 3 view .LVU80
+ 201:Core/Src/main.c ****   {
+ 202:Core/Src/main.c ****     linktest_tick();
+ 284              		.loc 1 202 5 discriminator 1 view .LVU81
+ 285 002a FFF7FEFF 		bl	linktest_tick
+ 286              	.LVL22:
+ 200:Core/Src/main.c ****   {
+ 287              		.loc 1 200 9 view .LVU82
+ 288 002e FCE7     		b	.L12
+ 289              	.L14:
+ 290              		.align	2
+ 291              	.L13:
+ 292 0030 00000000 		.word	hlora
+ 293 0034 00000000 		.word	appContext
+ 294              		.cfi_endproc
+ 295              	.LFE146:
+ 297              		.section	.text.Error_Handler,"ax",%progbits
+ 298              		.align	1
+ 299              		.global	Error_Handler
+ 300              		.syntax unified
+ 301              		.code	16
+ 302              		.thumb_func
+ 304              	Error_Handler:
+ 305              	.LFB147:
+ 203:Core/Src/main.c ****   }
+ 204:Core/Src/main.c **** #else
+ 205:Core/Src/main.c ****   /* populate appContext with values that are now available */
+ 206:Core/Src/main.c ****   //appContext.mode = setting('m')->value;
+ 207:Core/Src/main.c **** 
+ 208:Core/Src/main.c ****   //appContext.mode = MODE_TRACKER;
+ 209:Core/Src/main.c ****   appContext.mode = MODE_GROUND_STATION;
+ 210:Core/Src/main.c **** #ifndef APP_LINKTEST
+ 211:Core/Src/main.c ****   appContext.uid = UID_Get();
+ 212:Core/Src/main.c ****   strncpy(appContext.uidStr, UID_GetString(), 8);
+ 213:Core/Src/main.c ****   appContext.uidStr[8] = '\0';
+ 214:Core/Src/main.c **** 
+ 215:Core/Src/main.c ****   /* Seed the PRNG for LoRa collision avoidance with device UID */
+ 216:Core/Src/main.c ****   lora_seed_prng(appContext.uid);
+ 217:Core/Src/main.c ****   
+ 218:Core/Src/main.c ****   /* init command line interpreter */
+ 219:Core/Src/main.c ****   cmd_add("REBOOT", reboot, NULL);
+ 220:Core/Src/main.c ****   cmd_add("I", cmd_set_interactive, NULL);
+ 221:Core/Src/main.c ****   cmd_add("i", cmd_unset_interactive, NULL);
+ 222:Core/Src/main.c ****   cmd_add("R", print_remote, &appContext);
+ 223:Core/Src/main.c ****   cmd_add("L", print_str_ptr, &appContext.lastGpsSentence);
+ 224:Core/Src/main.c ****   cmd_add("T", transmit, &appContext);
+ 225:Core/Src/main.c ****   cmd_add("SCAN", scan, &appContext);
+ 226:Core/Src/main.c ****   cmd_add("PAIR", pair, &appContext);
+ 227:Core/Src/main.c ****   cmd_add("SET", set_config, NULL);
+ 228:Core/Src/main.c ****   cmd_add("GET", get_config, NULL);
+ARM GAS  /tmp/ccyQTeps.s 			page 11
+
+
+ 229:Core/Src/main.c ****   cmd_add("UID", print_str, &appContext.uidStr);
+ 230:Core/Src/main.c ****   cmd_add("D", discovery_read, &appContext);
+ 231:Core/Src/main.c ****   cmd_add("C", channel_switch, &appContext);
+ 232:Core/Src/main.c ****   //cmd_add("ERASE", erase_flash, NULL); 
+ 233:Core/Src/main.c ****   cmd_add("FACTORY", factory_reset, NULL);
+ 234:Core/Src/main.c ****   cmd_set_print_function(print); 
+ 235:Core/Src/main.c **** 
+ 236:Core/Src/main.c ****   /* Architecture description.
+ 237:Core/Src/main.c ****    * 
+ 238:Core/Src/main.c ****    * Low level drivers are primarily handled by a task scheduler. This includes polling 
+ 239:Core/Src/main.c ****    * the LoRa module, flashing LEDs and managing the USB Tx and Rx buffers. These task 
+ 240:Core/Src/main.c ****    * must happen in a timely manner for the operation of the tracker.
+ 241:Core/Src/main.c ****    *
+ 242:Core/Src/main.c ****    * Some task are interrupt driven, most notably the GPS receiver / parser and LoRa 
+ 243:Core/Src/main.c ****    * event completion.
+ 244:Core/Src/main.c ****    *
+ 245:Core/Src/main.c ****    * Higher level logic is taken care of using an event driven framework. For example,
+ 246:Core/Src/main.c ****    * the GPS rx interrupt will generate an event if it detects a valid GNGGA packet,
+ 247:Core/Src/main.c ****    * which then potentially creates a lora_tx event. 
+ 248:Core/Src/main.c ****    *
+ 249:Core/Src/main.c ****    */
+ 250:Core/Src/main.c **** 
+ 251:Core/Src/main.c ****   /* init lora & gps modules */
+ 252:Core/Src/main.c ****   //HAL_Delay(3000); // short delay to allow user to view init over serial.
+ 253:Core/Src/main.c ****   lora_init(&hlora);
+ 254:Core/Src/main.c ****   gps_init(&huart2);
+ 255:Core/Src/main.c **** #endif // !APP_LINKTEST
+ 256:Core/Src/main.c **** 
+ 257:Core/Src/main.c ****   /* create task, arguments are init_delay, period, callback, parameter */
+ 258:Core/Src/main.c ****   task_build(0, 100, task_led, &appContext);
+ 259:Core/Src/main.c ****   task_build(0, 100, task_lora, &appContext);
+ 260:Core/Src/main.c ****   task_build(0, 0, task_usb, &appContext);
+ 261:Core/Src/main.c ****   task_build(0, 2500, task_measure_voltage, &appContext);
+ 262:Core/Src/main.c ****   task_build(0, 10, task_gps, &appContext);
+ 263:Core/Src/main.c ****   task_build(0, 0, lora_process_delayed_response, &appContext);
+ 264:Core/Src/main.c ****   
+ 265:Core/Src/main.c ****   // Rx needs to be started once, will restart itself
+ 266:Core/Src/main.c ****   LoRa_Receive(&hlora, LORA_RX_TIMEOUT_MS);
+ 267:Core/Src/main.c **** 
+ 268:Core/Src/main.c ****   /* USER CODE END 2 */
+ 269:Core/Src/main.c **** 
+ 270:Core/Src/main.c ****   /* Infinite loop */
+ 271:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
+ 272:Core/Src/main.c ****   while (1)
+ 273:Core/Src/main.c ****   {
+ 274:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 275:Core/Src/main.c **** 
+ 276:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
+ 277:Core/Src/main.c **** 
+ 278:Core/Src/main.c ****     // Time dependant task
+ 279:Core/Src/main.c ****     task_run();
+ 280:Core/Src/main.c ****     eventDispatcher(&appContext);
+ 281:Core/Src/main.c ****     //power_management();
+ 282:Core/Src/main.c ****   }
+ 283:Core/Src/main.c **** #endif // APP_LINKTEST
+ 284:Core/Src/main.c **** 
+ 285:Core/Src/main.c ****   /* USER CODE END 3 */
+ARM GAS  /tmp/ccyQTeps.s 			page 12
+
+
+ 286:Core/Src/main.c **** }
+ 287:Core/Src/main.c **** 
+ 288:Core/Src/main.c **** /* USER CODE BEGIN 4 */
+ 289:Core/Src/main.c **** /* USER CODE END 4 */
+ 290:Core/Src/main.c **** 
+ 291:Core/Src/main.c **** /**
+ 292:Core/Src/main.c ****  * @brief  This function is executed in case of error occurrence.
+ 293:Core/Src/main.c ****  * @retval None
+ 294:Core/Src/main.c ****  */
+ 295:Core/Src/main.c **** void Error_Handler(void)
+ 296:Core/Src/main.c **** {
+ 306              		.loc 1 296 1 view -0
+ 307              		.cfi_startproc
+ 308              		@ Volatile: function does not return.
+ 309              		@ args = 0, pretend = 0, frame = 0
+ 310              		@ frame_needed = 0, uses_anonymous_args = 0
+ 311              		@ link register save eliminated.
+ 297:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 298:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 299:Core/Src/main.c ****   __disable_irq();
+ 312              		.loc 1 299 3 view .LVU84
+ 313              	.LBB4:
+ 314              	.LBI4:
+ 315              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ARM GAS  /tmp/ccyQTeps.s 			page 13
+
+
+  34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+  54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+ARM GAS  /tmp/ccyQTeps.s 			page 14
+
+
+  91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ 111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 316              		.loc 2 140 27 view .LVU85
+ 317              	.LBB5:
+ 141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 318              		.loc 2 142 3 view .LVU86
+ 319              		.syntax divided
+ 320              	@ 142 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ARM GAS  /tmp/ccyQTeps.s 			page 15
+
+
+ 321 0000 72B6     		cpsid i
+ 322              	@ 0 "" 2
+ 323              		.thumb
+ 324              		.syntax unified
+ 325              	.L16:
+ 326              	.LBE5:
+ 327              	.LBE4:
+ 300:Core/Src/main.c ****   
+ 301:Core/Src/main.c ****   while (1)
+ 328              		.loc 1 301 3 view .LVU87
+ 302:Core/Src/main.c ****   {
+ 303:Core/Src/main.c ****   }
+ 329              		.loc 1 303 3 view .LVU88
+ 301:Core/Src/main.c ****   {
+ 330              		.loc 1 301 9 view .LVU89
+ 331 0002 FEE7     		b	.L16
+ 332              		.cfi_endproc
+ 333              	.LFE147:
+ 335              		.global	appContext
+ 336              		.section	.data.appContext,"aw"
+ 337              		.align	2
+ 340              	appContext:
+ 341 0000 00000000 		.space	29
+ 341      00000000 
+ 341      00000000 
+ 341      00000000 
+ 341      00000000 
+ 342 001d 00       		.byte	0
+ 343 001e 0000     		.space	2
+ 344 0020 00000000 		.word	status_led
+ 345 0024 00000000 		.word	hlora
+ 346 0028 00000000 		.space	11
+ 346      00000000 
+ 346      000000
+ 347 0033 02       		.byte	2
+ 348 0034 00000000 		.space	16
+ 348      00000000 
+ 348      00000000 
+ 348      00000000 
+ 349              		.global	hlora
+ 350              		.section	.bss.hlora,"aw",%nobits
+ 351              		.align	2
+ 354              	hlora:
+ 355 0000 00000000 		.space	56
+ 355      00000000 
+ 355      00000000 
+ 355      00000000 
+ 355      00000000 
+ 356              		.global	status_led
+ 357              		.section	.bss.status_led,"aw",%nobits
+ 358              		.align	2
+ 361              	status_led:
+ 362 0000 00000000 		.space	24
+ 362      00000000 
+ 362      00000000 
+ 362      00000000 
+ 362      00000000 
+ARM GAS  /tmp/ccyQTeps.s 			page 16
+
+
+ 363              		.text
+ 364              	.Letext0:
+ 365              		.file 3 "/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdint.h"
+ 366              		.file 4 "Drivers/CMSIS/Device/ST/STM32F0xx/Include/stm32f042x6.h"
+ 367              		.file 5 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h"
+ 368              		.file 6 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_dma.h"
+ 369              		.file 7 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_spi.h"
+ 370              		.file 8 "Core/Inc/led.h"
+ 371              		.file 9 "Core/Inc/usb.h"
+ 372              		.file 10 "Core/Inc/lora.h"
+ 373              		.file 11 "Core/Inc/app_context.h"
+ 374              		.file 12 "Core/Inc/setting.h"
+ 375              		.file 13 "Core/Inc/filesystem.h"
+ 376              		.file 14 "tinyusb/src/common/tusb_types.h"
+ 377              		.file 15 "Core/Inc/spi.h"
+ 378              		.file 16 "Core/Inc/linktest.h"
+ 379              		.file 17 "Core/Inc/gpio.h"
+ 380              		.file 18 "Core/Inc/clock.h"
+ 381              		.file 19 "tinyusb/src/tusb.h"
+ 382              		.file 20 "Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h"
+ARM GAS  /tmp/ccyQTeps.s 			page 17
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+     /tmp/ccyQTeps.s:19     .text.load_settings:00000000 $t
+     /tmp/ccyQTeps.s:25     .text.load_settings:00000000 load_settings
+     /tmp/ccyQTeps.s:86     .text.lora_init:00000000 $t
+     /tmp/ccyQTeps.s:92     .text.lora_init:00000000 lora_init
+     /tmp/ccyQTeps.s:184    .text.lora_init:00000048 $d
+     /tmp/ccyQTeps.s:192    .text.HAL_GPIO_EXTI_Callback:00000000 $t
+     /tmp/ccyQTeps.s:198    .text.HAL_GPIO_EXTI_Callback:00000000 HAL_GPIO_EXTI_Callback
+     /tmp/ccyQTeps.s:229    .text.HAL_GPIO_EXTI_Callback:00000010 $d
+     /tmp/ccyQTeps.s:340    .data.appContext:00000000 appContext
+     /tmp/ccyQTeps.s:234    .text.startup.main:00000000 $t
+     /tmp/ccyQTeps.s:240    .text.startup.main:00000000 main
+     /tmp/ccyQTeps.s:292    .text.startup.main:00000030 $d
+     /tmp/ccyQTeps.s:354    .bss.hlora:00000000 hlora
+     /tmp/ccyQTeps.s:298    .text.Error_Handler:00000000 $t
+     /tmp/ccyQTeps.s:304    .text.Error_Handler:00000000 Error_Handler
+     /tmp/ccyQTeps.s:337    .data.appContext:00000000 $d
+     /tmp/ccyQTeps.s:361    .bss.status_led:00000000 status_led
+     /tmp/ccyQTeps.s:351    .bss.hlora:00000000 $d
+     /tmp/ccyQTeps.s:358    .bss.status_led:00000000 $d
+
+UNDEFINED SYMBOLS
+get_settings
+fs_read_config
+LoRa_Init
+hspi1
+LoRa_IrqHandler
+HAL_Init
+SystemClock_Config
+MX_GPIO_Init
+MX_SPI1_Init
+MX_USB_PCD_Init
+tusb_rhport_init
+linktest_boot
+linktest_tick

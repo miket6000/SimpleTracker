@@ -1,0 +1,44 @@
+
+> SCAN
+OK
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+WAIT 1
+> D
+1 f49ae83e,-60
+> T &f49ae83eC 43410  200000 4 9
+OK
+> C 434200000 4 9
+OK
+> R
+
+> R
+
+> R
+
+> R
+
+> R
+
+> L
+$GNGGA,081012.000,,,,,0,0,,,M,,M,,*5C
+> R
+
+> C 43  434000000 4 9
+OK
+> T &f49ae83eT 4342999   00000 4 9
+OK
+> c 434200000 4 9
+Command not recognised.
+> C 434200000 4 9
+OK
+> R
+
+> R
+
+> REBOOM T

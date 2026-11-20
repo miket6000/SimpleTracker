@@ -1,0 +1,486 @@
+ARM GAS  /tmp/ccnSGhYU.s 			page 1
+
+
+   1              		.cpu cortex-m0
+   2              		.arch armv6s-m
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 4
+  11              		.eabi_attribute 34, 0
+  12              		.eabi_attribute 18, 4
+  13              		.file	"usb_descriptors.c"
+  14              		.text
+  15              	.Ltext0:
+  16              		.cfi_sections	.debug_frame
+  17              		.file 1 "Core/Src/usb_descriptors.c"
+  18              		.section	.text.tud_descriptor_string_cb,"ax",%progbits
+  19              		.align	1
+  20              		.global	tud_descriptor_string_cb
+  21              		.syntax unified
+  22              		.code	16
+  23              		.thumb_func
+  25              	tud_descriptor_string_cb:
+  26              	.LVL0:
+  27              	.LFB100:
+   1:Core/Src/usb_descriptors.c **** #include "tusb.h"
+   2:Core/Src/usb_descriptors.c **** #include "uid.h"
+   3:Core/Src/usb_descriptors.c **** #include <string.h>
+   4:Core/Src/usb_descriptors.c **** 
+   5:Core/Src/usb_descriptors.c **** // UTF-16 string descriptor buffer
+   6:Core/Src/usb_descriptors.c **** static uint16_t _desc_str[32];
+   7:Core/Src/usb_descriptors.c **** 
+   8:Core/Src/usb_descriptors.c **** // String table
+   9:Core/Src/usb_descriptors.c **** static const char *string_desc_arr[] =
+  10:Core/Src/usb_descriptors.c **** {
+  11:Core/Src/usb_descriptors.c ****   (const char[]) { 0x09, 0x04 },  // 0: English (0x0409)
+  12:Core/Src/usb_descriptors.c ****   "Blueskin Design Ltd",                   // 1: Manufacturer
+  13:Core/Src/usb_descriptors.c ****   "SimpleTracker",             // 2: Product
+  14:Core/Src/usb_descriptors.c ****   NULL,                      // 3: Serial
+  15:Core/Src/usb_descriptors.c ****   "TinyUSB CDC"                  // 4: CDC Interface
+  16:Core/Src/usb_descriptors.c **** };
+  17:Core/Src/usb_descriptors.c **** 
+  18:Core/Src/usb_descriptors.c **** uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid)
+  19:Core/Src/usb_descriptors.c **** {
+  28              		.loc 1 19 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  20:Core/Src/usb_descriptors.c ****   (void) langid;
+  32              		.loc 1 20 3 view .LVU1
+  21:Core/Src/usb_descriptors.c **** 
+  22:Core/Src/usb_descriptors.c ****   uint8_t chr_count;
+  33              		.loc 1 22 3 view .LVU2
+  23:Core/Src/usb_descriptors.c **** 
+  24:Core/Src/usb_descriptors.c ****   if (index == 0)
+  34              		.loc 1 24 3 view .LVU3
+ARM GAS  /tmp/ccnSGhYU.s 			page 2
+
+
+  19:Core/Src/usb_descriptors.c ****   (void) langid;
+  35              		.loc 1 19 1 is_stmt 0 view .LVU4
+  36 0000 0300     		movs	r3, r0
+  37 0002 10B5     		push	{r4, lr}
+  38              	.LCFI0:
+  39              		.cfi_def_cfa_offset 8
+  40              		.cfi_offset 4, -8
+  41              		.cfi_offset 14, -4
+  42              		.loc 1 24 6 view .LVU5
+  43 0004 0028     		cmp	r0, #0
+  44 0006 0CD1     		bne	.L2
+  25:Core/Src/usb_descriptors.c ****   {
+  26:Core/Src/usb_descriptors.c ****     memcpy(&_desc_str[1], string_desc_arr[0], 2);
+  45              		.loc 1 26 5 is_stmt 1 view .LVU6
+  46 0008 154B     		ldr	r3, .L11
+  47 000a 164A     		ldr	r2, .L11+4
+  48 000c 1A80     		strh	r2, [r3]
+  27:Core/Src/usb_descriptors.c ****     chr_count = 1;
+  49              		.loc 1 27 5 view .LVU7
+  50              	.LVL1:
+  51              		.loc 1 27 15 is_stmt 0 view .LVU8
+  52 000e 0123     		movs	r3, #1
+  53              	.LVL2:
+  54              	.L3:
+  28:Core/Src/usb_descriptors.c ****   }
+  29:Core/Src/usb_descriptors.c ****   else {
+  30:Core/Src/usb_descriptors.c ****     const char *str;
+  31:Core/Src/usb_descriptors.c **** 
+  32:Core/Src/usb_descriptors.c ****     if (index == 3)
+  33:Core/Src/usb_descriptors.c ****     {
+  34:Core/Src/usb_descriptors.c ****       str = UID_GetString();
+  35:Core/Src/usb_descriptors.c ****     }
+  36:Core/Src/usb_descriptors.c ****     else
+  37:Core/Src/usb_descriptors.c ****     {
+  38:Core/Src/usb_descriptors.c ****       if (!(index < sizeof(string_desc_arr) / sizeof(string_desc_arr[0])))
+  39:Core/Src/usb_descriptors.c ****         return NULL;
+  40:Core/Src/usb_descriptors.c **** 
+  41:Core/Src/usb_descriptors.c ****       str = string_desc_arr[index];
+  42:Core/Src/usb_descriptors.c ****     }
+  43:Core/Src/usb_descriptors.c ****     chr_count = strlen(str);
+  44:Core/Src/usb_descriptors.c ****     if (chr_count > 31) chr_count = 31;
+  45:Core/Src/usb_descriptors.c **** 
+  46:Core/Src/usb_descriptors.c ****     for (uint8_t i = 0; i < chr_count; i++)
+  47:Core/Src/usb_descriptors.c ****     {
+  48:Core/Src/usb_descriptors.c ****        _desc_str[1 + i] = str[i];
+  49:Core/Src/usb_descriptors.c ****     }
+  50:Core/Src/usb_descriptors.c ****   }
+  51:Core/Src/usb_descriptors.c **** 
+  52:Core/Src/usb_descriptors.c ****   // first word: descriptor type and length
+  53:Core/Src/usb_descriptors.c ****   _desc_str[0] = (TUSB_DESC_STRING << 8 ) | (2 * chr_count + 2);
+  55              		.loc 1 53 3 is_stmt 1 view .LVU9
+  56              		.loc 1 53 16 is_stmt 0 view .LVU10
+  57 0010 C022     		movs	r2, #192
+  58              		.loc 1 53 43 view .LVU11
+  59 0012 0133     		adds	r3, r3, #1
+  60              	.LVL3:
+  61              		.loc 1 53 43 view .LVU12
+ARM GAS  /tmp/ccnSGhYU.s 			page 3
+
+
+  62 0014 DBB2     		uxtb	r3, r3
+  63              	.LVL4:
+  64              		.loc 1 53 16 view .LVU13
+  65 0016 1448     		ldr	r0, .L11+8
+  66              		.loc 1 53 43 view .LVU14
+  67 0018 5B00     		lsls	r3, r3, #1
+  68              		.loc 1 53 16 view .LVU15
+  69 001a 9200     		lsls	r2, r2, #2
+  70 001c 1343     		orrs	r3, r2
+  71 001e 0380     		strh	r3, [r0]
+  54:Core/Src/usb_descriptors.c **** 
+  55:Core/Src/usb_descriptors.c ****   return _desc_str;
+  72              		.loc 1 55 3 is_stmt 1 view .LVU16
+  73              	.LVL5:
+  74              	.L1:
+  56:Core/Src/usb_descriptors.c **** }
+  75              		.loc 1 56 1 is_stmt 0 view .LVU17
+  76              		@ sp needed
+  77 0020 10BD     		pop	{r4, pc}
+  78              	.LVL6:
+  79              	.L2:
+  80              	.LBB2:
+  30:Core/Src/usb_descriptors.c **** 
+  81              		.loc 1 30 5 is_stmt 1 view .LVU18
+  32:Core/Src/usb_descriptors.c ****     {
+  82              		.loc 1 32 5 view .LVU19
+  32:Core/Src/usb_descriptors.c ****     {
+  83              		.loc 1 32 8 is_stmt 0 view .LVU20
+  84 0022 0328     		cmp	r0, #3
+  85 0024 15D1     		bne	.L4
+  34:Core/Src/usb_descriptors.c ****     }
+  86              		.loc 1 34 7 is_stmt 1 view .LVU21
+  34:Core/Src/usb_descriptors.c ****     }
+  87              		.loc 1 34 13 is_stmt 0 view .LVU22
+  88 0026 FFF7FEFF 		bl	UID_GetString
+  89              	.LVL7:
+  34:Core/Src/usb_descriptors.c ****     }
+  90              		.loc 1 34 13 view .LVU23
+  91 002a 0400     		movs	r4, r0
+  92              	.LVL8:
+  93              	.L5:
+  43:Core/Src/usb_descriptors.c ****     if (chr_count > 31) chr_count = 31;
+  94              		.loc 1 43 5 is_stmt 1 view .LVU24
+  43:Core/Src/usb_descriptors.c ****     if (chr_count > 31) chr_count = 31;
+  95              		.loc 1 43 17 is_stmt 0 view .LVU25
+  96 002c 2000     		movs	r0, r4
+  97 002e FFF7FEFF 		bl	strlen
+  98              	.LVL9:
+  44:Core/Src/usb_descriptors.c **** 
+  99              		.loc 1 44 5 is_stmt 1 view .LVU26
+  43:Core/Src/usb_descriptors.c ****     if (chr_count > 31) chr_count = 31;
+ 100              		.loc 1 43 15 is_stmt 0 discriminator 1 view .LVU27
+ 101 0032 031C     		adds	r3, r0, #0
+  44:Core/Src/usb_descriptors.c **** 
+ 102              		.loc 1 44 8 view .LVU28
+ 103 0034 C0B2     		uxtb	r0, r0
+ 104              	.LVL10:
+ARM GAS  /tmp/ccnSGhYU.s 			page 4
+
+
+  44:Core/Src/usb_descriptors.c **** 
+ 105              		.loc 1 44 8 view .LVU29
+ 106 0036 1F28     		cmp	r0, #31
+ 107 0038 00D9     		bls	.L7
+ 108 003a 1F23     		movs	r3, #31
+ 109              	.LVL11:
+ 110              	.L7:
+  44:Core/Src/usb_descriptors.c **** 
+ 111              		.loc 1 44 8 view .LVU30
+ 112 003c 2000     		movs	r0, r4
+ 113              	.LVL12:
+  44:Core/Src/usb_descriptors.c **** 
+ 114              		.loc 1 44 8 view .LVU31
+ 115 003e DBB2     		uxtb	r3, r3
+  46:Core/Src/usb_descriptors.c ****     {
+ 116              		.loc 1 46 5 is_stmt 1 view .LVU32
+ 117              	.LBB3:
+  46:Core/Src/usb_descriptors.c ****     {
+ 118              		.loc 1 46 10 view .LVU33
+ 119              	.LVL13:
+  46:Core/Src/usb_descriptors.c ****     {
+ 120              		.loc 1 46 10 is_stmt 0 view .LVU34
+ 121 0040 094A     		ldr	r2, .L11+8
+ 122 0042 E118     		adds	r1, r4, r3
+ 123              	.LVL14:
+ 124              	.L8:
+  46:Core/Src/usb_descriptors.c ****     {
+ 125              		.loc 1 46 27 is_stmt 1 discriminator 1 view .LVU35
+ 126 0044 0232     		adds	r2, r2, #2
+ 127 0046 8142     		cmp	r1, r0
+ 128 0048 E2D0     		beq	.L3
+  48:Core/Src/usb_descriptors.c ****     }
+ 129              		.loc 1 48 8 view .LVU36
+  48:Core/Src/usb_descriptors.c ****     }
+ 130              		.loc 1 48 30 is_stmt 0 view .LVU37
+ 131 004a 0478     		ldrb	r4, [r0]
+ 132 004c 0130     		adds	r0, r0, #1
+  48:Core/Src/usb_descriptors.c ****     }
+ 133              		.loc 1 48 30 view .LVU38
+ 134 004e 1480     		strh	r4, [r2]
+  46:Core/Src/usb_descriptors.c ****     {
+ 135              		.loc 1 46 41 is_stmt 1 discriminator 3 view .LVU39
+ 136              	.LVL15:
+  46:Core/Src/usb_descriptors.c ****     {
+ 137              		.loc 1 46 41 is_stmt 0 discriminator 3 view .LVU40
+ 138 0050 F8E7     		b	.L8
+ 139              	.LVL16:
+ 140              	.L4:
+  46:Core/Src/usb_descriptors.c ****     {
+ 141              		.loc 1 46 41 discriminator 3 view .LVU41
+ 142              	.LBE3:
+  38:Core/Src/usb_descriptors.c ****         return NULL;
+ 143              		.loc 1 38 7 is_stmt 1 view .LVU42
+  39:Core/Src/usb_descriptors.c **** 
+ 144              		.loc 1 39 16 is_stmt 0 view .LVU43
+ 145 0052 0020     		movs	r0, #0
+ 146              	.LVL17:
+ARM GAS  /tmp/ccnSGhYU.s 			page 5
+
+
+  38:Core/Src/usb_descriptors.c ****         return NULL;
+ 147              		.loc 1 38 10 view .LVU44
+ 148 0054 042B     		cmp	r3, #4
+ 149 0056 E3D8     		bhi	.L1
+  41:Core/Src/usb_descriptors.c ****     }
+ 150              		.loc 1 41 7 is_stmt 1 view .LVU45
+  41:Core/Src/usb_descriptors.c ****     }
+ 151              		.loc 1 41 11 is_stmt 0 view .LVU46
+ 152 0058 044A     		ldr	r2, .L11+12
+ 153 005a 9B00     		lsls	r3, r3, #2
+ 154              	.LVL18:
+  41:Core/Src/usb_descriptors.c ****     }
+ 155              		.loc 1 41 11 view .LVU47
+ 156 005c 9C58     		ldr	r4, [r3, r2]
+ 157 005e E5E7     		b	.L5
+ 158              	.L12:
+ 159              		.align	2
+ 160              	.L11:
+ 161 0060 02000000 		.word	_desc_str+2
+ 162 0064 09040000 		.word	1033
+ 163 0068 00000000 		.word	_desc_str
+ 164 006c 00000000 		.word	string_desc_arr
+ 165              	.LBE2:
+ 166              		.cfi_endproc
+ 167              	.LFE100:
+ 169              		.section	.text.tud_descriptor_device_cb,"ax",%progbits
+ 170              		.align	1
+ 171              		.global	tud_descriptor_device_cb
+ 172              		.syntax unified
+ 173              		.code	16
+ 174              		.thumb_func
+ 176              	tud_descriptor_device_cb:
+ 177              	.LFB101:
+  57:Core/Src/usb_descriptors.c **** 
+  58:Core/Src/usb_descriptors.c **** tusb_desc_device_t const desc_device =
+  59:Core/Src/usb_descriptors.c **** {
+  60:Core/Src/usb_descriptors.c ****   .bLength            = sizeof(tusb_desc_device_t),
+  61:Core/Src/usb_descriptors.c ****   .bDescriptorType    = TUSB_DESC_DEVICE,
+  62:Core/Src/usb_descriptors.c ****   .bcdUSB             = 0x0200,
+  63:Core/Src/usb_descriptors.c ****   .bDeviceClass       = TUSB_CLASS_MISC,
+  64:Core/Src/usb_descriptors.c ****   .bDeviceSubClass    = MISC_SUBCLASS_COMMON,
+  65:Core/Src/usb_descriptors.c ****   .bDeviceProtocol    = MISC_PROTOCOL_IAD,
+  66:Core/Src/usb_descriptors.c ****   .bMaxPacketSize0    = CFG_TUD_ENDPOINT0_SIZE,
+  67:Core/Src/usb_descriptors.c **** 
+  68:Core/Src/usb_descriptors.c ****   .idVendor           = 0xCafe,
+  69:Core/Src/usb_descriptors.c ****   .idProduct          = 0x4000,
+  70:Core/Src/usb_descriptors.c ****   .bcdDevice          = 0x0100,
+  71:Core/Src/usb_descriptors.c **** 
+  72:Core/Src/usb_descriptors.c ****   .iManufacturer      = 0x01,
+  73:Core/Src/usb_descriptors.c ****   .iProduct           = 0x02,
+  74:Core/Src/usb_descriptors.c ****   .iSerialNumber      = 0x03,
+  75:Core/Src/usb_descriptors.c **** 
+  76:Core/Src/usb_descriptors.c ****   .bNumConfigurations = 0x01
+  77:Core/Src/usb_descriptors.c **** };
+  78:Core/Src/usb_descriptors.c **** 
+  79:Core/Src/usb_descriptors.c **** uint8_t const * tud_descriptor_device_cb(void)
+  80:Core/Src/usb_descriptors.c **** {
+ARM GAS  /tmp/ccnSGhYU.s 			page 6
+
+
+ 178              		.loc 1 80 1 is_stmt 1 view -0
+ 179              		.cfi_startproc
+ 180              		@ args = 0, pretend = 0, frame = 0
+ 181              		@ frame_needed = 0, uses_anonymous_args = 0
+ 182              		@ link register save eliminated.
+  81:Core/Src/usb_descriptors.c ****   return (uint8_t const *) &desc_device;
+ 183              		.loc 1 81 3 view .LVU49
+ 184              		.loc 1 81 10 is_stmt 0 discriminator 1 view .LVU50
+ 185 0000 0048     		ldr	r0, .L14
+  82:Core/Src/usb_descriptors.c **** }
+ 186              		.loc 1 82 1 view .LVU51
+ 187              		@ sp needed
+ 188 0002 7047     		bx	lr
+ 189              	.L15:
+ 190              		.align	2
+ 191              	.L14:
+ 192 0004 00000000 		.word	desc_device
+ 193              		.cfi_endproc
+ 194              	.LFE101:
+ 196              		.section	.text.tud_descriptor_configuration_cb,"ax",%progbits
+ 197              		.align	1
+ 198              		.global	tud_descriptor_configuration_cb
+ 199              		.syntax unified
+ 200              		.code	16
+ 201              		.thumb_func
+ 203              	tud_descriptor_configuration_cb:
+ 204              	.LVL19:
+ 205              	.LFB102:
+  83:Core/Src/usb_descriptors.c **** 
+  84:Core/Src/usb_descriptors.c **** enum {
+  85:Core/Src/usb_descriptors.c ****   ITF_NUM_CDC = 0,
+  86:Core/Src/usb_descriptors.c ****   ITF_NUM_CDC_DATA,
+  87:Core/Src/usb_descriptors.c ****   ITF_NUM_TOTAL
+  88:Core/Src/usb_descriptors.c **** };
+  89:Core/Src/usb_descriptors.c **** 
+  90:Core/Src/usb_descriptors.c **** #define CONFIG_TOTAL_LEN  (TUD_CONFIG_DESC_LEN + TUD_CDC_DESC_LEN)
+  91:Core/Src/usb_descriptors.c **** 
+  92:Core/Src/usb_descriptors.c **** uint8_t const desc_configuration[] =
+  93:Core/Src/usb_descriptors.c **** {
+  94:Core/Src/usb_descriptors.c ****   TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_TOTAL_LEN, 0, 100),
+  95:Core/Src/usb_descriptors.c ****   TUD_CDC_DESCRIPTOR(ITF_NUM_CDC, 4, 0x81, 8, 0x02, 0x82, 64)
+  96:Core/Src/usb_descriptors.c **** };
+  97:Core/Src/usb_descriptors.c **** 
+  98:Core/Src/usb_descriptors.c **** uint8_t const * tud_descriptor_configuration_cb(uint8_t index)
+  99:Core/Src/usb_descriptors.c **** {
+ 206              		.loc 1 99 1 is_stmt 1 view -0
+ 207              		.cfi_startproc
+ 208              		@ args = 0, pretend = 0, frame = 0
+ 209              		@ frame_needed = 0, uses_anonymous_args = 0
+ 210              		@ link register save eliminated.
+ 100:Core/Src/usb_descriptors.c ****   (void) index;
+ 211              		.loc 1 100 3 view .LVU53
+ 101:Core/Src/usb_descriptors.c ****   return desc_configuration;
+ 212              		.loc 1 101 3 view .LVU54
+ 213              		.loc 1 101 10 is_stmt 0 discriminator 1 view .LVU55
+ 214 0000 0048     		ldr	r0, .L17
+ 215              	.LVL20:
+ARM GAS  /tmp/ccnSGhYU.s 			page 7
+
+
+ 102:Core/Src/usb_descriptors.c **** }
+ 216              		.loc 1 102 1 view .LVU56
+ 217              		@ sp needed
+ 218 0002 7047     		bx	lr
+ 219              	.L18:
+ 220              		.align	2
+ 221              	.L17:
+ 222 0004 00000000 		.word	desc_configuration
+ 223              		.cfi_endproc
+ 224              	.LFE102:
+ 226              		.global	desc_configuration
+ 227              		.section	.rodata.desc_configuration,"a"
+ 230              	desc_configuration:
+ 231 0000 09024B00 		.ascii	"\011\002K\000\002\001\000\2002\010\013\000\002\002\002"
+ 231      02010080 
+ 231      32080B00 
+ 231      020202
+ 232 000f 00000904 		.ascii	"\000\000\011\004\000\000\001\002\002\000\004\005$\000"
+ 232      00000102 
+ 232      02000405 
+ 232      2400
+ 233 001d 20010524 		.ascii	" \001\005$\001\000\001\004$\002\006\005$\006\000\001"
+ 233      01000104 
+ 233      24020605 
+ 233      24060001 
+ 234 002d 07058103 		.ascii	"\007\005\201\003\010\000\001\011\004\001\000\002\012"
+ 234      08000109 
+ 234      04010002 
+ 234      0A
+ 235 003a 00000007 		.ascii	"\000\000\000\007\005\002\002@\000\000\007\005\202\002"
+ 235      05020240 
+ 235      00000705 
+ 235      8202
+ 236 0048 400000   		.ascii	"@\000\000"
+ 237              		.global	desc_device
+ 238              		.section	.rodata.desc_device,"a"
+ 241              	desc_device:
+ 242 0000 12       		.byte	18
+ 243 0001 01       		.byte	1
+ 244 0002 0002     		.2byte	512
+ 245 0004 EF       		.byte	-17
+ 246 0005 02       		.byte	2
+ 247 0006 01       		.byte	1
+ 248 0007 40       		.byte	64
+ 249 0008 FECA     		.2byte	-13570
+ 250 000a 0040     		.2byte	16384
+ 251 000c 0001     		.2byte	256
+ 252 000e 01       		.byte	1
+ 253 000f 02       		.byte	2
+ 254 0010 03       		.byte	3
+ 255 0011 01       		.byte	1
+ 256              		.section	.rodata.str1.1,"aMS",%progbits,1
+ 257              	.LC5:
+ 258 0000 426C7565 		.ascii	"Blueskin Design Ltd\000"
+ 258      736B696E 
+ 258      20446573 
+ 258      69676E20 
+ARM GAS  /tmp/ccnSGhYU.s 			page 8
+
+
+ 258      4C746400 
+ 259              	.LC6:
+ 260 0014 53696D70 		.ascii	"SimpleTracker\000"
+ 260      6C655472 
+ 260      61636B65 
+ 260      7200
+ 261              	.LC7:
+ 262 0022 54696E79 		.ascii	"TinyUSB CDC\000"
+ 262      55534220 
+ 262      43444300 
+ 263              		.section	.rodata.string_desc_arr,"a"
+ 264              		.align	2
+ 267              	string_desc_arr:
+ 268 0000 00000000 		.word	__compound_literal.0
+ 269 0004 00000000 		.word	.LC5
+ 270 0008 14000000 		.word	.LC6
+ 271 000c 00000000 		.word	0
+ 272 0010 22000000 		.word	.LC7
+ 273              		.section	.rodata.__compound_literal.0,"a"
+ 276              	__compound_literal.0:
+ 277 0000 09       		.byte	9
+ 278 0001 04       		.byte	4
+ 279              		.section	.bss._desc_str,"aw",%nobits
+ 280              		.align	1
+ 283              	_desc_str:
+ 284 0000 00000000 		.space	64
+ 284      00000000 
+ 284      00000000 
+ 284      00000000 
+ 284      00000000 
+ 285              		.text
+ 286              	.Letext0:
+ 287              		.file 2 "/usr/lib/gcc/arm-none-eabi/14.2.1/include/stdint.h"
+ 288              		.file 3 "/usr/lib/gcc/arm-none-eabi/14.2.1/include/stddef.h"
+ 289              		.file 4 "tinyusb/src/common/tusb_types.h"
+ 290              		.file 5 "tinyusb/src/class/cdc/cdc.h"
+ 291              		.file 6 "/usr/include/newlib/string.h"
+ 292              		.file 7 "Core/Inc/uid.h"
+ARM GAS  /tmp/ccnSGhYU.s 			page 9
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 usb_descriptors.c
+     /tmp/ccnSGhYU.s:19     .text.tud_descriptor_string_cb:00000000 $t
+     /tmp/ccnSGhYU.s:25     .text.tud_descriptor_string_cb:00000000 tud_descriptor_string_cb
+     /tmp/ccnSGhYU.s:161    .text.tud_descriptor_string_cb:00000060 $d
+     /tmp/ccnSGhYU.s:283    .bss._desc_str:00000000 _desc_str
+     /tmp/ccnSGhYU.s:267    .rodata.string_desc_arr:00000000 string_desc_arr
+     /tmp/ccnSGhYU.s:170    .text.tud_descriptor_device_cb:00000000 $t
+     /tmp/ccnSGhYU.s:176    .text.tud_descriptor_device_cb:00000000 tud_descriptor_device_cb
+     /tmp/ccnSGhYU.s:192    .text.tud_descriptor_device_cb:00000004 $d
+     /tmp/ccnSGhYU.s:241    .rodata.desc_device:00000000 desc_device
+     /tmp/ccnSGhYU.s:197    .text.tud_descriptor_configuration_cb:00000000 $t
+     /tmp/ccnSGhYU.s:203    .text.tud_descriptor_configuration_cb:00000000 tud_descriptor_configuration_cb
+     /tmp/ccnSGhYU.s:222    .text.tud_descriptor_configuration_cb:00000004 $d
+     /tmp/ccnSGhYU.s:230    .rodata.desc_configuration:00000000 desc_configuration
+     /tmp/ccnSGhYU.s:264    .rodata.string_desc_arr:00000000 $d
+     /tmp/ccnSGhYU.s:276    .rodata.__compound_literal.0:00000000 __compound_literal.0
+     /tmp/ccnSGhYU.s:280    .bss._desc_str:00000000 $d
+
+UNDEFINED SYMBOLS
+UID_GetString
+strlen

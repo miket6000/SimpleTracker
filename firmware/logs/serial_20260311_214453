@@ -1,0 +1,6 @@
+
+> GET b
+4
+> SET b 6
+OK
+> exit    REBOOT

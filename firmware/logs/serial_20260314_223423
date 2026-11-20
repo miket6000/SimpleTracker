@@ -1,0 +1,34 @@
+
+> SCAN
+OK
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+1 c1b425cd,-38
+> D PAIR c1b425cd 434500000 9 4
+OK
+> L
+$GNGGA,093517.138,,,,,0,0,,,M,,M,,*55
+> R
+&85a3f70cTACK -38
+> R
+&85a3f70cTACK -38
+> R
+&85a3f70cTACK -38
+> R
+&85a3f70cTACK -38
+> R
+&85a3f70cTACK -38
+> R
+&85a3f70cTACK -38
+> C 434500000 9 4
+OK
+> R
+c1b425cd $GNGGA,093535.000,,,,,0,0,,,M,,M,,*5F -38
+> R
+c1b425cd $GNGGA,093537.000,,,,,0,0,,,M,,M,,*5D -38
+> 

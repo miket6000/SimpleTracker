@@ -1,0 +1,14 @@
+
+> GET b
+4
+> GET s
+9
+> GET p
+8
+> GET d
+22
+> GET f
+434000000
+> GET c
+1
+> FACTORY

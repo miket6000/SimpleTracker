@@ -1,0 +1,22 @@
+
+> SCAN
+OK
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+WAIT 0
+> D
+0
+> GET f
+434000000
+> GET s
+9
+> GET b
+3
+> 
