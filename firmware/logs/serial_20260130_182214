@@ -1,70 +1,0 @@
-\/\SI	c0 00 
-SO	a2 22 
-/\CMDW	80SI	00 
-SO	a2 
-/\SI	1d 07 40 00 
-SO	a2 a2 a2 a2 
-/\CMDW	07SI	00 00 
-SO	a2 a2 
-/\CMDW	97SI	00 00 01 40 
-SO	a2 a2 a2 a2 
-/\CMDW	9dSI	01 
-SO	a2 
-/\CMDW	96SI	00 
-SO	a2 
-/\CMDW	8fSI	00 00 
-SO	a2 a2 
-/\CMDW	8aSI	01 
-SO	a2 
-/\CMDW	95SI	04 07 00 01 
-SO	a2 a2 a2 a2 
-/\CMDW	8eSI	16 04 
-SO	a2 a2 
-/\CMDW	86SI	1b 20 00 00 
-SO	a2 a2 a2 a2 
-/\CMDW	8bSI	09 04 01 00 
-SO	a2 a2 a2 a2 
-/\CMDW	8cSI	00 08 00 ff 01 00 00 00 00 
-SO	a2 a2 a2 a2 a2 a2 a2 a2 a2 
-/\CMDW	08SI	02 03 02 03 00 00 00 00 
-SO	a2 a2 a2 a2 a2 a2 a2 a2 
-/\SI	17 
-SO	a2 
-00 
-a2 
-00 00 
-00 00 
-/LoRa Init OK
-\SI	12 
-SO	a2 
-00 
-a2 
-00 00 
-00 00 
-/0\CMDW	8cSI	00 08 00 ff 01 00 00 00 00 
-SO	a2 a2 a2 a2 a2 a2 a2 a2 a2 
-/\CMDW	02SI	03 ff 
-SO	a2 a2 
-/\CMDW	80SI	00 
-SO	a2 
-/\SI	0e 00 
-SO	a2 a2 
-SI	48 65 6c 6c 6f 00 
-SO	a2 a2 a2 a2 a2 a2 
-/\CMDW	80SI	00 
-SO	a2 
-/\CMDW	83SI	00 00 00 
-SO	a2 a2 a2 
-/\SI	c0 
-SO	aa 
-00 
-2a 
-00 
-2a 
-/\SI	12 
-SO	aa 
-00 
-aa 
-00 00 
-00 00 
-/0
